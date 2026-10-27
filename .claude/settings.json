@@ -1,0 +1,21 @@
+{
+  "extraKnownMarketplaces": {
+    "trpa-claude-skills": {
+      "source": {
+        "source": "github",
+        "repo": "trpa-agency/trpa-claude-skills"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "trpa-brand@trpa-claude-skills": true,
+    "ltinfo-platform@trpa-claude-skills": true,
+    "trpa-monitoring-dashboard@trpa-claude-skills": true,
+    "trpa-threshold-dashboard@trpa-claude-skills": true,
+    "trpa-transportation-tracker@trpa-claude-skills": true,
+    "trpa-dashboard-stack@trpa-claude-skills": true,
+    "trpa-dashboard-qa@trpa-claude-skills": true,
+    "trpa-data-services@trpa-claude-skills": true,
+    "trpa-repo-handoff@trpa-claude-skills": true
+  }
+}

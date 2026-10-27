@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Regional Stormwater Monitoring | Monitoring Dashboard</title>
+<!--
+  Monitoring program dashboard: Regional Stormwater Monitoring
+  Built from templates/program-dashboard.html by scripts/scaffold_programs.py.
+
+  Two ways this page is shown:
+    - Standalone (opened directly or from index.html): LT Info shell header, breadcrumb hero,
+      side nav of the category's programs, footer.
+    - Embedded in the Dashboard card on monitoring.laketahoeinfo.org (inside an iframe): no chrome,
+      #f7f7f7 background, posts its height to the parent. Per the ltinfo-platform embed contract.
+
+  Program and site data load live from internalapi.laketahoeinfo.org (anonymous, CORS open).
+  To add program-specific measurement charts, fill in renderCustom() in the CUSTOM block below.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap">
+<!-- Calcite 2.13.2 matches the Calcite build bundled with ArcGIS SDK 4.31 (see trpa-monitoring-dashboard). -->
+<link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
+<script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
+<!-- UMD bundles before the ArcGIS SDK, or Dojo's AMD loader claims them. -->
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/dist/ag-grid-community.min.js"></script>
+<link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.31/"></script>
+<style>
+  :root {
+    --ltinfo-navy: #2f3f56;
+    --monitoring-green: #789440;
+    --primary: #3e72b0;
+    --link: #337ab7;
+    --ink: #333333;
+    --ink-soft: #4b4b4b;
+    --muted: #656565;
+    --gray-50: #fafafa;
+    --gray-100: #efefef;
+    --gray-200: #dcdcdc;
+    --gray-300: #bdbdbd;
+    --page-bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --radius: 6px;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 4px 12px rgba(0, 0, 0, .05);
+    --font: 'Lexend Deca', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --cat: #0F3F6F;
+    --calcite-color-brand: #789440;
+    --calcite-color-brand-hover: #616049;
+    --calcite-color-brand-press: #616049;
+    --calcite-font-family: var(--font);
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.5; color: var(--ink-soft); background: var(--page-bg); }
+  a { color: var(--link); }
+  h1, h2, h3 { color: var(--ink); line-height: 1.25; margin: 0; }
+  :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+  /* Keep the footer at the bottom of the window on short pages. */
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  main.wrap { flex: 1; width: 100%; }
+
+  /* ---------- Shell (standalone only) ---------- */
+  .site-header { background: var(--ltinfo-navy); color: #fff; }
+  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
+  .brand { display: flex; align-items: center; gap: 14px; color: #fff; text-decoration: none; }
+  .brand img { height: 34px; width: auto; }
+  .brand-divider { width: 1px; height: 28px; background: rgba(255, 255, 255, .35); }
+  .brand-name { font-size: 19px; font-weight: 500; }
+  .header-links { display: flex; gap: 20px; }
+  .header-links a { color: #dfe6ef; text-decoration: none; font-size: 14px; }
+  .header-links a:hover { color: #fff; }
+  /* Footer copied from monitoring.laketahoeinfo.org (.home-footer). */
+  .site-footer { background: #fff; margin-top: 56px; font-size: 11px; border-top: 1px solid var(--gray-100); }
+  .site-footer__content { max-width: 900px; margin: 0 auto; padding: 3.125em 15px 2.5em; text-align: center; }
+  .site-footer__content p { line-height: 1.85714em; color: #a8a8a8; margin: .35714em auto; }
+  .site-footer__content a { color: #a8a8a8; text-decoration: none; transition: color 125ms linear; }
+  .site-footer__content a:hover { color: #6f6f6f; }
+  .site-footer__content img { max-height: 80px; width: auto; display: block; margin: 0 auto; }
+  .site-footer__credit { font-size: 12px; }
+  .site-footer__disclaimer { font-size: 11px; margin: 10px auto; line-height: 1.7em; max-width: 800px; }
+  .site-footer__copyright { font-size: 10px; }
+
+  .prog-hero { position: relative; color: #fff; background: var(--ltinfo-navy) center / cover no-repeat; }
+  .prog-hero::before { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(15, 24, 36, .9) 0%, rgba(15, 24, 36, .7) 60%, rgba(15, 24, 36, .35) 100%); }
+  .prog-hero .wrap { position: relative; padding-top: 22px; padding-bottom: 30px; }
+  .crumbs { font-size: 12.5px; letter-spacing: 1px; text-transform: uppercase; display: flex; flex-wrap: wrap; gap: 6px; }
+  .crumbs a { color: #cfe0a8; text-decoration: none; }
+  .crumbs a:hover { text-decoration: underline; }
+  .crumbs span { color: rgba(255, 255, 255, .55); }
+  .crumbs .here { color: #fff; }
+  .prog-hero h1 { color: #fff; font-size: clamp(24px, 3.4vw, 36px); font-weight: 600; margin: 14px 0 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { font-size: 12.5px; padding: 4px 11px; border-radius: 999px; background: rgba(255, 255, 255, .14);
+    color: #fff; border: 1px solid rgba(255, 255, 255, .25); }
+  .chip.chip-cat { background: var(--cat); border-color: var(--cat); color: var(--on-cat, #fff); }
+  .lede { max-width: 820px; margin: 14px 0 0; color: #e6ecf3; font-size: 15px; }
+
+  .prog-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 24px; margin-top: 24px; align-items: start; }
+  .side-nav { position: sticky; top: 16px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .side-nav h2 { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--on-cat, #fff);
+    background: var(--cat); padding: 10px 14px; font-weight: 600; }
+  .side-nav ul { list-style: none; margin: 0; padding: 6px; }
+  .side-nav a { display: block; padding: 8px 10px; border-radius: 4px; font-size: 13.5px; color: var(--ink-soft); text-decoration: none; }
+  .side-nav a:hover { background: var(--gray-100); color: var(--ink); }
+  .side-nav a[aria-current] { background: color-mix(in srgb, var(--cat) 12%, white); color: var(--ink); font-weight: 600;
+    box-shadow: inset 3px 0 0 var(--cat); }
+  .side-nav .back { display: block; padding: 10px 14px; border-top: 1px solid var(--gray-100); font-size: 13px; text-decoration: none; }
+
+  /* ---------- Dashboard body (both modes) ---------- */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
+  .kpi { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); padding: 14px 16px; border-top: 3px solid var(--cat); }
+  .kpi-label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 500; }
+  .kpi-value { font-size: 28px; font-weight: 600; color: var(--ink); line-height: 1.2; margin-top: 4px; }
+  .kpi-sub, .note { font-size: 12px; color: var(--muted); }
+  .kpi.is-empty .kpi-value { color: var(--gray-300); }
+
+  .dash-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 18px; margin-top: 18px; }
+  .span-12 { grid-column: span 12; } .span-7 { grid-column: span 7; } .span-5 { grid-column: span 5; } .span-6 { grid-column: span 6; }
+  .panel { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); display: flex; flex-direction: column; min-width: 0; }
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    padding: 12px 16px; border-bottom: 1px solid var(--gray-100); }
+  .panel-head h2 { font-size: 15px; font-weight: 600; }
+  .panel-head p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
+  .panel-tools { display: flex; align-items: center; gap: 10px; flex: none; }
+  .panel-body { padding: 14px 16px; flex: 1; }
+  .panel-body.flush { padding: 0; }
+  .prose { font-size: 14.5px; }
+  .prose p { margin: 0 0 10px; }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose img { max-width: 100%; height: auto; }
+  .list-plain { list-style: none; margin: 0; padding: 0; }
+  .list-plain li { padding: 8px 0; border-top: 1px solid var(--gray-100); font-size: 14px; }
+  .list-plain li:first-child { border-top: 0; padding-top: 0; }
+  .sub-label { font-size: 12px; text-transform: uppercase; letter-spacing: .6px; color: var(--muted); font-weight: 500; margin: 18px 0 6px; }
+  .sub-label:first-child { margin-top: 0; }
+
+  #progMap { height: 380px; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+  .chart { height: 320px; width: auto; }
+  .chart-grid { height: 320px; }
+  .sites-grid { height: 420px; }
+  .table-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    padding: 10px 16px; border-bottom: 1px solid var(--gray-100); }
+  .table-tools calcite-input { width: 260px; max-width: 100%; }
+  .dash-frame { width: 100%; height: 640px; border: 0; display: block; background: #f7f7f7; border-radius: 0 0 var(--radius) var(--radius); }
+  .empty { display: grid; place-items: center; text-align: center; padding: 32px 20px; min-height: 200px; color: var(--muted);
+    font-size: 14px; background: repeating-linear-gradient(135deg, #fafafa 0 10px, #f4f4f4 10px 20px); border-radius: 4px; }
+  .empty strong { display: block; color: var(--ink); font-weight: 600; margin-bottom: 4px; }
+  .loading { display: grid; place-items: center; min-height: 240px; }
+  .source { margin-top: 14px; }
+
+  /* ---------- Embedded in the LT Info Dashboard card ---------- */
+  html.is-embed body { background: #f7f7f7; }
+  html.is-embed .standalone { display: none !important; }
+  html.is-embed .wrap { padding: 0 12px; }
+  html.is-embed .prog-layout { grid-template-columns: 1fr; margin-top: 12px; }
+  html.is-embed .site-footer { display: none; }
+
+  @media (max-width: 1080px) {
+    .prog-layout { grid-template-columns: 1fr; }
+    .side-nav { position: relative; top: 0; }
+    .side-nav ul { display: flex; flex-wrap: wrap; gap: 4px; }
+    .span-7, .span-5, .span-6 { grid-column: span 12; }
+  }
+  @media (max-width: 680px) {
+    .wrap { padding: 0 16px; }
+    .header-links { display: none; }
+    .brand-name { font-size: 16px; }
+    .brand img { height: 28px; }
+    .kpi-value { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header standalone">
+  <div class="wrap header-row">
+    <a class="brand" href="../index.html">
+      <img src="https://monitoring.laketahoeinfo.org/assets/logos/LT_INFO_LOGO2025-white.png" alt="Lake Tahoe Info">
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-name">Monitoring Dashboard</span>
+    </a>
+    <nav class="header-links" aria-label="Site">
+      <a href="../index.html#/all">All programs</a>
+      <a href="../index.html#/about">About</a>
+    </nav>
+  </div>
+</header>
+
+<section class="prog-hero standalone" id="hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="../index.html">Monitoring Programs</a><span>/</span>
+      <a id="crumbCat" href="#"></a><span>/</span>
+      <span class="here" id="crumbHere"></span>
+    </nav>
+    <h1 id="progTitle"></h1>
+    <div class="chips" id="chips"></div>
+    <p class="lede" id="lede" hidden></p>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="prog-layout">
+    <aside class="side-nav standalone" id="sideNav"></aside>
+    <div>
+      <div class="kpis" id="kpis"></div>
+      <div class="dash-grid" id="grid">
+        <div class="panel span-12 loading"><calcite-loader label="Loading program data" scale="m"></calcite-loader></div>
+      </div>
+      <p class="note source" id="source"></p>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer standalone">
+  <div class="site-footer__content">
+    <p class="site-footer__credit"><strong>Implementation &amp; Hosting by <a href="https://esassoc.com/services/technology/">Environmental Science Associates</a></strong></p>
+    <p class="site-footer__disclaimer">Portions of the Lake Tahoe Info platform may be freely modified and redistributed. The open source version of the EIP Project Tracker is available as <a href="https://projectfirma.com">ProjectFirma</a> on <a href="https://github.com/sitkatech/projectfirma">GitHub</a>. The source code for the Stormwater Tools is available upon request. Other components of LT Info are available via commercial licensing through the Tahoe Regional Planning Agency (<a href="mailto:trpa@trpa.gov">trpa@trpa.gov</a>).</p>
+    <img src="https://monitoring.laketahoeinfo.org/assets/img/trpa-logo-footer.png" alt="TRPA">
+    <p class="site-footer__copyright">Copyright (C) 2026 <a href="https://trpa.gov">Tahoe Regional Planning Agency</a></p>
+  </div>
+</footer>
+
+<script>
+/* ---------- PROGRAM: stamped by scripts/scaffold_programs.py ---------- */
+const PROGRAM = {"id": 16, "name": "Regional Stormwater Monitoring", "category": "Water Quality", "categoryFolder": "water-quality", "categoryColor": "#0F3F6F", "siblings": [{"id": 82, "name": "Harmful Algae Bloom (HAB) Monitoring", "file": "harmful-algae-bloom.html"}, {"id": 76, "name": "Nearshore Human Health, E. coli Monitoring", "file": "nearshore-human-health.html"}, {"id": 66, "name": "Pelagic Water Quality (Clarity)", "file": "pelagic-water-quality.html"}, {"id": 13, "name": "Periphyton", "file": "periphyton.html"}, {"id": 16, "name": "Regional Stormwater Monitoring", "file": "regional-stormwater.html"}, {"id": 63, "name": "Streams", "file": "streams.html"}]};
+
+/* ---------- CUSTOM: program-specific sections ----------
+   Called after the standard panels render. Append panels to ctx.grid with chartPanel() and
+   wire them with wireChart(); give every section an explicit empty state until real data exists.
+   ctx = { program, sites, grid, color } */
+function renderCustom(ctx) {}
+
+/* ---------- Settings ---------- */
+const API = 'https://internalapi.laketahoeinfo.org';
+const THRESHOLDS_URL = 'https://thresholds.laketahoeinfo.org/';
+const EMBEDDED = window.self !== window.top;
+const INACTIVE = '#9aa3ad';
+document.documentElement.classList.toggle('is-embed', EMBEDDED);
+document.documentElement.style.setProperty('--on-cat', onColor(PROGRAM.categoryColor));
+
+const PLOT_LAYOUT = {
+  font: { family: 'Lexend Deca, sans-serif', color: '#333333', size: 12 },
+  paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+  margin: { t: 10, r: 12, b: 40, l: 48 },
+  xaxis: { gridcolor: '#dcdcdc', linecolor: '#dcdcdc', automargin: true, tickformat: 'd' },
+  yaxis: { gridcolor: '#dcdcdc', linecolor: '#dcdcdc', zeroline: false, automargin: true, rangemode: 'tozero' },
+  hovermode: 'x unified', showlegend: false, bargap: 0.25,
+  hoverlabel: { font: { family: 'Lexend Deca, sans-serif' } },
+};
+const PLOT_CONFIG = { displayModeBar: false, responsive: true };
+const GRID_THEME = agGrid.themeQuartz.withParams({
+  accentColor: '#3e72b0', fontFamily: 'Lexend Deca, sans-serif', fontSize: 13.5,
+  headerBackgroundColor: '#efefef', headerTextColor: '#3d3d3d', headerFontWeight: 600,
+  oddRowBackgroundColor: '#fafafa', borderColor: 'rgba(0,0,0,.12)', rowHeight: 40, headerHeight: 42,
+  wrapperBorderRadius: 0,
+});
+
+/* ---------- Helpers ---------- */
+const $ = (id) => document.getElementById(id);
+function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function plural(n, word) { return n === 1 ? word : `${word}s`; }
+function slugify(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+function year(d) { const y = parseInt(String(d || '').slice(0, 4), 10); return Number.isFinite(y) ? y : null; }
+function fileUrl(guid) { return `${API}/file-resources/${guid}`; }
+function debounce(fn, ms = 200) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+async function getJson(path, fallback) {
+  try { const r = await fetch(API + path); if (!r.ok) throw new Error(r.status); return await r.json(); }
+  catch (e) { console.warn(`${path}: ${e.message}`); return fallback; }
+}
+// White or dark text, whichever reads better on a category color.
+function onColor(hex) {
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4 ? '#1f2a37' : '#ffffff';
+}
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(`${iso.slice(0, 10)}T12:00:00`);
+  const months = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+  return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+}
+// Program text comes from the LT Info CMS as HTML; keep the markup, drop anything executable.
+function clean(html) {
+  if (!html) return '';
+  const doc = new DOMParser().parseFromString(html, 'text/html');
+  doc.querySelectorAll('script, style, iframe, object, embed, link, meta, form').forEach((n) => n.remove());
+  doc.querySelectorAll('*').forEach((el) => {
+    [...el.attributes].forEach((a) => {
+      if (/^on/i.test(a.name) || (/^(href|src)$/i.test(a.name) && /^\s*javascript:/i.test(a.value))) el.removeAttribute(a.name);
+    });
+    if (el.tagName === 'A') { el.target = '_blank'; el.rel = 'noopener'; }
+  });
+  return doc.body.textContent.trim() ? doc.body.innerHTML : '';
+}
+function lede(html) {
+  const text = new DOMParser().parseFromString(html, 'text/html').body.textContent.replace(/\s+/g, ' ').trim();
+  if (text.length <= 240) return text;
+  const cut = text.slice(0, 240);
+  const end = cut.lastIndexOf('. ');
+  return end > 80 ? cut.slice(0, end + 1) : `${cut.slice(0, cut.lastIndexOf(' '))}…`;
+}
+function emptyState(title, body) { return `<div class="empty"><div><strong>${esc(title)}</strong>${esc(body)}</div></div>`; }
+const postHeight = () => {
+  if (EMBEDDED) window.parent.postMessage({ type: 'ltinfo-embed:height', height: document.documentElement.scrollHeight }, '*');
+};
+
+/* ---------- Panels ---------- */
+function kpi(label, value, sub) {
+  const empty = value == null;
+  return `<div class="kpi${empty ? ' is-empty' : ''}"><div class="kpi-label">${esc(label)}</div>
+    <div class="kpi-value">${empty ? '&mdash;' : esc(value)}</div><div class="kpi-sub">${esc(sub || '')}</div></div>`;
+}
+
+function chartPanel(id, span, title, sub) {
+  return `
+    <section class="panel ${span}" id="${id}-panel">
+      <div class="panel-head">
+        <div><h2>${esc(title)}</h2><p>${esc(sub)}</p></div>
+        <div class="panel-tools">
+          <calcite-segmented-control scale="s" data-view label="View">
+            <calcite-segmented-control-item value="chart" checked>Chart</calcite-segmented-control-item>
+            <calcite-segmented-control-item value="table">Table</calcite-segmented-control-item>
+          </calcite-segmented-control>
+          <calcite-button scale="s" appearance="outline" kind="neutral" icon-start="download" data-csv>CSV</calcite-button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <div class="chart" id="${id}"></div>
+        <div class="chart-grid" id="${id}-table" hidden></div>
+      </div>
+    </section>`;
+}
+
+// rows: array of objects; cols: [{ field, headerName, num }]; draw(el) renders the Plotly chart.
+function wireChart(id, rows, cols, draw, csvName, empty) {
+  const panel = $(`${id}-panel`);
+  const el = $(id);
+  const tableEl = $(`${id}-table`);
+  if (!rows.length) {
+    el.outerHTML = emptyState(empty[0], empty[1]);
+    panel.querySelector('.panel-tools').hidden = true;
+    return;
+  }
+  draw(el);
+  const api = agGrid.createGrid(tableEl, {
+    theme: GRID_THEME, rowData: rows,
+    columnDefs: cols.map(({ num, ...c }) => ({ ...c, flex: 1, type: num ? 'numericColumn' : undefined })),
+    defaultColDef: { sortable: true, filter: true, resizable: true },
+  });
+  panel.querySelector('[data-view]').addEventListener('calciteSegmentedControlChange', (e) => {
+    const table = e.target.value === 'table';
+    el.hidden = table; tableEl.hidden = !table;
+    if (!table) Plotly.Plots.resize(el);
+    postHeight();
+  });
+  panel.querySelector('[data-csv]').addEventListener('click', () => api.exportDataAsCsv({ fileName: `${slugify(csvName)}.csv` }));
+}
+
+function countByYear(years, cumulative) {
+  const counts = {};
+  years.forEach((y) => { counts[y] = (counts[y] || 0) + 1; });
+  let total = 0;
+  return Object.keys(counts).map(Number).sort((a, b) => a - b).map((y) => {
+    total += counts[y];
+    return cumulative ? { year: y, count: counts[y], total } : { year: y, count: counts[y] };
+  });
+}
+
+function connectionsPanel(partners, indicators, documents, span) {
+  return `
+    <section class="panel ${span}">
+      <div class="panel-head"><div><h2>Partners, indicators, and documents</h2></div></div>
+      <div class="panel-body">
+        <div class="sub-label">Partners</div>
+        ${partners.length ? `<ul class="list-plain">${partners.map((p) => `<li>${esc(p.OrganizationName)}</li>`).join('')}</ul>`
+                          : '<p class="note">No partners listed yet.</p>'}
+        <div class="sub-label">Associated threshold indicators</div>
+        ${indicators.length ? `<ul class="list-plain">${indicators.map((i) => `<li><a href="${THRESHOLDS_URL}" target="_blank" rel="noopener">${esc(i.IndicatorDisplayName)}</a></li>`).join('')}</ul>`
+                            : '<p class="note">No linked indicators.</p>'}
+        <div class="sub-label">Documents</div>
+        ${documents.length ? `<ul class="list-plain">${documents.map((d) => `<li><a href="${fileUrl(d.FileResourceGUID)}" target="_blank" rel="noopener">${esc(d.DisplayName)}</a>
+            <span class="note">${esc((d.FileExtension || '').replace('.', '').toUpperCase())}${d.UploadDate ? `, ${fmtDate(d.UploadDate)}` : ''}</span></li>`).join('')}</ul>`
+                           : '<p class="note">No documents on file.</p>'}
+      </div>
+    </section>`;
+}
+
+/* ---------- Standalone chrome ---------- */
+function renderChrome(record, keyImage) {
+  const catHref = `../index.html#/category/${PROGRAM.categoryFolder}`;
+  $('crumbCat').textContent = PROGRAM.category;
+  $('crumbCat').href = catHref;
+  $('crumbHere').textContent = record.ShortName || PROGRAM.name;
+  $('progTitle').textContent = record.MonitoringProgramName || PROGRAM.name;
+  $('chips').innerHTML = [
+    `<span class="chip chip-cat">${esc(PROGRAM.category)}</span>`,
+    record.MonitoringProgramTypeDisplayName ? `<span class="chip">${esc(record.MonitoringProgramTypeDisplayName)}</span>` : '',
+    record.IsFeaturedProgram ? '<span class="chip">Featured program</span>' : '',
+  ].join('');
+  const desc = clean(record.MonitoringProgramDescription);
+  if (desc) { $('lede').textContent = lede(desc); $('lede').hidden = false; }
+  if (keyImage) $('hero').style.backgroundImage = `url('${fileUrl(keyImage)}')`;
+  $('sideNav').innerHTML = `
+    <h2>${esc(PROGRAM.category)}</h2>
+    <ul>${PROGRAM.siblings.map((s) => `<li><a href="${esc(s.file)}"${s.id === PROGRAM.id ? ' aria-current="page"' : ''}>${esc(s.name)}</a></li>`).join('')}</ul>
+    <a class="back" href="${catHref}">&lsaquo; All categories</a>`;
+}
+
+/* ---------- Map ---------- */
+function renderMap(mapped, color) {
+  return new Promise((resolve) => {
+    require(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/Graphic', 'esri/widgets/Legend',
+      'esri/widgets/Home', 'esri/widgets/Expand'], (Map, MapView, FeatureLayer, Graphic, Legend, Home, Expand) => {
+      const layer = new FeatureLayer({
+        title: 'Monitoring sites', objectIdField: 'oid', geometryType: 'point', spatialReference: { wkid: 4326 },
+        fields: [
+          { name: 'oid', type: 'oid' }, { name: 'name', type: 'string' }, { name: 'status', type: 'string' },
+          { name: 'span', type: 'string' }, { name: 'stations', type: 'integer' },
+        ],
+        source: mapped.map((s, i) => new Graphic({
+          geometry: { type: 'point', longitude: s.lon, latitude: s.lat },
+          attributes: { oid: i + 1, name: s.name || 'Site', status: s.active ? 'Active' : 'Inactive', span: s.span, stations: s.stations ?? null },
+        })),
+        renderer: {
+          type: 'unique-value', field: 'status',
+          uniqueValueInfos: ['Active', 'Inactive'].map((v) => ({
+            value: v, label: v,
+            symbol: { type: 'simple-marker', size: mapped.length > 100 ? 7 : 9, color: v === 'Active' ? color : INACTIVE, outline: { color: '#ffffff', width: 1 } },
+          })),
+        },
+        popupTemplate: { title: '{name}', content: '{status} · {span}' },
+      });
+      const view = new MapView({
+        container: 'progMap', map: new Map({ basemap: 'gray-vector', layers: [layer] }),
+        center: [-120.04, 39.09], zoom: 10, constraints: { snapToZoom: false },
+        popup: { dockEnabled: false, dockOptions: { buttonEnabled: false } },
+      });
+      view.on('mouse-wheel', (e) => e.stopPropagation());
+      view.ui.add(new Home({ view }), 'top-left');
+      const legend = new Legend({ view });
+      view.ui.add(window.innerWidth < 640 ? new Expand({ view, content: legend, mode: 'drawer', expanded: false }) : legend, 'bottom-left');
+      layer.when(() => layer.queryExtent()).then((r) => {
+        if (r.count) view.goTo(r.count === 1 ? { target: r.extent.center, zoom: 13 } : r.extent.expand(1.3), { animate: false });
+      });
+      resolve({
+        // Zoom to a site from the sites table and open its popup.
+        show(index) {
+          layer.queryFeatures({ objectIds: [index + 1], returnGeometry: true, outFields: ['*'] }).then(({ features }) => {
+            if (!features.length) return;
+            $('progMap').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            view.goTo({ target: features[0].geometry, zoom: Math.max(view.zoom, 13) }, { duration: 600 })
+              .then(() => view.openPopup({ features, location: features[0].geometry }));
+          });
+        },
+      });
+    });
+  });
+}
+
+/* ---------- Page ---------- */
+async function init() {
+  const pid = PROGRAM.id;
+  const [record, siteRows, geo, partners, indicators, documents, images] = await Promise.all([
+    getJson(`/monitoring-programs/${pid}`, null),
+    getJson(`/monitoring-programs/${pid}/sites?activeOnly=false`, []),
+    getJson(`/monitoring-programs/${pid}/sites-as-feature-collection`, { features: [] }),
+    getJson(`/monitoring-programs/${pid}/partners`, []),
+    getJson(`/monitoring-programs/${pid}/indicators`, []),
+    getJson(`/monitoring-programs/${pid}/documents`, []),
+    getJson(`/monitoring-programs/${pid}/images`, []),
+  ]);
+  const grid = $('grid');
+  if (!record) {
+    renderChrome({}, null);
+    grid.innerHTML = `<section class="panel span-12"><div class="panel-body">${emptyState('Program data could not be loaded',
+      'Lake Tahoe Info did not respond. Reload the page to try again.')}</div></section>`;
+    postHeight();
+    return;
+  }
+
+  // Site rows carry status and dates; the feature collection carries location.
+  const coords = {};
+  (geo.features || []).forEach((f) => {
+    const c = f.geometry && f.geometry.type === 'Point' ? f.geometry.coordinates : null;
+    if (c) coords[f.properties.MonitoringSiteID] = c;
+  });
+  const sites = siteRows.map((r) => {
+    const c = coords[r.MonitoringSiteID];
+    const f = year(r.FirstObservationDate), l = year(r.LastObservationDate);
+    return {
+      name: r.MonitoringSiteName, active: r.Active, stations: r.StationCount,
+      first: r.FirstObservationDate || '', last: r.LastObservationDate || '',
+      lon: c ? c[0] : null, lat: c ? c[1] : null,
+      span: f ? `${f}${l && l !== f ? `–${l}` : ''}` : 'No observations',
+    };
+  });
+  const mapped = sites.filter((s) => s.lat != null);
+  const firstYears = sites.map((s) => year(s.first)).filter(Boolean);
+  const lastYears = sites.map((s) => year(s.last)).filter(Boolean);
+  const active = sites.filter((s) => s.active).length;
+  const hasSites = sites.length > 0;
+  const color = PROGRAM.categoryColor;
+  const keyImage = (images.find((i) => i.IsKeyPhoto) || images[0] || {}).FileResourceGUID || record.KeyImageFileResourceGUID;
+  const desc = clean(record.MonitoringProgramDescription);
+  const approach = clean(record.MonitoringApproach);
+  const dash = record.Dashboard && record.Dashboard.DashboardUrl;
+  // Never embed a dashboard URL that points back at this page.
+  const showDash = dash && new URL(dash, location.href).pathname !== location.pathname;
+  const siteLabel = record.SiteLabelPlural || 'Sites';
+
+  renderChrome(record, keyImage);
+
+  $('kpis').innerHTML = [
+    kpi(`Monitoring ${siteLabel.toLowerCase()}`, hasSites ? sites.length : null, hasSites ? `${mapped.length} mapped` : 'No fixed sites'),
+    kpi('Active sites', hasSites ? active : null, hasSites ? `${Math.round((active / sites.length) * 100)} percent of sites` : ''),
+    kpi('Record began', firstYears.length ? Math.min(...firstYears) : null, 'First observation'),
+    kpi('Latest observation', lastYears.length ? Math.max(...lastYears) : null, 'Most recent site visit'),
+    kpi('Partners', partners.length, 'Organizations'),
+    kpi('Indicators', indicators.length, 'Linked threshold indicators'),
+  ].join('');
+
+  grid.innerHTML = `
+    ${showDash ? `
+      <section class="panel span-12">
+        <div class="panel-head"><div><h2>Program dashboard</h2><p>${esc(record.Dashboard.DashboardDescription || `${PROGRAM.name} data, maintained by the program team.`)}</p></div>
+          <a href="${esc(dash)}" target="_blank" rel="noopener" class="note">Open full screen &#8599;</a></div>
+        <iframe class="dash-frame" src="${esc(dash)}" title="${esc(PROGRAM.name)} dashboard" loading="lazy" allowfullscreen></iframe>
+      </section>` : ''}
+
+    ${hasSites ? `
+      <section class="panel span-7">
+        <div class="panel-head"><div><h2>Where we monitor</h2><p>${mapped.length} mapped ${plural(mapped.length, 'site')}. Select a site for details.</p></div></div>
+        <div class="panel-body flush">${mapped.length ? '<div id="progMap" role="region" aria-label="Map of monitoring sites"></div>'
+          : emptyState('No mapped sites', 'Sites for this program are recorded without coordinates.')}</div>
+      </section>
+      ${chartPanel('chartStart', 'span-5', 'When monitoring began', 'Sites by year of first observation, with the running total.')}
+      ${chartPanel('chartLast', 'span-6', 'How current is the record', 'Sites by year of most recent observation.')}
+      ${connectionsPanel(partners, indicators, documents, 'span-6')}
+    ` : `
+      ${connectionsPanel(partners, indicators, documents, 'span-5')}
+      <section class="panel span-7">
+        <div class="panel-head"><div><h2>Program data</h2></div></div>
+        <div class="panel-body">${emptyState('No monitoring sites in Lake Tahoe Info',
+          'This program is not tracked by site. Charts of sites and observations will appear here once sites or a dashboard are added.')}</div>
+      </section>
+    `}
+
+    ${approach ? `
+      <section class="panel span-${desc ? 6 : 12}">
+        <div class="panel-head"><div><h2>How it is monitored</h2></div></div>
+        <div class="panel-body prose">${approach}</div>
+      </section>` : ''}
+    ${desc ? `
+      <section class="panel span-${approach ? 6 : 12}">
+        <div class="panel-head"><div><h2>About this program</h2></div></div>
+        <div class="panel-body prose">${desc}</div>
+      </section>` : ''}
+
+    ${hasSites ? `
+      <section class="panel span-12">
+        <div class="panel-head">
+          <div><h2>Monitoring sites</h2><p>${sites.length} ${plural(sites.length, 'site')}. Select a row to find it on the map.</p></div>
+          <div class="panel-tools"><calcite-button scale="s" appearance="outline" kind="neutral" icon-start="download" id="sitesCsv">CSV</calcite-button></div>
+        </div>
+        <div class="table-tools">
+          <calcite-input id="siteFilter" type="search" icon="search" placeholder="Filter sites" scale="s" clearable label="Filter sites"></calcite-input>
+          <span class="note" id="siteCount"></span>
+        </div>
+        <div class="sites-grid" id="sitesGrid"></div>
+      </section>` : ''}`;
+
+  $('source').textContent = `Source: Lake Tahoe Info monitoring program ${pid}, retrieved ${fmtDate(new Date().toISOString())}.`;
+
+  if (hasSites) {
+    const mapApi = mapped.length ? renderMap(mapped, color) : Promise.resolve(null);
+
+    const startRows = countByYear(firstYears, true);
+    const lastRows = countByYear(lastYears, false);
+    const noDates = ['No observation dates loaded yet', 'This chart will show sites by year once dates are recorded.'];
+    wireChart('chartStart', startRows, [
+      { field: 'year', headerName: 'Year' }, { field: 'count', headerName: 'Sites added', num: true }, { field: 'total', headerName: 'Running total', num: true },
+    ], (el) => Plotly.newPlot(el, [
+      { type: 'bar', x: startRows.map((r) => r.year), y: startRows.map((r) => r.count), name: 'Sites added', marker: { color },
+        hovertemplate: '%{y} added<extra></extra>' },
+      { type: 'scatter', mode: 'lines', x: startRows.map((r) => r.year), y: startRows.map((r) => r.total), name: 'Running total', yaxis: 'y2',
+        line: { color: '#333333', width: 2, shape: 'hv' }, hovertemplate: '%{y} total<extra></extra>' },
+    ], {
+      ...PLOT_LAYOUT, margin: { ...PLOT_LAYOUT.margin, r: 48 },
+      yaxis: { ...PLOT_LAYOUT.yaxis, title: { text: 'Sites added', font: { size: 11 } } },
+      yaxis2: { overlaying: 'y', side: 'right', showgrid: false, rangemode: 'tozero', title: { text: 'Running total', font: { size: 11 } } },
+    }, PLOT_CONFIG), `${PROGRAM.name} sites by first observation`, noDates);
+
+    wireChart('chartLast', lastRows, [
+      { field: 'year', headerName: 'Year' }, { field: 'count', headerName: 'Sites', num: true },
+    ], (el) => Plotly.newPlot(el, [
+      { type: 'bar', x: lastRows.map((r) => r.year), y: lastRows.map((r) => r.count), marker: { color },
+        hovertemplate: '%{y} sites last observed<extra></extra>' },
+    ], { ...PLOT_LAYOUT, yaxis: { ...PLOT_LAYOUT.yaxis, title: { text: 'Sites', font: { size: 11 } } } }, PLOT_CONFIG),
+    `${PROGRAM.name} sites by most recent observation`, noDates);
+
+    // A working list people scan top to bottom, so no pagination.
+    const rows = sites.map((s, i) => ({
+      _i: s.lat != null ? mapped.indexOf(s) : -1, Site: s.name || '', Status: s.active ? 'Active' : 'Inactive',
+      'First observation': s.first, 'Last observation': s.last, Stations: s.stations ?? null, Mapped: s.lat != null ? 'Yes' : 'No',
+    }));
+    const updateCount = (api) => { $('siteCount').textContent = `Showing ${api.getDisplayedRowCount()} of ${rows.length}`; };
+    const sitesApi = agGrid.createGrid($('sitesGrid'), {
+      theme: GRID_THEME, rowData: rows,
+      columnDefs: [
+        { field: 'Site', flex: 2, minWidth: 180 },
+        { field: 'Status', minWidth: 110,
+          cellRenderer: (p) => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${p.value === 'Active' ? color : INACTIVE}"></span>${p.value}` },
+        { field: 'First observation', minWidth: 140 }, { field: 'Last observation', minWidth: 140 },
+        { field: 'Stations', type: 'numericColumn', minWidth: 100 }, { field: 'Mapped', minWidth: 100 },
+      ],
+      defaultColDef: { sortable: true, filter: true, resizable: true, flex: 1 },
+      onRowClicked: (e) => { if (e.data._i >= 0) mapApi.then((m) => m && m.show(e.data._i)); },
+      onFilterChanged: (e) => updateCount(e.api),
+      onFirstDataRendered: (e) => updateCount(e.api),
+    });
+    $('siteFilter').addEventListener('calciteInputInput', (e) => sitesApi.setGridOption('quickFilterText', e.target.value));
+    $('sitesCsv').addEventListener('click', () => sitesApi.exportDataAsCsv({
+      fileName: `${slugify(PROGRAM.name)}-sites.csv`, columnKeys: ['Site', 'Status', 'First observation', 'Last observation', 'Stations', 'Mapped'],
+    }));
+  }
+
+  renderCustom({ program: record, sites, grid, color });
+  postHeight();
+}
+
+window.addEventListener('load', init);
+window.addEventListener('resize', debounce(postHeight));
+new ResizeObserver(debounce(postHeight)).observe(document.body);
+</script>
+</body>
+</html>

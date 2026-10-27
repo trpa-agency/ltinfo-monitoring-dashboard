@@ -1,0 +1,3 @@
+{
+  "python.defaultInterpreterPath": "${env:LOCALAPPDATA}\\ESRI\\conda\\envs\\arcgispro-py3-plotly\\python.exe"
+}

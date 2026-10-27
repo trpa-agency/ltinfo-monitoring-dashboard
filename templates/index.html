@@ -1,0 +1,664 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Monitoring Dashboard</title>
+<!--
+  Generated from templates/index.html by scripts/scaffold_programs.py. Edit the template, not index.html.
+
+  Home page for the monitoring program dashboards, modeled on the Threshold Dashboard home.
+  Routes (hash based, so the page works from file:// and GitHub Pages alike):
+    #/                    category cards and the site map
+    #/category/{folder}   home with that category open
+    #/all                 every program in one table
+    #/about               about monitoring
+  Program links open the single-page dashboards at {category-folder}/{program}.html.
+
+  Data: a snapshot of programs and sites from the LT Info API, written into SNAPSHOT below
+  when the scaffold script runs. Category tile icons load from the Threshold Dashboard.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap">
+<!-- Calcite 2.13.2 matches the Calcite build bundled with ArcGIS SDK 4.31 (see trpa-monitoring-dashboard). -->
+<link rel="stylesheet" href="https://js.arcgis.com/calcite-components/2.13.2/calcite.css">
+<script type="module" src="https://js.arcgis.com/calcite-components/2.13.2/calcite.esm.js"></script>
+<!-- UMD bundles before the ArcGIS SDK, or Dojo's AMD loader claims them. -->
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community@33.3.2/dist/ag-grid-community.min.js"></script>
+<link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/light/main.css">
+<script src="https://js.arcgis.com/4.31/"></script>
+<style>
+  :root {
+    --ltinfo-navy: #2f3f56;
+    --monitoring-green: #789440;
+    --primary: #3e72b0;
+    --link: #337ab7;
+    --ink: #333333;
+    --ink-soft: #4b4b4b;
+    --muted: #656565;
+    --gray-50: #fafafa;
+    --gray-100: #efefef;
+    --gray-200: #dcdcdc;
+    --gray-300: #bdbdbd;
+    --page-bg: #f4f5f7;
+    --card-bg: #ffffff;
+    --radius: 6px;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .06), 0 4px 12px rgba(0, 0, 0, .05);
+    --shadow-hover: 0 2px 4px rgba(0, 0, 0, .08), 0 10px 24px rgba(0, 0, 0, .10);
+    --font: 'Lexend Deca', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --calcite-color-brand: #789440;
+    --calcite-color-brand-hover: #616049;
+    --calcite-color-brand-press: #616049;
+    --calcite-font-family: var(--font);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--font); font-size: 16px; line-height: 1.5; color: var(--ink-soft); background: var(--page-bg); }
+  a { color: var(--link); }
+  h1, h2, h3 { color: var(--ink); line-height: 1.25; margin: 0; }
+  button { font-family: inherit; }
+  :focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; }
+  main:focus { outline: none; }
+  /* Keep the footer at the bottom of the window on short pages. */
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+  main { flex: 1; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+  /* ---------- Shell ---------- */
+  .site-header { background: var(--ltinfo-navy); color: #fff; }
+  .header-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
+  .brand { display: flex; align-items: center; gap: 14px; color: #fff; text-decoration: none; }
+  .brand img { height: 34px; width: auto; }
+  .brand-divider { width: 1px; height: 28px; background: rgba(255, 255, 255, .35); }
+  .brand-name { font-size: 19px; font-weight: 500; }
+  .header-links { display: flex; gap: 20px; }
+  .header-links a { color: #dfe6ef; text-decoration: none; font-size: 14px; }
+  .header-links a:hover { color: #fff; }
+  .subnav { background: #263345; }
+  .subnav .wrap { display: flex; gap: 4px; overflow-x: auto; }
+  .subnav a { color: #c9d3df; text-decoration: none; font-size: 14px; padding: 11px 14px; border-bottom: 3px solid transparent; white-space: nowrap; }
+  .subnav a:hover { color: #fff; }
+  .subnav a.active { color: #fff; border-bottom-color: var(--monitoring-green); }
+  /* Footer copied from monitoring.laketahoeinfo.org (.home-footer). */
+  .site-footer { background: #fff; margin-top: 56px; font-size: 11px; border-top: 1px solid var(--gray-100); }
+  .site-footer__content { max-width: 900px; margin: 0 auto; padding: 3.125em 15px 2.5em; text-align: center; }
+  .site-footer__content p { line-height: 1.85714em; color: #a8a8a8; margin: .35714em auto; }
+  .site-footer__content a { color: #a8a8a8; text-decoration: none; transition: color 125ms linear; }
+  .site-footer__content a:hover { color: #6f6f6f; }
+  .site-footer__content img { max-height: 80px; width: auto; display: block; margin: 0 auto; }
+  .site-footer__credit { font-size: 12px; }
+  .site-footer__disclaimer { font-size: 11px; margin: 10px auto; line-height: 1.7em; max-width: 800px; }
+  .site-footer__copyright { font-size: 10px; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; color: #fff;
+    background: var(--ltinfo-navy) url('https://monitoring.laketahoeinfo.org/assets/header-images/monitoring.png') center / cover no-repeat; }
+  .hero::before { content: ''; position: absolute; inset: 0;
+    background: linear-gradient(90deg, rgba(20, 32, 48, .88) 0%, rgba(20, 32, 48, .65) 55%, rgba(20, 32, 48, .25) 100%); }
+  .hero .wrap { position: relative; padding-top: 44px; padding-bottom: 44px; }
+  .hero-eyebrow { font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: #cfe0a8; font-weight: 600; }
+  .hero h1 { color: #fff; font-size: clamp(28px, 4vw, 40px); font-weight: 600; margin: 6px 0 12px; }
+  .hero p { max-width: 720px; margin: 0; color: #e6ecf3; }
+  .hero-stats { display: flex; flex-wrap: wrap; gap: 12px 36px; margin-top: 26px; }
+  .hero-stat strong { display: block; font-size: 30px; font-weight: 600; color: #fff; line-height: 1.1; }
+  .hero-stat span { font-size: 13px; color: #cdd7e3; }
+
+  /* ---------- Home layout ---------- */
+  .home-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(360px, 42%); gap: 24px; align-items: start; margin-top: 28px; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+  .section-head h2 { font-size: 20px; font-weight: 600; }
+  .section-head p { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+  .section-head calcite-input { width: 260px; max-width: 100%; }
+  /* Two across, five rows, beside the map. */
+  .cat-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem; align-items: start; }
+
+  /* ---------- Category card ---------- */
+  .cat-card { --cat: #666; background: var(--card-bg); border-radius: .5rem; box-shadow: var(--shadow); overflow: hidden;
+    border-bottom: 4px solid var(--cat); transition: box-shadow .18s ease, transform .18s ease; }
+  .cat-card:hover, .cat-card.is-hot { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+  .cat-card.is-open { transform: none; }
+  /* equalizeCards() sets a shared min-height on .cat-head so every collapsed card is the same height. */
+  .cat-head { position: relative; display: flex; flex-direction: column; width: 100%; padding: 0; border: 0; background: none; text-align: left;
+    cursor: pointer; color: inherit; font: inherit; }
+  .cat-head:focus-visible { outline: 3px solid var(--cat); outline-offset: -3px; }
+  .cat-band { position: relative; height: 40px; background: var(--cat); }
+  .cat-icon { position: absolute; left: 16px; bottom: -22px; z-index: 1; width: 48px; height: 48px; border-radius: 50%;
+    background: var(--cat); display: grid; place-items: center; border: 3px solid #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, .2); }
+  .cat-icon img { width: 26px; height: 26px; object-fit: contain; }
+  .cat-card.on-light .cat-icon img { filter: brightness(0) opacity(.75); }   /* the white icon disappears on a light theme color */
+  .cat-count { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: rgba(255, 255, 255, .92);
+    color: var(--ink); font-size: 12px; font-weight: 600; padding: 2px 10px; border-radius: 999px; }
+  .cat-body { flex: 1; align-content: start; padding: 28px 16px 12px; display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; align-items: start; }
+  .cat-body h3 { font-size: 16px; font-weight: 600; }
+  .cat-body p { grid-column: 1; margin: 0; font-size: 13px; color: var(--muted); }
+  .cat-meta { grid-column: 1; margin-top: 6px; display: flex; gap: 14px; font-size: 12.5px; }
+  .cat-meta b { font-weight: 600; color: var(--ink); }
+  .chev { grid-column: 2; grid-row: 1 / span 3; align-self: center; width: 30px; height: 30px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--gray-100); color: var(--ink); transition: transform .2s ease, background .2s ease; }
+  .chev svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.2; }
+  .cat-card.is-open .chev { transform: rotate(180deg); background: var(--cat); color: #fff; }
+  .cat-card.is-open.on-light .chev { color: var(--ink); }
+
+  .cat-drop { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .25s ease; }
+  .cat-card.is-open .cat-drop { grid-template-rows: 1fr; }
+  .cat-drop > div { overflow: hidden; }
+  .prog-list { list-style: none; margin: 0; padding: 4px 8px 10px; border-top: 1px solid var(--gray-100); max-height: 360px; overflow-y: auto; }
+  .prog-list li + li { border-top: 1px solid var(--gray-100); }
+  .prog-link { display: flex; align-items: center; gap: 10px; padding: 10px 8px; border-radius: 4px; text-decoration: none; color: var(--ink); }
+  .prog-link:hover, .prog-link:focus-visible { background: color-mix(in srgb, var(--cat) 10%, white); outline: none; }
+  .prog-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--cat); flex: none; }
+  .prog-name { flex: 1; font-size: 14px; }
+  .prog-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+  .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; background: var(--gray-100); color: var(--ink-soft); white-space: nowrap; }
+  .tag.tag-dash { background: #e3edf8; color: #2b4f7a; }
+  .prog-arrow { color: var(--gray-300); font-size: 18px; line-height: 1; }
+  .prog-link:hover .prog-arrow { color: var(--ink); }
+  .none { padding: 12px 16px 16px; margin: 0; font-size: 13.5px; color: var(--muted); border-top: 1px solid var(--gray-100); }
+  .empty-note { padding: 12px 16px; font-size: 13.5px; color: var(--muted); }
+
+  /* ---------- Home map ---------- */
+  .map-panel { position: sticky; top: 16px; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .map-panel-head { padding: 12px 16px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 10px; }
+  .map-swatch { width: 12px; height: 12px; border-radius: 50%; background: var(--ink); flex: none; transition: background .2s; }
+  .map-panel-head h2 { font-size: 15px; font-weight: 600; }
+  .map-panel-head p { margin: 0; font-size: 12.5px; color: var(--muted); }
+  #homeMap { height: min(640px, calc(100vh - 150px)); min-height: 380px; background: #dfe7ee; position: relative; }
+  .map-foot { padding: 8px 16px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--gray-100); }
+  .map-legend { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 10px 16px; border-top: 1px solid var(--gray-100); }
+  .map-legend button { border: 0; background: none; padding: 2px 0; font-size: 12px; color: var(--ink-soft); cursor: pointer;
+    display: flex; align-items: center; gap: 6px; }
+  .map-legend button:hover { color: var(--ink); text-decoration: underline; }
+  .map-legend i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .map-tip { position: absolute; z-index: 5; pointer-events: none; background: #fff; border-radius: 4px; padding: 6px 9px; font-size: 12.5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .2); transform: translate(-50%, calc(-100% - 10px)); white-space: nowrap; }
+  .map-tip b { display: block; color: var(--ink); }
+
+  /* ---------- All programs / about ---------- */
+  .page-head { padding: 28px 0 8px; }
+  .page-head h1 { font-size: 26px; font-weight: 600; color: var(--primary); text-transform: uppercase; letter-spacing: .4px; }
+  .page-head p { margin: 6px 0 0; color: var(--muted); max-width: 760px; }
+  .panel { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); min-width: 0; }
+  .panel-head { padding: 12px 16px; border-bottom: 1px solid var(--gray-100); }
+  .panel-head h2 { font-size: 15px; font-weight: 600; }
+  .panel-body { padding: 14px 16px; font-size: 14.5px; }
+  .panel-body p { margin: 0 0 10px; }
+  .table-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding: 10px 16px; border-bottom: 1px solid var(--gray-100); }
+  .table-tools calcite-input { width: 260px; max-width: 100%; }
+  .tools-right { display: flex; align-items: center; gap: 12px; }
+  .note { font-size: 12px; color: var(--muted); }
+  .about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 16px; }
+
+  @media (max-width: 1080px) {
+    .home-layout { grid-template-columns: 1fr; }
+    .map-panel { position: relative; top: 0; }
+    #homeMap { height: 340px; min-height: 0; }
+  }
+  @media (max-width: 480px) { .cat-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 680px) {
+    .wrap { padding: 0 16px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .header-links { display: none; }
+    .brand-name { font-size: 16px; }
+    .brand img { height: 28px; }
+    .section-head calcite-input { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand" href="#/">
+      <img src="https://monitoring.laketahoeinfo.org/assets/logos/LT_INFO_LOGO2025-white.png" alt="Lake Tahoe Info">
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-name">Monitoring Dashboard</span>
+    </a>
+    <nav class="header-links" aria-label="Site">
+      <a href="https://laketahoeinfo.org/">Explore LT Info</a>
+      <a href="https://thresholds.laketahoeinfo.org/">Threshold Dashboard</a>
+    </nav>
+  </div>
+  <nav class="subnav" aria-label="Monitoring Dashboard">
+    <div class="wrap">
+      <a href="#/" data-nav="home">Monitoring Programs</a>
+      <a href="#/all" data-nav="all">All Programs</a>
+      <a href="#/about" data-nav="about">About Monitoring</a>
+    </div>
+  </nav>
+</header>
+
+<main id="app" tabindex="-1"></main>
+
+<footer class="site-footer">
+  <div class="site-footer__content">
+    <p class="site-footer__credit"><strong>Implementation &amp; Hosting by <a href="https://esassoc.com/services/technology/">Environmental Science Associates</a></strong></p>
+    <p class="site-footer__disclaimer">Portions of the Lake Tahoe Info platform may be freely modified and redistributed. The open source version of the EIP Project Tracker is available as <a href="https://projectfirma.com">ProjectFirma</a> on <a href="https://github.com/sitkatech/projectfirma">GitHub</a>. The source code for the Stormwater Tools is available upon request. Other components of LT Info are available via commercial licensing through the Tahoe Regional Planning Agency (<a href="mailto:trpa@trpa.gov">trpa@trpa.gov</a>).</p>
+    <img src="https://monitoring.laketahoeinfo.org/assets/img/trpa-logo-footer.png" alt="TRPA">
+    <p class="site-footer__copyright">Copyright (C) 2026 <a href="https://trpa.gov">Tahoe Regional Planning Agency</a></p>
+  </div>
+</footer>
+
+<script>
+/* ---------- Data: written by scripts/scaffold_programs.py ---------- */
+window.SNAPSHOT = {{SNAPSHOT_JSON}};
+
+/* ---------- Card copy: what each category monitors, keyed by category folder ---------- */
+const CATEGORY_COPY = {
+  'air-quality': { blurb: 'Particulate matter, ozone, carbon monoxide, and visibility.' },
+  'fisheries': { blurb: 'Stream habitat and fish populations.' },
+  'noise': { blurb: 'Sound levels along highways, in plan areas, and on the shorezone.' },
+  'recreation': { blurb: 'Recreation capacity, access, and visitor experience.' },
+  'scenic-resources': { blurb: 'Scenic quality along roadways, the shoreline, and public viewpoints.' },
+  'soil-conservation': { blurb: 'Stream environment zones and land coverage.' },
+  'transportation-and-sustainable-communities': { blurb: 'Traffic, transit, bicycle and pedestrian counts, safety, and travel behavior.' },
+  'vegetation-preservation': { blurb: 'Rare plants, subalpine conifers, and forest condition.' },
+  'water-quality': { blurb: 'Lake clarity, nearshore conditions, streams, and stormwater runoff.' },
+  'wildlife': { blurb: 'Special-interest species and their habitat.' },
+};
+
+(function () {
+  'use strict';
+
+  const SNAP = window.SNAPSHOT;
+  const THRESHOLDS_URL = 'https://thresholds.laketahoeinfo.org/';
+  const app = document.getElementById('app');
+
+  // Alphabetical, as on the Threshold Dashboard. Colors are the Threshold Dashboard category theme
+  // colors, used on the map so a category reads the same color on both sites.
+  const CATS = SNAP.categories.map((c) => ({ ...c, ...CATEGORY_COPY[c.folder], light: isLight(c.color), programs: [] }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  const CAT_BY_FOLDER = Object.fromEntries(CATS.map((c) => [c.folder, c]));
+  const PROGRAMS = SNAP.programs.map((p) => ({ ...p, cat: CAT_BY_FOLDER[p.folder] }));
+  PROGRAMS.forEach((p) => p.cat.programs.push(p));
+  CATS.forEach((c) => c.programs.sort((a, b) => (b.featured - a.featured) || a.name.localeCompare(b.name)));
+  const PROGRAM_BY_ID = Object.fromEntries(PROGRAMS.map((p) => [p.id, p]));
+
+  const GRID_THEME = agGrid.themeQuartz.withParams({
+    accentColor: '#3e72b0', fontFamily: 'Lexend Deca, sans-serif', fontSize: 13.5,
+    headerBackgroundColor: '#efefef', headerTextColor: '#3d3d3d', headerFontWeight: 600,
+    oddRowBackgroundColor: '#fafafa', borderColor: 'rgba(0,0,0,.12)', rowHeight: 42, headerHeight: 42, wrapperBorderRadius: 0,
+  });
+
+  let cleanups = [];
+  window.addEventListener('hashchange', route);
+  route();
+
+  /* ---------------------------------------------------------------- router */
+  function route() {
+    cleanups.forEach((fn) => fn());
+    cleanups = [];
+    const parts = location.hash.replace(/^#\/?/, '').split('/').filter(Boolean);
+    let nav = 'home';
+    if (parts[0] === 'all') { renderAll(); nav = 'all'; }
+    else if (parts[0] === 'about') { renderAbout(); nav = 'about'; }
+    else renderHome(parts[0] === 'category' ? parts[1] : null);
+    document.querySelectorAll('.subnav a').forEach((a) => a.classList.toggle('active', a.dataset.nav === nav));
+    window.scrollTo(0, 0);
+  }
+
+  /* ------------------------------------------------------------------ home */
+  function renderHome(openFolder) {
+    const mappedSites = PROGRAMS.reduce((n, p) => n + p.sites.length, 0);
+    const partners = new Set(PROGRAMS.flatMap((p) => p.partners).map((s) => s.trim()));
+
+    app.innerHTML = `
+      <section class="hero">
+        <div class="wrap">
+          <div class="hero-eyebrow">Lake Tahoe Info</div>
+          <h1>Monitoring Programs</h1>
+          <p>Monitoring tells us how the Lake Tahoe Region is changing and whether threshold standards are being met. Explore what is monitored, where, how, and by whom. Select a category to see its programs, or hover over one to see where it monitors.</p>
+          <div class="hero-stats">
+            ${heroStat(PROGRAMS.length, 'monitoring programs')}
+            ${heroStat(CATS.length, 'threshold categories')}
+            ${heroStat(mappedSites.toLocaleString(), 'mapped monitoring sites')}
+            ${heroStat(partners.size, 'partner organizations')}
+          </div>
+        </div>
+      </section>
+      <div class="wrap">
+        <div class="home-layout">
+          <section aria-labelledby="catTitle">
+            <div class="section-head">
+              <div>
+                <h2 id="catTitle">Threshold categories</h2>
+                <p>Select a category to list its monitoring programs.</p>
+              </div>
+              <calcite-input id="progSearch" type="search" icon="search" placeholder="Find a program or partner" clearable label="Find a program or partner"></calcite-input>
+            </div>
+            <div class="cat-grid" id="catGrid">${CATS.map(catCard).join('')}</div>
+            <p class="empty-note" id="noMatch" hidden>No programs match that search.</p>
+          </section>
+          <aside class="map-panel" aria-label="Monitoring site map">
+            <div class="map-panel-head">
+              <span class="map-swatch" id="mapSwatch"></span>
+              <div>
+                <h2 id="mapTitle">All monitoring sites</h2>
+                <p id="mapSub">Hover over a category to show its sites.</p>
+              </div>
+            </div>
+            <div id="homeMap" role="region" aria-label="Map of monitoring sites"><div class="map-tip" id="mapTip" hidden></div></div>
+            <div class="map-legend" id="mapLegend">
+              ${CATS.filter((c) => c.programs.some((p) => p.sites.length)).map((c) =>
+                `<button type="button" data-cat="${c.folder}"><i style="background:${c.color}"></i>${esc(c.name)}</button>`).join('')}
+            </div>
+            <div class="map-foot">Site locations from Lake Tahoe Info, captured ${fmtDate(SNAP.captured)}. Programs without fixed sites do not appear on the map.</div>
+          </aside>
+        </div>
+      </div>`;
+
+    const state = { pinned: null, hoverCat: null, hoverProg: null, search: null };
+    const mapReady = makeHomeMap();
+
+    function applyMap() {
+      let label, sub, color, where;
+      if (state.hoverProg) {
+        const p = state.hoverProg;
+        where = `pid = ${p.id}`; color = p.cat.color; label = p.name;
+        sub = p.sites.length ? `${p.sites.length} mapped ${plural(p.sites.length, 'site')}` : 'This program has no mapped sites.';
+      } else if (state.hoverCat || state.pinned) {
+        const c = CAT_BY_FOLDER[state.hoverCat || state.pinned];
+        const n = c.programs.reduce((k, p) => k + p.sites.length, 0);
+        const withSites = c.programs.filter((p) => p.sites.length).length;
+        where = `cat = '${c.folder}'`; color = c.color; label = c.name;
+        sub = !c.programs.length ? 'No monitoring programs in this category yet.'
+          : n ? `${n.toLocaleString()} mapped sites from ${withSites} of ${c.programs.length} programs`
+              : `No mapped sites. These ${plural(c.programs.length, 'program')} are not tied to fixed sites.`;
+      } else if (state.search) {
+        const ids = [...state.search].map((p) => p.id);
+        where = ids.length ? `pid IN (${ids.join(',')})` : '1=0'; color = '#333'; label = 'Search results';
+        const n = [...state.search].reduce((k, p) => k + p.sites.length, 0);
+        sub = `${n.toLocaleString()} mapped ${plural(n, 'site')} in matching programs`;
+      } else {
+        // Default: every site shown in gray until a category or program is hovered or selected.
+        where = '1=0'; color = '#9aa3ad'; label = 'All monitoring sites';
+        sub = 'Hover over a category to show its sites.';
+      }
+      mapReady.then((m) => m.highlight(where));
+      document.getElementById('mapTitle').textContent = label;
+      document.getElementById('mapSub').textContent = sub;
+      document.getElementById('mapSwatch').style.background = color;
+      const hot = state.hoverCat || (state.hoverProg && state.hoverProg.folder);
+      document.querySelectorAll('.cat-card').forEach((card) => card.classList.toggle('is-hot', hot === card.dataset.cat));
+    }
+
+    function setOpen(folder) {
+      state.pinned = folder;
+      document.querySelectorAll('.cat-card').forEach((card) => {
+        const open = card.dataset.cat === folder;
+        card.classList.toggle('is-open', open);
+        card.querySelector('.cat-head').setAttribute('aria-expanded', open);
+      });
+      history.replaceState(null, '', folder ? `#/category/${folder}` : '#/');
+      mapReady.then((m) => m.fitTo(folder ? `cat = '${folder}'` : null));
+      applyMap();
+    }
+
+    const grid = document.getElementById('catGrid');
+
+    // Give every collapsed card the height of the tallest one, whatever its text length.
+    function equalizeCards() {
+      const heads = [...grid.querySelectorAll('.cat-head')];
+      heads.forEach((h) => { h.style.minHeight = ''; });
+      const max = Math.max(...heads.map((h) => h.offsetHeight));
+      heads.forEach((h) => { h.style.minHeight = `${max}px`; });
+    }
+    equalizeCards();
+    document.fonts.ready.then(equalizeCards);
+    const onResize = debounce(equalizeCards, 150);
+    window.addEventListener('resize', onResize);
+    cleanups.push(() => window.removeEventListener('resize', onResize));
+
+    grid.querySelectorAll('.cat-card').forEach((card) => {
+      const key = card.dataset.cat;
+      const head = card.querySelector('.cat-head');
+      head.addEventListener('click', () => {
+        const opening = state.pinned !== key;
+        setOpen(opening ? key : null);
+        if (opening && window.matchMedia('(max-width: 1080px)').matches) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+      card.addEventListener('mouseenter', () => { state.hoverCat = key; applyMap(); });
+      card.addEventListener('mouseleave', () => { state.hoverCat = null; state.hoverProg = null; applyMap(); });
+      head.addEventListener('focus', () => { state.hoverCat = key; applyMap(); });
+      head.addEventListener('blur', () => { state.hoverCat = null; applyMap(); });
+      card.querySelectorAll('.prog-link').forEach((a) => {
+        const p = PROGRAM_BY_ID[+a.dataset.id];
+        const on = () => { state.hoverProg = p; applyMap(); };
+        const off = () => { state.hoverProg = null; applyMap(); };
+        a.addEventListener('mouseenter', on); a.addEventListener('focus', on);
+        a.addEventListener('mouseleave', off); a.addEventListener('blur', off);
+      });
+    });
+
+    document.querySelectorAll('#mapLegend button').forEach((b) => {
+      const key = b.dataset.cat;
+      b.addEventListener('mouseenter', () => { state.hoverCat = key; applyMap(); });
+      b.addEventListener('mouseleave', () => { state.hoverCat = null; applyMap(); });
+      b.addEventListener('click', () => {
+        setOpen(key);
+        grid.querySelector(`[data-cat="${key}"]`).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
+    });
+
+    document.getElementById('progSearch').addEventListener('calciteInputInput', (e) => {
+      const q = e.target.value.trim().toLowerCase();
+      state.search = q ? new Set(PROGRAMS.filter((p) => [p.name, p.shortName, ...p.partners].join(' ').toLowerCase().includes(q))) : null;
+      // Cards with matches open to show them; cards without matches hide.
+      let anyCard = false;
+      grid.querySelectorAll('.cat-card').forEach((card) => {
+        let n = 0;
+        card.querySelectorAll('.prog-list li').forEach((li) => {
+          const match = !state.search || state.search.has(PROGRAM_BY_ID[+li.dataset.id]);
+          li.hidden = !match;
+          if (match) n++;
+        });
+        card.hidden = !!state.search && n === 0;
+        card.classList.toggle('is-open', state.search ? n > 0 : card.dataset.cat === state.pinned);
+        anyCard = anyCard || !card.hidden;
+      });
+      document.getElementById('noMatch').hidden = anyCard;
+      applyMap();
+    });
+
+    const openCat = openFolder && CAT_BY_FOLDER[openFolder];
+    if (openCat) setOpen(openCat.folder); else applyMap();
+  }
+
+  function progList(programs) {
+    return `<ul class="prog-list">${programs.map((p) => `
+      <li data-id="${p.id}">
+        <a class="prog-link" href="${p.href}" data-id="${p.id}" style="--cat:${p.cat.color}">
+          <span class="prog-dot"></span>
+          <span class="prog-name">${esc(p.name)}</span>
+          <span class="prog-tags">
+            ${p.hasDashboard ? '<span class="tag tag-dash">Dashboard</span>' : ''}
+            ${p.sites.length ? `<span class="tag">${p.sites.length} ${plural(p.sites.length, 'site')}</span>` : ''}
+          </span>
+          <span class="prog-arrow" aria-hidden="true">&rsaquo;</span>
+        </a>
+      </li>`).join('')}</ul>`;
+  }
+
+  // One client-side FeatureLayer holds every site; hover states use a feature effect, not a redraw.
+  function makeHomeMap() {
+    return new Promise((resolve) => {
+      require(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/Graphic', 'esri/widgets/Home',
+        'esri/widgets/BasemapToggle'], (Map, MapView, FeatureLayer, Graphic, Home, BasemapToggle) => {
+        let oid = 0;
+        const source = PROGRAMS.flatMap((p) => p.sites.map(([lat, lon, name]) => new Graphic({
+          geometry: { type: 'point', longitude: lon, latitude: lat },
+          attributes: { oid: ++oid, pid: p.id, cat: p.folder, site: name || 'Site', program: p.shortName },
+        })));
+        const marker = (color) => ({ type: 'simple-marker', size: 7, color, outline: { color: '#ffffff', width: 0.75 } });
+        // Sites outside the filter render gray; '1=0' grays every site.
+        const grayOutside = (where) => ({ filter: { where }, excludedEffect: 'grayscale(100%) opacity(40%)' });
+        const layer = new FeatureLayer({
+          title: 'Monitoring sites', objectIdField: 'oid', geometryType: 'point', spatialReference: { wkid: 4326 }, source,
+          fields: [{ name: 'oid', type: 'oid' }, { name: 'pid', type: 'integer' }, { name: 'cat', type: 'string' },
+            { name: 'site', type: 'string' }, { name: 'program', type: 'string' }],
+          outFields: ['*'],
+          renderer: { type: 'unique-value', field: 'cat', defaultSymbol: marker('#666666'),
+            uniqueValueInfos: CATS.map((c) => ({ value: c.folder, label: c.name, symbol: marker(c.color) })) },
+          featureEffect: grayOutside('1=0'),
+        });
+        const view = new MapView({
+          container: 'homeMap', map: new Map({ basemap: 'gray-vector', layers: [layer] }),
+          center: [-120.04, 39.09], zoom: 10, constraints: { snapToZoom: false }, popupEnabled: false,
+        });
+        view.on('mouse-wheel', (e) => e.stopPropagation());
+        view.ui.add(new Home({ view }), 'top-left');
+        view.ui.add(new BasemapToggle({ view, nextBasemap: 'hybrid' }), 'bottom-right');
+
+        const tip = document.getElementById('mapTip');
+        let hoverTimer;
+        view.on('pointer-move', (e) => {
+          clearTimeout(hoverTimer);
+          hoverTimer = setTimeout(() => view.hitTest(e, { include: layer }).then((r) => {
+            const g = r.results[0] && r.results[0].graphic;
+            view.container.style.cursor = g ? 'pointer' : '';
+            if (!g) { tip.hidden = true; return; }
+            tip.innerHTML = `<b>${esc(g.attributes.site)}</b>${esc(g.attributes.program)}`;
+            tip.style.left = `${e.x}px`; tip.style.top = `${e.y}px`; tip.hidden = false;
+          }), 30);
+        });
+        view.on('pointer-leave', () => { tip.hidden = true; });
+        view.on('click', (e) => view.hitTest(e, { include: layer }).then((r) => {
+          const g = r.results[0] && r.results[0].graphic;
+          if (g) location.href = PROGRAM_BY_ID[g.attributes.pid].href;
+        }));
+        cleanups.push(() => view.destroy());
+
+        layer.when(() => layer.queryExtent()).then((r) => { if (r.count) view.goTo(r.extent.expand(1.15), { animate: false }); });
+        resolve({
+          highlight(where) { layer.featureEffect = grayOutside(where); },
+          fitTo(where) {
+            layer.queryExtent(where ? { where } : {}).then((r) => {
+              if (r.count) view.goTo(r.count === 1 ? { target: r.extent.center, zoom: 12 } : r.extent.expand(1.3), { duration: 600 });
+            });
+          },
+        });
+      });
+    });
+  }
+
+  function heroStat(value, label) { return `<div class="hero-stat"><strong>${value}</strong><span>${label}</span></div>`; }
+
+  // Card in the category's threshold color with its Threshold Dashboard icon; selecting it drops down its program list.
+  function catCard(c) {
+    const n = c.programs.length;
+    const sites = c.programs.reduce((k, p) => k + p.sites.length, 0);
+    const dashes = c.programs.filter((p) => p.hasDashboard).length;
+    return `
+      <article class="cat-card${c.light ? ' on-light' : ''}" data-cat="${c.folder}" style="--cat:${c.color}">
+        <button type="button" class="cat-head" aria-expanded="false" aria-controls="drop-${c.folder}">
+          <div class="cat-band">
+            <span class="cat-icon"><img src="${THRESHOLDS_URL}assets/img/threshold-icons/${c.apiName}-white-icon.png" alt=""></span>
+            <span class="cat-count">${n} ${plural(n, 'program')}</span>
+          </div>
+          <div class="cat-body">
+            <h3>${esc(c.name)}</h3>
+            <p>${esc(c.blurb)}</p>
+            <div class="cat-meta">
+              <span><b>${sites.toLocaleString()}</b> mapped sites</span>
+              ${dashes ? `<span><b>${dashes}</b> ${plural(dashes, 'dashboard')}</span>` : ''}
+            </div>
+            <span class="chev" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span>
+          </div>
+        </button>
+        <div class="cat-drop" id="drop-${c.folder}"><div>
+          ${n ? progList(c.programs) : '<p class="none">No monitoring programs are assigned to this category yet.</p>'}
+        </div></div>
+      </article>`;
+  }
+
+  // True when white text or a white icon would not read on this color.
+  function isLight(hex) {
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255)
+      .map((v) => (v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4));
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b > 0.4;
+  }
+
+  /* ------------------------------------------------------------ all / about */
+  function renderAll() {
+    app.innerHTML = `
+      <div class="wrap">
+        <div class="page-head">
+          <h1>All monitoring programs</h1>
+          <p>Every program on the Monitoring Dashboard. Select a row to open the program.</p>
+        </div>
+        <section class="panel" style="margin-top:16px">
+          <div class="table-tools">
+            <calcite-input id="allFilter" type="search" icon="search" placeholder="Filter programs" scale="s" clearable label="Filter programs"></calcite-input>
+            <span class="tools-right"><span class="note" id="allCount"></span>
+              <calcite-button scale="s" appearance="outline" kind="neutral" icon-start="download" id="allCsv">CSV</calcite-button></span>
+          </div>
+          <div id="allGrid"></div>
+        </section>
+      </div>`;
+    const rows = PROGRAMS.map((p) => ({
+      _p: p, Program: p.name, Category: p.cat.name, 'Program type': p.type || '', Sites: p.sites.length,
+      Partners: p.partners.length, Dashboard: p.hasDashboard ? 'Yes' : '',
+    }));
+    const count = (api) => { document.getElementById('allCount').textContent = `Showing ${api.getDisplayedRowCount()} of ${rows.length}`; };
+    // Short reference list (one row per program), so no pagination.
+    const api = agGrid.createGrid(document.getElementById('allGrid'), {
+      theme: GRID_THEME, rowData: rows, domLayout: 'autoHeight',
+      columnDefs: [
+        { field: 'Program', flex: 2, minWidth: 220 },
+        { field: 'Category', minWidth: 200, sort: 'asc',
+          cellRenderer: (p) => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${p.data._p.cat.color}"></span>${esc(p.value)}` },
+        { field: 'Program type', minWidth: 220 }, { field: 'Sites', type: 'numericColumn', minWidth: 90 },
+        { field: 'Partners', type: 'numericColumn', minWidth: 100 }, { field: 'Dashboard', minWidth: 110 },
+      ],
+      defaultColDef: { sortable: true, filter: true, resizable: true, flex: 1 },
+      rowStyle: { cursor: 'pointer' },
+      onRowClicked: (e) => { location.href = e.data._p.href; },
+      onFilterChanged: (e) => count(e.api),
+      onFirstDataRendered: (e) => count(e.api),
+    });
+    cleanups.push(() => api.destroy());
+    document.getElementById('allFilter').addEventListener('calciteInputInput', (e) => api.setGridOption('quickFilterText', e.target.value));
+    document.getElementById('allCsv').addEventListener('click', () => api.exportDataAsCsv({
+      fileName: 'monitoring-programs.csv', columnKeys: ['Program', 'Category', 'Program type', 'Sites', 'Partners', 'Dashboard'],
+    }));
+  }
+
+  function renderAbout() {
+    app.innerHTML = `
+      <div class="wrap">
+        <div class="page-head">
+          <h1>About monitoring</h1>
+          <p>Monitoring is how TRPA and its partners measure the condition of the Lake Tahoe Region and track progress toward threshold standards.</p>
+        </div>
+        <div class="about-grid">
+          <section class="panel">
+            <div class="panel-head"><h2>What this dashboard holds</h2></div>
+            <div class="panel-body">
+              <p>Each monitoring program page describes what is measured, how and where it is measured, who does the work, and what the record shows so far.</p>
+              <p>Programs are grouped by the same 10 categories as the Threshold Dashboard. Programs with their own dashboard show it on the program page.</p>
+            </div>
+          </section>
+          <section class="panel">
+            <div class="panel-head"><h2>How it connects</h2></div>
+            <div class="panel-body">
+              <p>Monitoring data feed the <a href="${THRESHOLDS_URL}" target="_blank" rel="noopener">Threshold Dashboard</a>, where each indicator is evaluated against its standard every four years.</p>
+              <p>Program data are also published on Tahoe Open Data and in partner reports.</p>
+            </div>
+          </section>
+        </div>
+      </div>`;
+  }
+
+  /* --------------------------------------------------------------- helpers */
+  function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
+  function plural(n, word) { return n === 1 ? word : `${word}s`; }
+  function esc(s) { return String(s ?? '').replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch])); }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    const d = new Date(`${iso}T12:00:00`);
+    const months = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+    return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  }
+})();
+</script>
+</body>
+</html>

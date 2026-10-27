@@ -1,0 +1,74 @@
+{
+  "_comment": "Source of truth for folders and pages. Categories are the 10 Threshold Dashboard categories (internalapi /threshold-categories). Programs are the LT Info monitoring programs that carry a category (internalapi /monitoring-programs, captured Oct. 27, 2026). Run scripts/scaffold_programs.py after editing.",
+  "categories": [
+    {
+      "thresholdCategoryId": 1, "name": "Air Quality", "folder": "air-quality", "themeColor": "#9CC3EA",
+      "programs": [
+        { "id": 67, "name": "Air Quality", "file": "air-quality.html", "featured": true },
+        { "id": 26, "name": "Carbon Monoxide Monitoring", "file": "carbon-monoxide.html", "featured": false }
+      ]
+    },
+    {
+      "thresholdCategoryId": 2, "name": "Fisheries", "folder": "fisheries", "themeColor": "#B94F41",
+      "programs": [
+        { "id": 32, "name": "Stream Habitat Condition Monitoring", "file": "stream-habitat-condition.html", "featured": false }
+      ]
+    },
+    {
+      "thresholdCategoryId": 3, "name": "Recreation", "folder": "recreation", "themeColor": "#F78814",
+      "programs": []
+    },
+    {
+      "thresholdCategoryId": 4, "name": "Scenic Resources", "folder": "scenic-resources", "themeColor": "#B0A843",
+      "programs": []
+    },
+    {
+      "thresholdCategoryId": 5, "name": "Soil Conservation", "folder": "soil-conservation", "themeColor": "#9A5710",
+      "programs": [
+        { "id": 49, "name": "SEZ Basin-wide Monitoring and Assessment Plan", "file": "sez-monitoring.html", "featured": false }
+      ]
+    },
+    {
+      "thresholdCategoryId": 6, "name": "Vegetation Preservation", "folder": "vegetation-preservation", "themeColor": "#415414",
+      "programs": [
+        { "id": 39, "name": "Tahoe Yellow Cress Monitoring", "file": "tahoe-yellow-cress.html", "featured": true },
+        { "id": 83, "name": "Subalpine Conifer", "file": "subalpine-conifer.html", "featured": false }
+      ]
+    },
+    {
+      "thresholdCategoryId": 7, "name": "Water Quality", "folder": "water-quality", "themeColor": "#0F3F6F",
+      "programs": [
+        { "id": 82, "name": "Harmful Algae Bloom (HAB) Monitoring", "file": "harmful-algae-bloom.html", "featured": true },
+        { "id": 76, "name": "Nearshore Human Health, E. coli Monitoring", "file": "nearshore-human-health.html", "featured": true },
+        { "id": 66, "name": "Pelagic Water Quality (Clarity)", "file": "pelagic-water-quality.html", "featured": true },
+        { "id": 13, "name": "Periphyton", "file": "periphyton.html", "featured": true },
+        { "id": 16, "name": "Regional Stormwater Monitoring", "file": "regional-stormwater.html", "featured": true },
+        { "id": 63, "name": "Streams", "file": "streams.html", "featured": true }
+      ]
+    },
+    {
+      "thresholdCategoryId": 8, "name": "Wildlife", "folder": "wildlife", "themeColor": "#9E2220",
+      "programs": []
+    },
+    {
+      "thresholdCategoryId": 9, "name": "Noise", "folder": "noise", "themeColor": "#675EA1",
+      "programs": [
+        { "id": 65, "name": "Noise - Highways", "file": "noise-highways.html", "featured": true },
+        { "id": 61, "name": "Noise - Plan Areas", "file": "noise-plan-areas.html", "featured": true },
+        { "id": 62, "name": "Noise - Shorezone", "file": "noise-shorezone.html", "featured": true }
+      ]
+    },
+    {
+      "thresholdCategoryId": 10, "name": "Transportation and Sustainable Communities", "folder": "transportation-and-sustainable-communities", "themeColor": "#DB5B00",
+      "programs": [
+        { "id": 33, "name": "Bicycle and Pedestrian", "file": "bicycle-and-pedestrian.html", "featured": true },
+        { "id": 77, "name": "Congestion-Travel Time", "file": "congestion-travel-time.html", "featured": true },
+        { "id": 34, "name": "Safety", "file": "safety.html", "featured": true },
+        { "id": 68, "name": "Socio-Economic", "file": "socio-economic.html", "featured": true },
+        { "id": 64, "name": "Traffic Volumes", "file": "traffic-volumes.html", "featured": true },
+        { "id": 36, "name": "Transit", "file": "transit.html", "featured": true },
+        { "id": 69, "name": "Travel Behavior", "file": "travel-behavior.html", "featured": true }
+      ]
+    }
+  ]
+}
