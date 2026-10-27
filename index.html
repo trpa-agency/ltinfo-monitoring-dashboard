@@ -346,7 +346,7 @@ const CATEGORY_COPY = {
         </div>
       </div>`;
 
-    const state = { pinned: null, hoverCat: null, hoverProg: null, search: null };
+    const state = { pinned: null, hoverCat: null, hoverProg: null, search: null, touched: false };
     const mapReady = makeHomeMap();
 
     function applyMap() {
@@ -369,10 +369,12 @@ const CATEGORY_COPY = {
         const n = [...state.search].reduce((k, p) => k + p.sites.length, 0);
         sub = `${n.toLocaleString()} mapped ${plural(n, 'site')} in matching programs`;
       } else {
-        // Default: every site shown in gray until a category or program is hovered or selected.
-        where = '1=0'; color = '#9aa3ad'; label = 'All monitoring sites';
+        // Default: every site in its category color on arrival; after the first hover, select, or search,
+        // the resting state is every site in gray.
+        where = state.touched ? '1=0' : null; color = state.touched ? '#9aa3ad' : '#333'; label = 'All monitoring sites';
         sub = 'Hover over a category to show its sites.';
       }
+      if (state.hoverProg || state.hoverCat || state.pinned || state.search) state.touched = true;
       mapReady.then((m) => m.highlight(where));
       document.getElementById('mapTitle').textContent = label;
       document.getElementById('mapSub').textContent = sub;
@@ -498,7 +500,6 @@ const CATEGORY_COPY = {
           outFields: ['*'],
           renderer: { type: 'unique-value', field: 'cat', defaultSymbol: marker('#666666'),
             uniqueValueInfos: CATS.map((c) => ({ value: c.folder, label: c.name, symbol: marker(c.color) })) },
-          featureEffect: grayOutside('1=0'),
         });
         const view = new MapView({
           container: 'homeMap', map: new Map({ basemap: 'gray-vector', layers: [layer] }),
@@ -529,7 +530,7 @@ const CATEGORY_COPY = {
 
         layer.when(() => layer.queryExtent()).then((r) => { if (r.count) view.goTo(r.extent.expand(1.15), { animate: false }); });
         resolve({
-          highlight(where) { layer.featureEffect = grayOutside(where); },
+          highlight(where) { layer.featureEffect = where ? grayOutside(where) : null; },
           fitTo(where) {
             layer.queryExtent(where ? { where } : {}).then((r) => {
               if (r.count) view.goTo(r.count === 1 ? { target: r.extent.center, zoom: 12 } : r.extent.expand(1.3), { duration: 600 });

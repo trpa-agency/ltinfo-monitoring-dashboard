@@ -11,7 +11,7 @@
 
 Modeled on the Threshold Dashboard home. It has hash routes, so it works from `file://` and GitHub Pages:
 
-- `#/` shows the 10 category cards, in two columns of five rows beside a site map. Each card uses its category's Threshold Dashboard color and icon, every collapsed card is the same height, and selecting one drops down its programs. Map sites show gray until you hover or select a category or program, which colors its sites. A search box finds programs by name or partner.
+- `#/` shows the 10 category cards, in two columns of five rows beside a site map. Each card uses its category's Threshold Dashboard color and icon, every collapsed card is the same height, and selecting one drops down its programs. Map sites start in their category colors. After the first hover, select, or search, sites rest in gray, and hovering or selecting a category or program colors just its sites. A search box finds programs by name or partner.
 - `#/category/{folder}` opens the home page with that category selected.
 - `#/all` lists every program in a table.
 - `#/about` describes the dashboard.
