@@ -4,4 +4,4 @@ Threshold category 5. One single-page dashboard per monitoring program, built fr
 
 | Program | LT Info ID | Template | Page |
 |---|---|---|---|
-| SEZ Basin-wide Monitoring and Assessment Plan | 49 | charts | [sez-monitoring.html](sez-monitoring.html) |
+| SEZ Basin-wide Monitoring and Assessment Plan | 49 | map | [sez-monitoring.html](sez-monitoring.html) |

@@ -187,6 +187,40 @@
   .table-tools calcite-input { width: 260px; max-width: 100%; }
   .tools-right { display: flex; align-items: center; gap: 12px; }
   .note { font-size: 12px; color: var(--muted); }
+
+  /* All Programs: programs grouped by category, one card each */
+  .all-tools { display: flex; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin: 18px 0 6px; }
+  .all-tools calcite-input { width: 280px; max-width: 100%; }
+  .all-tools .tools-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .cat-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cat-chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--gray-200);
+    background: #fff; font: inherit; font-size: 12.5px; color: var(--ink); cursor: pointer; }
+  .cat-chip i { width: 9px; height: 9px; border-radius: 50%; background: var(--cat); }
+  .cat-chip[aria-pressed="true"] { background: var(--cat); border-color: var(--cat); color: #fff; font-weight: 600; }
+  .cat-chip.on-light[aria-pressed="true"] { color: var(--ink); }
+  .cat-chip[aria-pressed="true"] i { background: #fff; }
+  .all-group { margin-top: 26px; }
+  .all-group-head { display: flex; align-items: center; gap: 12px; padding-bottom: 10px; border-bottom: 3px solid var(--cat); margin-bottom: 14px; }
+  .all-group-head .gicon { width: 34px; height: 34px; border-radius: 50%; background: var(--cat); display: grid; place-items: center; flex: none; }
+  .all-group-head .gicon img { width: 20px; height: 20px; }
+  .all-group.on-light .gicon img { filter: brightness(0) opacity(.75); }
+  .all-group-head h2 { font-size: 18px; font-weight: 600; margin: 0; }
+  .all-group-head span { font-size: 13px; color: var(--muted); }
+  .prog-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+  .prog-card { display: flex; flex-direction: column; background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow);
+    overflow: hidden; text-decoration: none; color: var(--ink); border-top: 3px solid var(--cat); transition: transform .15s ease, box-shadow .15s ease; }
+  .prog-card:hover, .prog-card:focus-visible { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0, 0, 0, .12); }
+  .prog-card .thumb { height: 110px; background: var(--cat) center / cover no-repeat; position: relative; }
+  .prog-card .thumb.no-photo { display: grid; place-items: center; background: color-mix(in srgb, var(--cat) 18%, white); }
+  .prog-card .thumb.no-photo img { width: 40px; height: 40px; filter: brightness(0) opacity(.25); }
+  .prog-card .thumb .tag { position: absolute; top: 8px; right: 8px; }
+  .prog-card .body { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .prog-card h3 { font-size: 15px; font-weight: 600; margin: 0; line-height: 1.3; }
+  .prog-card .partners { font-size: 12.5px; color: var(--muted); margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .prog-card .stats { display: flex; gap: 18px; margin-top: auto; padding-top: 8px; border-top: 1px solid var(--gray-100); }
+  .prog-card .stats div { font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); }
+  .prog-card .stats b { display: block; font-size: 17px; color: var(--ink); letter-spacing: 0; text-transform: none; }
+  .all-empty { padding: 40px 0; text-align: center; color: var(--muted); }
   .about-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 16px; }
 
   @media (max-width: 1080px) {
@@ -261,6 +295,7 @@ const CATEGORY_COPY = {
 
   const SNAP = window.SNAPSHOT;
   const THRESHOLDS_URL = 'https://thresholds.laketahoeinfo.org/';
+  const SERVICE = 'https://maps.trpa.org/server/rest/services/LTInfo_Monitoring/MapServer';
   const app = document.getElementById('app');
 
   // Alphabetical, as on the Threshold Dashboard. Colors are the Threshold Dashboard category theme
@@ -269,6 +304,8 @@ const CATEGORY_COPY = {
     .sort((a, b) => a.name.localeCompare(b.name));
   const CAT_BY_FOLDER = Object.fromEntries(CATS.map((c) => [c.folder, c]));
   const PROGRAMS = SNAP.programs.map((p) => ({ ...p, cat: CAT_BY_FOLDER[p.folder] }));
+  // Mapped sites for a program: its points plus any mapped areas (SEZ assessment units count as sites).
+  const siteCount = (p) => p.sites.length + (p.areas ? p.areas.count : 0);
   PROGRAMS.forEach((p) => p.cat.programs.push(p));
   CATS.forEach((c) => c.programs.sort((a, b) => (b.featured - a.featured) || a.name.localeCompare(b.name)));
   const PROGRAM_BY_ID = Object.fromEntries(PROGRAMS.map((p) => [p.id, p]));
@@ -298,7 +335,7 @@ const CATEGORY_COPY = {
 
   /* ------------------------------------------------------------------ home */
   function renderHome(openFolder) {
-    const mappedSites = PROGRAMS.reduce((n, p) => n + p.sites.length, 0);
+    const mappedSites = PROGRAMS.reduce((n, p) => n + siteCount(p), 0);
     const partners = new Set(PROGRAMS.flatMap((p) => p.partners).map((s) => s.trim()));
 
     app.innerHTML = `
@@ -338,7 +375,7 @@ const CATEGORY_COPY = {
             </div>
             <div id="homeMap" role="region" aria-label="Map of monitoring sites"><div class="map-tip" id="mapTip" hidden></div></div>
             <div class="map-legend" id="mapLegend">
-              ${CATS.filter((c) => c.programs.some((p) => p.sites.length)).map((c) =>
+              ${CATS.filter((c) => c.programs.some((p) => siteCount(p))).map((c) =>
                 `<button type="button" data-cat="${c.folder}"><i style="background:${c.color}"></i>${esc(c.name)}</button>`).join('')}
             </div>
             <div class="map-foot">Site locations from Lake Tahoe Info, captured ${fmtDate(SNAP.captured)}. Programs without fixed sites do not appear on the map.</div>
@@ -350,37 +387,48 @@ const CATEGORY_COPY = {
     const mapReady = makeHomeMap();
 
     function applyMap() {
-      let label, sub, color, where;
-      if (state.hoverProg) {
-        const p = state.hoverProg;
-        where = `pid = ${p.id}`; color = p.cat.color; label = p.name;
-        sub = p.sites.length ? `${p.sites.length} mapped ${plural(p.sites.length, 'site')}` : 'This program has no mapped sites.';
-      } else if (state.hoverCat || state.pinned) {
-        const c = CAT_BY_FOLDER[state.hoverCat || state.pinned];
-        const n = c.programs.reduce((k, p) => k + p.sites.length, 0);
-        const withSites = c.programs.filter((p) => p.sites.length).length;
+      let label, sub, color, where, pids;
+      // A selected category holds the map. Hovering one of its own programs shows that program while hovered.
+      const prog = state.hoverProg && (!state.pinned || state.hoverProg.folder === state.pinned) ? state.hoverProg : null;
+      const catKey = state.pinned || state.hoverCat;
+      if (prog) {
+        const p = prog;
+        where = `pid = ${p.id}`; pids = [p.id]; color = p.cat.color; label = p.name;
+        sub = siteCount(p) ? `${siteCount(p).toLocaleString()} mapped ${plural(siteCount(p), 'site')}` : 'This program has no mapped sites.';
+      } else if (catKey) {
+        const c = CAT_BY_FOLDER[catKey];
+        pids = c.programs.map((p) => p.id);
+        const n = c.programs.reduce((k, p) => k + siteCount(p), 0);
+        const withSites = c.programs.filter((p) => siteCount(p)).length;
         where = `cat = '${c.folder}'`; color = c.color; label = c.name;
         sub = !c.programs.length ? 'No monitoring programs in this category yet.'
           : n ? `${n.toLocaleString()} mapped sites from ${withSites} of ${c.programs.length} programs`
               : `No mapped sites. These ${plural(c.programs.length, 'program')} are not tied to fixed sites.`;
       } else if (state.search) {
         const ids = [...state.search].map((p) => p.id);
-        where = ids.length ? `pid IN (${ids.join(',')})` : '1=0'; color = '#333'; label = 'Search results';
-        const n = [...state.search].reduce((k, p) => k + p.sites.length, 0);
+        where = ids.length ? `pid IN (${ids.join(',')})` : '1=0'; pids = ids; color = '#333'; label = 'Search results';
+        const n = [...state.search].reduce((k, p) => k + siteCount(p), 0);
         sub = `${n.toLocaleString()} mapped ${plural(n, 'site')} in matching programs`;
       } else {
         // Default: every site in its category color on arrival; after the first hover, select, or search,
         // the resting state is every site in gray.
-        where = state.touched ? '1=0' : null; color = state.touched ? '#9aa3ad' : '#333'; label = 'All monitoring sites';
+        where = state.touched ? '1=0' : null; pids = state.touched ? [] : null; color = state.touched ? '#9aa3ad' : '#333'; label = 'All monitoring sites';
         sub = 'Hover over a category to show its sites.';
       }
       if (state.hoverProg || state.hoverCat || state.pinned || state.search) state.touched = true;
-      mapReady.then((m) => m.highlight(where));
+      mapReady.then((m) => m.highlight(where, pids));
       document.getElementById('mapTitle').textContent = label;
       document.getElementById('mapSub').textContent = sub;
       document.getElementById('mapSwatch').style.background = color;
-      const hot = state.hoverCat || (state.hoverProg && state.hoverProg.folder);
+      const hot = catKey || (prog && prog.folder);
       document.querySelectorAll('.cat-card').forEach((card) => card.classList.toggle('is-hot', hot === card.dataset.cat));
+    }
+
+    // Hovering a category or program colors its sites, and they stay colored after the pointer leaves,
+    // until something else is hovered or a search starts. There is no gray gap between hovers.
+    function hover(cat, prog) {
+      if (state.hoverCat === cat && state.hoverProg === prog) return;
+      state.hoverCat = cat; state.hoverProg = prog; applyMap();
     }
 
     function setOpen(folder) {
@@ -391,7 +439,7 @@ const CATEGORY_COPY = {
         card.querySelector('.cat-head').setAttribute('aria-expanded', open);
       });
       history.replaceState(null, '', folder ? `#/category/${folder}` : '#/');
-      mapReady.then((m) => m.fitTo(folder ? `cat = '${folder}'` : null));
+      mapReady.then((m) => m.fitTo(folder ? `cat = '${folder}'` : null, folder ? CAT_BY_FOLDER[folder].programs.map((p) => p.id) : null));
       applyMap();
     }
 
@@ -418,23 +466,22 @@ const CATEGORY_COPY = {
         setOpen(opening ? key : null);
         if (opening && window.matchMedia('(max-width: 1080px)').matches) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
-      card.addEventListener('mouseenter', () => { state.hoverCat = key; applyMap(); });
-      card.addEventListener('mouseleave', () => { state.hoverCat = null; state.hoverProg = null; applyMap(); });
-      head.addEventListener('focus', () => { state.hoverCat = key; applyMap(); });
-      head.addEventListener('blur', () => { state.hoverCat = null; applyMap(); });
+      // Entering the card or its header shows the category; moving between program links keeps the last program.
+      card.addEventListener('mouseenter', () => hover(key, null));
+      head.addEventListener('mouseenter', () => hover(key, null));
+      head.addEventListener('focus', () => hover(key, null));
       card.querySelectorAll('.prog-link').forEach((a) => {
         const p = PROGRAM_BY_ID[+a.dataset.id];
-        const on = () => { state.hoverProg = p; applyMap(); };
-        const off = () => { state.hoverProg = null; applyMap(); };
-        a.addEventListener('mouseenter', on); a.addEventListener('focus', on);
-        a.addEventListener('mouseleave', off); a.addEventListener('blur', off);
+        a.addEventListener('mouseenter', () => hover(key, p));
+        a.addEventListener('focus', () => hover(key, p));
+        // In a selected category, leaving a program goes back to the whole category.
+        a.addEventListener('mouseleave', () => { if (state.pinned) hover(key, null); });
       });
     });
 
     document.querySelectorAll('#mapLegend button').forEach((b) => {
       const key = b.dataset.cat;
-      b.addEventListener('mouseenter', () => { state.hoverCat = key; applyMap(); });
-      b.addEventListener('mouseleave', () => { state.hoverCat = null; applyMap(); });
+      b.addEventListener('mouseenter', () => hover(key, null));
       b.addEventListener('click', () => {
         setOpen(key);
         grid.querySelector(`[data-cat="${key}"]`).scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -443,6 +490,7 @@ const CATEGORY_COPY = {
 
     document.getElementById('progSearch').addEventListener('calciteInputInput', (e) => {
       const q = e.target.value.trim().toLowerCase();
+      state.hoverCat = null; state.hoverProg = null;
       state.search = q ? new Set(PROGRAMS.filter((p) => [p.name, p.shortName, ...p.partners].join(' ').toLowerCase().includes(q))) : null;
       // Cards with matches open to show them; cards without matches hide.
       let anyCard = false;
@@ -461,6 +509,17 @@ const CATEGORY_COPY = {
       applyMap();
     });
 
+    // A click on blank space closes the open category and returns the map to every site in its category color,
+    // as on arrival. Clicks on cards, the map, the legend, the search box, or any link or button don't count.
+    const onBlankClick = (e) => {
+      if (e.target.closest('.cat-card, #homeMap, #mapLegend, #progSearch, a, button, input, calcite-input')) return;
+      if (!state.hoverCat && !state.hoverProg && !state.pinned && !state.touched) return;
+      state.hoverCat = null; state.hoverProg = null; state.touched = false;
+      if (state.pinned) setOpen(null); else applyMap();
+    };
+    document.addEventListener('click', onBlankClick);
+    cleanups.push(() => document.removeEventListener('click', onBlankClick));
+
     const openCat = openFolder && CAT_BY_FOLDER[openFolder];
     if (openCat) setOpen(openCat.folder); else applyMap();
   }
@@ -473,7 +532,7 @@ const CATEGORY_COPY = {
           <span class="prog-name">${esc(p.name)}</span>
           <span class="prog-tags">
             ${p.hasDashboard ? '<span class="tag tag-dash">Dashboard</span>' : ''}
-            ${p.sites.length ? `<span class="tag">${p.sites.length} ${plural(p.sites.length, 'site')}</span>` : ''}
+            ${siteCount(p) ? `<span class="tag">${siteCount(p).toLocaleString()} ${plural(siteCount(p), 'site')}</span>` : ''}
           </span>
           <span class="prog-arrow" aria-hidden="true">&rsaquo;</span>
         </a>
@@ -481,6 +540,7 @@ const CATEGORY_COPY = {
   }
 
   // One client-side FeatureLayer holds every site; hover states use a feature effect, not a redraw.
+  // Programs with mapped areas (snapshot p.areas) add a polygon layer from the map service, under the points.
   function makeHomeMap() {
     return new Promise((resolve) => {
       require(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/Graphic', 'esri/widgets/Home',
@@ -501,8 +561,20 @@ const CATEGORY_COPY = {
           renderer: { type: 'unique-value', field: 'cat', defaultSymbol: marker('#666666'),
             uniqueValueInfos: CATS.map((c) => ({ value: c.folder, label: c.name, symbol: marker(c.color) })) },
         });
+        const areaRenderer = (c, geometry) => ({ type: 'simple', symbol: geometry === 'line' ? { type: 'simple-line', color: c, width: 2.5 }
+          : { type: 'simple-fill', color: c, outline: { color: c, width: 1 } } });
+        // Out of focus, areas take the same light gray the points fade to.
+        const AREA_GRAY = [154, 163, 173, 0.45];
+        const areaLayers = PROGRAMS.filter((p) => p.areas).map((p) => new FeatureLayer({
+          url: `${SERVICE}/${p.areas.layer}`, definitionExpression: p.areas.where, title: p.shortName,
+          outFields: [p.areas.name].filter(Boolean),
+          renderer: areaRenderer(p.cat.color, p.areas.geometry),
+        }));
+        // Which program each area layer belongs to, for the tooltip, click, and highlight.
+        // (A WeakMap, because Map here is the ArcGIS map class.)
+        const areaPid = new WeakMap(areaLayers.map((a, i) => [a, PROGRAMS.filter((p) => p.areas)[i].id]));
         const view = new MapView({
-          container: 'homeMap', map: new Map({ basemap: 'gray-vector', layers: [layer] }),
+          container: 'homeMap', map: new Map({ basemap: 'gray-vector', layers: [...areaLayers, layer] }),
           center: [-120.04, 39.09], zoom: 10, constraints: { snapToZoom: false }, popupEnabled: false,
         });
         view.on('mouse-wheel', (e) => e.stopPropagation());
@@ -513,28 +585,44 @@ const CATEGORY_COPY = {
         let hoverTimer;
         view.on('pointer-move', (e) => {
           clearTimeout(hoverTimer);
-          hoverTimer = setTimeout(() => view.hitTest(e, { include: layer }).then((r) => {
+          hoverTimer = setTimeout(() => view.hitTest(e, { include: [layer, ...areaLayers] }).then((r) => {
             const g = r.results[0] && r.results[0].graphic;
             view.container.style.cursor = g ? 'pointer' : '';
             if (!g) { tip.hidden = true; return; }
-            tip.innerHTML = `<b>${esc(g.attributes.site)}</b>${esc(g.attributes.program)}`;
+            const ap = g.layer !== layer && PROGRAM_BY_ID[areaPid.get(g.layer)];
+            tip.innerHTML = ap ? `<b>${esc(g.attributes[ap.areas.name] || 'Mapped area')}</b>${esc(ap.shortName)}`
+              : `<b>${esc(g.attributes.site)}</b>${esc(g.attributes.program)}`;
             tip.style.left = `${e.x}px`; tip.style.top = `${e.y}px`; tip.hidden = false;
           }), 30);
         });
         view.on('pointer-leave', () => { tip.hidden = true; });
-        view.on('click', (e) => view.hitTest(e, { include: layer }).then((r) => {
+        view.on('click', (e) => view.hitTest(e, { include: [layer, ...areaLayers] }).then((r) => {
           const g = r.results[0] && r.results[0].graphic;
-          if (g) location.href = PROGRAM_BY_ID[g.attributes.pid].href;
+          if (g) location.href = PROGRAM_BY_ID[g.layer === layer ? g.attributes.pid : areaPid.get(g.layer)].href;
         }));
         cleanups.push(() => view.destroy());
 
         layer.when(() => layer.queryExtent()).then((r) => { if (r.count) view.goTo(r.extent.expand(1.15), { animate: false }); });
         resolve({
-          highlight(where) { layer.featureEffect = where ? grayOutside(where) : null; },
-          fitTo(where) {
-            layer.queryExtent(where ? { where } : {}).then((r) => {
-              if (r.count) view.goTo(r.count === 1 ? { target: r.extent.center, zoom: 12 } : r.extent.expand(1.3), { duration: 600 });
+          // pids: programs in focus (null colors everything); their areas stay colored and the rest gray.
+          highlight(where, pids) {
+            layer.featureEffect = where ? grayOutside(where) : null;
+            areaLayers.forEach((a) => {
+              const on = !pids || pids.includes(areaPid.get(a));
+              const ap = PROGRAM_BY_ID[areaPid.get(a)];
+              a.renderer = areaRenderer(on ? ap.cat.color : AREA_GRAY, ap.areas.geometry);
             });
+          },
+          // Zooms to the points matching where and the areas of the programs in pids.
+          async fitTo(where, pids) {
+            const sr = view.spatialReference;
+            const parts = [await layer.queryExtent({ where: where || '1=1', outSpatialReference: sr })];
+            for (const a of areaLayers) if (!pids || pids.includes(areaPid.get(a))) parts.push(await a.queryExtent({ where: a.definitionExpression, outSpatialReference: sr }));
+            const hits = parts.filter((r) => r.count && r.extent);
+            if (!hits.length) return;
+            const n = hits.reduce((k, r) => k + r.count, 0);
+            const ext = hits.slice(1).reduce((e, r) => e.union(r.extent), hits[0].extent);
+            view.goTo(n === 1 ? { target: ext.center, zoom: 12 } : ext.expand(1.3), { duration: 600 });
           },
         });
       });
@@ -546,7 +634,7 @@ const CATEGORY_COPY = {
   // Card in the category's threshold color with its Threshold Dashboard icon; selecting it drops down its program list.
   function catCard(c) {
     const n = c.programs.length;
-    const sites = c.programs.reduce((k, p) => k + p.sites.length, 0);
+    const sites = c.programs.reduce((k, p) => k + siteCount(p), 0);
     const dashes = c.programs.filter((p) => p.hasDashboard).length;
     return `
       <article class="cat-card${c.light ? ' on-light' : ''}" data-cat="${c.folder}" style="--cat:${c.color}">
@@ -580,47 +668,96 @@ const CATEGORY_COPY = {
 
   /* ------------------------------------------------------------ all / about */
   function renderAll() {
+    const groups = CATS.filter((c) => c.programs.length);
     app.innerHTML = `
       <div class="wrap">
         <div class="page-head">
           <h1>All monitoring programs</h1>
-          <p>Every program on the Monitoring Dashboard. Select a row to open the program.</p>
+          <p>Every program on the Monitoring Dashboard, by threshold category. Select a program to open it.</p>
         </div>
-        <section class="panel" style="margin-top:16px">
-          <div class="table-tools">
-            <calcite-input id="allFilter" type="search" icon="search" placeholder="Filter programs" scale="s" clearable label="Filter programs"></calcite-input>
-            <span class="tools-right"><span class="note" id="allCount"></span>
-              <calcite-button scale="s" appearance="outline" kind="neutral" icon-start="download" id="allCsv">CSV</calcite-button></span>
+        <div class="all-tools">
+          <calcite-input id="allFilter" type="search" icon="search" placeholder="Find a program or partner" scale="s" clearable label="Find a program or partner"></calcite-input>
+          <div class="cat-chips" role="group" aria-label="Filter by category">
+            ${groups.map((c) => `<button type="button" class="cat-chip${c.light ? ' on-light' : ''}" data-cat="${c.folder}" aria-pressed="false" style="--cat:${c.color}"><i></i>${esc(c.name)}</button>`).join('')}
           </div>
-          <div id="allGrid"></div>
-        </section>
+          <span class="tools-right"><span class="note" id="allCount" aria-live="polite"></span>
+            <calcite-button scale="s" appearance="outline" kind="neutral" icon-start="download" id="allCsv">CSV</calcite-button></span>
+        </div>
+        <div id="allGroups">
+          ${groups.map((c) => `
+            <section class="all-group${c.light ? ' on-light' : ''}" data-cat="${c.folder}" style="--cat:${c.color}">
+              <div class="all-group-head">
+                <span class="gicon"><img src="${THRESHOLDS_URL}assets/img/threshold-icons/${c.apiName}-white-icon.png" alt=""></span>
+                <h2>${esc(c.name)}</h2><span data-n></span>
+              </div>
+              <div class="prog-cards">
+                ${[...c.programs].sort((x, y) => x.name.localeCompare(y.name)).map((p) => progCard(p, c)).join('')}
+              </div>
+            </section>`).join('')}
+          <p class="all-empty" id="allEmpty" hidden>No programs match. Clear the search or category filter.</p>
+        </div>
       </div>`;
-    const rows = PROGRAMS.map((p) => ({
-      _p: p, Program: p.name, Category: p.cat.name, 'Program type': p.type || '', Sites: p.sites.length,
-      Partners: p.partners.length, Dashboard: p.hasDashboard ? 'Yes' : '',
+
+    const picked = new Set();
+    let q = '';
+    const apply = () => {
+      let shown = 0;
+      document.querySelectorAll('.all-group').forEach((g) => {
+        let n = 0;
+        g.querySelectorAll('.prog-card').forEach((card) => {
+          const ok = (!picked.size || picked.has(g.dataset.cat)) && (!q || card.dataset.q.includes(q));
+          card.hidden = !ok;
+          if (ok) n++;
+        });
+        g.hidden = n === 0;
+        g.querySelector('[data-n]').textContent = `${n} ${plural(n, 'program')}`;
+        shown += n;
+      });
+      document.getElementById('allEmpty').hidden = shown > 0;
+      document.getElementById('allCount').textContent = shown === PROGRAMS.length ? `${shown} programs` : `Showing ${shown} of ${PROGRAMS.length}`;
+    };
+    document.getElementById('allFilter').addEventListener('calciteInputInput', (e) => { q = e.target.value.trim().toLowerCase(); apply(); });
+    document.querySelectorAll('.cat-chip').forEach((b) => b.addEventListener('click', () => {
+      const on = b.getAttribute('aria-pressed') !== 'true';
+      b.setAttribute('aria-pressed', on);
+      if (on) picked.add(b.dataset.cat); else picked.delete(b.dataset.cat);
+      apply();
     }));
-    const count = (api) => { document.getElementById('allCount').textContent = `Showing ${api.getDisplayedRowCount()} of ${rows.length}`; };
-    // Short reference list (one row per program), so no pagination.
-    const api = agGrid.createGrid(document.getElementById('allGrid'), {
-      theme: GRID_THEME, rowData: rows, domLayout: 'autoHeight',
-      columnDefs: [
-        { field: 'Program', flex: 2, minWidth: 220 },
-        { field: 'Category', minWidth: 200, sort: 'asc',
-          cellRenderer: (p) => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${p.data._p.cat.color}"></span>${esc(p.value)}` },
-        { field: 'Program type', minWidth: 220 }, { field: 'Sites', type: 'numericColumn', minWidth: 90 },
-        { field: 'Partners', type: 'numericColumn', minWidth: 100 }, { field: 'Dashboard', minWidth: 110 },
-      ],
-      defaultColDef: { sortable: true, filter: true, resizable: true, flex: 1 },
-      rowStyle: { cursor: 'pointer' },
-      onRowClicked: (e) => { location.href = e.data._p.href; },
-      onFilterChanged: (e) => count(e.api),
-      onFirstDataRendered: (e) => count(e.api),
+    apply();
+
+    // CSV of every program, whatever the filter.
+    document.getElementById('allCsv').addEventListener('click', () => {
+      const cols = ['Program', 'Category', 'Mapped sites', 'Partners', 'Dashboard', 'Page'];
+      const cell = (v) => { const t = String(v ?? ''); return /[",\n]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; };
+      const rows = PROGRAMS.map((p) => [p.name, p.cat.name, siteCount(p), p.partners.length, p.hasDashboard ? 'Yes' : '', new URL(p.href, location.href).href]);
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([[cols, ...rows].map((r) => r.map(cell).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8' }));
+      a.download = 'monitoring-programs.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
     });
-    cleanups.push(() => api.destroy());
-    document.getElementById('allFilter').addEventListener('calciteInputInput', (e) => api.setGridOption('quickFilterText', e.target.value));
-    document.getElementById('allCsv').addEventListener('click', () => api.exportDataAsCsv({
-      fileName: 'monitoring-programs.csv', columnKeys: ['Program', 'Category', 'Program type', 'Sites', 'Partners', 'Dashboard'],
-    }));
+  }
+
+  // One program as a card: key photo (or the category icon), name, partners, mapped sites, and partner count.
+  function progCard(p, c) {
+    const n = siteCount(p);
+    const photo = p.keyImage ? `style="background-image:url('https://internalapi.laketahoeinfo.org/file-resources/${esc(p.keyImage)}')"` : '';
+    return `
+      <a class="prog-card" href="${p.href}" style="--cat:${c.color}"
+         data-q="${esc([p.name, p.shortName, c.name, ...p.partners].join(' ').toLowerCase())}">
+        <div class="thumb${p.keyImage ? '' : ' no-photo'}" ${photo}>
+          ${p.keyImage ? '' : `<img src="${THRESHOLDS_URL}assets/img/threshold-icons/${c.apiName}-white-icon.png" alt="">`}
+          ${p.hasDashboard ? '<span class="tag tag-dash">Dashboard</span>' : ''}
+        </div>
+        <div class="body">
+          <h3>${esc(p.name)}</h3>
+          <p class="partners">${p.partners.length ? esc(p.partners.join(', ')) : 'No partners listed yet'}</p>
+          <div class="stats">
+            <div><b>${n ? n.toLocaleString() : '—'}</b>Mapped sites</div>
+            <div><b>${p.partners.length}</b>${plural(p.partners.length, 'Partner')}</div>
+          </div>
+        </div>
+      </a>`;
   }
 
   function renderAbout() {
