@@ -980,8 +980,6 @@ function renderChrome(record, keyImage) {
   $('progTitle').textContent = PROGRAM.name;
   $('chips').innerHTML = [
     `<span class="chip chip-cat">${esc(PROGRAM.category)}</span>`,
-    record.MonitoringProgramTypeDisplayName ? `<span class="chip">${esc(record.MonitoringProgramTypeDisplayName)}</span>` : '',
-    record.IsFeaturedProgram ? '<span class="chip">Featured program</span>' : '',
   ].join('');
   const desc = clean(record.MonitoringProgramDescription);
   if (desc) { $('lede').textContent = lede(desc); $('lede').hidden = false; }
