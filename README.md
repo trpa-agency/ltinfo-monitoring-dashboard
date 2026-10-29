@@ -1,10 +1,10 @@
 # ltinfo-monitoring-dashboard
 
-Program dashboards for the [Lake Tahoe Info Monitoring Dashboard](https://monitoring.laketahoeinfo.org/), the inventory of environmental monitoring programs in the Tahoe Region. Each program gets one single-page HTML file. The file shows what the program monitors, where, by whom, and what the record shows so far. The program's Dashboard card on monitoring.laketahoeinfo.org embeds the file by URL.
+Program pages for the [Lake Tahoe Info Monitoring Dashboard](https://monitoring.laketahoeinfo.org/), the inventory of environmental monitoring programs in the Tahoe Region. Each program gets one single-page HTML file. The file shows what the program monitors, where, by whom, and what the record shows so far. The program's page on monitoring.laketahoeinfo.org embeds the file by URL, in the card LT Info labels "Dashboard."
 
-## About the dashboard
+## About the Monitoring Dashboard
 
-The dashboard has 36 program pages, grouped under the 10 [Threshold Dashboard](https://thresholds.laketahoeinfo.org/) categories. Each category uses its Threshold Dashboard color and icon.
+The Monitoring Dashboard has 36 program pages, grouped under the 10 [Threshold Dashboard](https://thresholds.laketahoeinfo.org/) categories. Each category uses its Threshold Dashboard color and icon.
 
 | Category | Programs |
 |---|---|
@@ -34,7 +34,7 @@ Every page has:
 - partners, threshold indicators, and documents
 - a table view and a CSV download behind every chart
 
-A page opened on its own shows the LT Info header and navigation. Embedded in an LT Info Dashboard card, it drops that chrome and matches the host page's styling.
+A page opened on its own shows the LT Info header and navigation. Embedded in its program's page on monitoring.laketahoeinfo.org, it drops that chrome and matches the host page's styling.
 
 **Data sources.** Pages load their data live when they open:
 
@@ -55,7 +55,7 @@ templates/
 scripts/
   scaffold_programs.py         builds program pages, index.html, and the category READMEs
 <category-folder>/             one folder per Threshold Dashboard category
-  <program>.html               one dashboard per program (generated)
+  <program>.html               one page per program (generated)
   README.md                    list of the category's programs (generated)
 EDITING-PROGRAM-PAGES.md       guide for program page owners
 CLAUDE.md                      instructions for Claude Code in this repo
@@ -77,7 +77,7 @@ Run the script from the repo root with the ArcGIS Pro Python environment:
 - Without flags, it creates pages for new programs and rebuilds `index.html` and the category READMEs.
 - `--force` restamps every program page from the template. Use it after you change a template or a program's settings.
 
-The site is published through GitHub Pages. A program page is served at `https://trpa-agency.github.io/ltinfo-monitoring-dashboard/<category-folder>/<program>.html`. The LT Info admin points the program's `DashboardUrl` at it. Run the `trpa-dashboard-qa` checklist before sending a URL to the admin.
+The site is published through GitHub Pages. A program page is served at `https://trpa-agency.github.io/ltinfo-monitoring-dashboard/<category-folder>/<program>.html`. The LT Info admin sets the program's `DashboardUrl` field (LT Info's name for the embed link) to that URL. Run the `trpa-dashboard-qa` checklist before sending a URL to the admin.
 
 ## More
 
