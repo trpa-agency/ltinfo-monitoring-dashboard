@@ -15,8 +15,23 @@
       #f7f7f7 background, posts its height to the parent. Per the ltinfo-platform embed contract.
 
   Program and site data load live from internalapi.laketahoeinfo.org (anonymous, CORS open).
-  To add program-specific measurement charts, fill in renderCustom() in the CUSTOM block below.
+  Measurement charts load live from the TRPA LTInfo_Monitoring map service (PROGRAM.measures, from programs.json).
+  To add other program-specific sections, fill in renderCustom() in the CUSTOM block below.
 -->
+<!--
+  ================================  PAGE TEMPLATE  ================================
+  This page uses the template named on the TEMPLATE line below. Change that one word to switch layouts:
+
+    'charts'   Chart-heavy. Measurement charts lead; map and site summaries follow; text sits near the end.
+    'map'      Map-focused. A full-width map and the sites table lead; charts and text follow.
+    'context'  Context-heavy. The monitoring approach and program description lead, then partners,
+               indicators, and documents; charts and map follow when the program has them.
+
+  To preview another template without editing, add ?template=map (or charts, context) to the page URL.
+  To keep a change when the pages are restamped, also set "template" on this program in programs.json.
+  =================================================================================
+-->
+<script>const TEMPLATE = 'map';</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap">
 <!-- Calcite 2.13.2 matches the Calcite build bundled with ArcGIS SDK 4.31 (see trpa-monitoring-dashboard). -->
@@ -124,7 +139,8 @@
     padding: 12px 16px; border-bottom: 1px solid var(--gray-100); }
   .panel-head h2 { font-size: 15px; font-weight: 600; }
   .panel-head p { margin: 2px 0 0; font-size: 12.5px; color: var(--muted); }
-  .panel-tools { display: flex; align-items: center; gap: 10px; flex: none; }
+  .panel-tools { display: flex; align-items: center; gap: 10px; flex: none; flex-wrap: wrap; }
+  .panel-tools calcite-select { width: 240px; max-width: 100%; }
   .panel-body { padding: 14px 16px; flex: 1; }
   .panel-body.flush { padding: 0; }
   .prose { font-size: 14.5px; }
@@ -138,8 +154,15 @@
   .sub-label:first-child { margin-top: 0; }
 
   #progMap { height: 380px; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+  #progMap.is-tall { height: 540px; }
+  .span-4 { grid-column: span 4; }
   .chart { height: 320px; width: auto; }
   .chart-grid { height: 320px; }
+  .chart-legend { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+  .chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .chart-legend i { width: 10px; height: 10px; border-radius: 2px; flex: none; }
+  .chart-source { margin: 10px 0 0; }
+  .chart-source a { color: var(--muted); }
   .sites-grid { height: 420px; }
   .table-tools { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
     padding: 10px 16px; border-bottom: 1px solid var(--gray-100); }
@@ -162,7 +185,8 @@
     .prog-layout { grid-template-columns: 1fr; }
     .side-nav { position: relative; top: 0; }
     .side-nav ul { display: flex; flex-wrap: wrap; gap: 4px; }
-    .span-7, .span-5, .span-6 { grid-column: span 12; }
+    .span-7, .span-5, .span-6, .span-4 { grid-column: span 12; }
+    #progMap.is-tall { height: 420px; }
   }
   @media (max-width: 680px) {
     .wrap { padding: 0 16px; }
@@ -170,6 +194,7 @@
     .brand-name { font-size: 16px; }
     .brand img { height: 28px; }
     .kpi-value { font-size: 24px; }
+    .panel-tools, .panel-tools calcite-select { width: 100%; }
   }
 </style>
 </head>
@@ -225,7 +250,7 @@
 
 <script>
 /* ---------- PROGRAM: stamped by scripts/scaffold_programs.py ---------- */
-const PROGRAM = {"id": 62, "name": "Noise - Shorezone", "category": "Noise", "categoryFolder": "noise", "categoryColor": "#675EA1", "siblings": [{"id": 65, "name": "Noise - Highways", "file": "noise-highways.html"}, {"id": 61, "name": "Noise - Plan Areas", "file": "noise-plan-areas.html"}, {"id": 62, "name": "Noise - Shorezone", "file": "noise-shorezone.html"}]};
+const PROGRAM = {"id": 62, "name": "Noise - Shorezone", "category": "Noise", "categoryFolder": "noise", "categoryColor": "#675EA1", "siblings": [{"id": 65, "name": "Noise - Highways", "file": "noise-highways.html"}, {"id": 61, "name": "Noise - Plan Areas", "file": "noise-plan-areas.html"}, {"id": 62, "name": "Noise - Shorezone", "file": "noise-shorezone.html"}], "measures": [{"title": "Shorezone noise exceedances", "sub": "Average noise standard exceedances per day, across all shorezone sites.", "layer": 78, "x": "Year", "y": "Value", "yName": "Exceedances per day", "yLabel": "Exceedances per day", "type": "bar", "standard": {"field": "Threshold_Value"}, "span": "span-12"}], "sitesLayer": null};
 
 /* ---------- CUSTOM: program-specific sections ----------
    Called after the standard panels render. Append panels to ctx.grid with chartPanel() and
@@ -235,6 +260,9 @@ function renderCustom(ctx) {}
 
 /* ---------- Settings ---------- */
 const API = 'https://internalapi.laketahoeinfo.org';
+// TRPA map service behind the current Monitoring and Threshold dashboards; PROGRAM.measures chart its layers and tables.
+const SERVICE = 'https://maps.trpa.org/server/rest/services/LTInfo_Monitoring/MapServer';
+const SERIES_COLORS = ['#3e72b0', '#e49937', '#89bf40', '#5a9cb0', '#be4c4c', '#646820', '#89cad7', '#2c5f72'];
 const THRESHOLDS_URL = 'https://thresholds.laketahoeinfo.org/';
 const EMBEDDED = window.self !== window.top;
 const INACTIVE = '#9aa3ad';
@@ -314,7 +342,8 @@ function kpi(label, value, sub) {
     <div class="kpi-value">${empty ? '&mdash;' : esc(value)}</div><div class="kpi-sub">${esc(sub || '')}</div></div>`;
 }
 
-function chartPanel(id, span, title, sub) {
+// source: optional HTML line under the chart naming where the numbers come from.
+function chartPanel(id, span, title, sub, source) {
   return `
     <section class="panel ${span}" id="${id}-panel">
       <div class="panel-head">
@@ -330,24 +359,25 @@ function chartPanel(id, span, title, sub) {
       <div class="panel-body">
         <div class="chart" id="${id}"></div>
         <div class="chart-grid" id="${id}-table" hidden></div>
+        <div class="chart-legend" id="${id}-legend" hidden></div>
+        ${source ? `<p class="note chart-source">${source}</p>` : ''}
       </div>
     </section>`;
 }
 
-// rows: array of objects; cols: [{ field, headerName, num }]; draw(el) renders the Plotly chart.
-function wireChart(id, rows, cols, draw, csvName, empty) {
+function chartEmpty(id, empty) {
+  $(id).outerHTML = emptyState(empty[0], empty[1]);
+  $(`${id}-panel`).querySelector('.panel-tools').hidden = true;
+}
+
+// Creates the table behind a chart and wires the Chart/Table toggle and CSV button. csvName may be a function.
+function wireTable(id, rows, cols, csvName) {
   const panel = $(`${id}-panel`);
   const el = $(id);
   const tableEl = $(`${id}-table`);
-  if (!rows.length) {
-    el.outerHTML = emptyState(empty[0], empty[1]);
-    panel.querySelector('.panel-tools').hidden = true;
-    return;
-  }
-  draw(el);
   const api = agGrid.createGrid(tableEl, {
     theme: GRID_THEME, rowData: rows,
-    columnDefs: cols.map(({ num, ...c }) => ({ ...c, flex: 1, type: num ? 'numericColumn' : undefined })),
+    columnDefs: cols.map(({ num, ...c }) => ({ ...c, flex: 1, minWidth: 110, type: num ? 'numericColumn' : undefined })),
     defaultColDef: { sortable: true, filter: true, resizable: true },
   });
   panel.querySelector('[data-view]').addEventListener('calciteSegmentedControlChange', (e) => {
@@ -356,7 +386,175 @@ function wireChart(id, rows, cols, draw, csvName, empty) {
     if (!table) Plotly.Plots.resize(el);
     postHeight();
   });
-  panel.querySelector('[data-csv]').addEventListener('click', () => api.exportDataAsCsv({ fileName: `${slugify(csvName)}.csv` }));
+  panel.querySelector('[data-csv]').addEventListener('click', () => api.exportDataAsCsv({
+    fileName: `${slugify(typeof csvName === 'function' ? csvName() : csvName)}.csv`,
+  }));
+  return api;
+}
+
+// rows: array of objects; cols: [{ field, headerName, num }]; draw(el) renders the Plotly chart.
+function wireChart(id, rows, cols, draw, csvName, empty) {
+  if (!rows.length) { chartEmpty(id, empty); return; }
+  draw($(id));
+  wireTable(id, rows, cols, csvName);
+}
+
+/* ---------- Measurements from the TRPA monitoring map service ----------
+   Each PROGRAM.measures entry names a layer or table in SERVICE and how to chart it.
+   Keys are documented in templates/README.md. */
+const MONTHS = ['Jan.', 'Feb.', 'March', 'April', 'May', 'June', 'July', 'Aug.', 'Sept.', 'Oct.', 'Nov.', 'Dec.'];
+
+// Formats a value for tables and labels; '.0%' shows shares as percents, anything else as a plain number.
+function fmtValue(v, format) {
+  if (v == null || !Number.isFinite(+v)) return '';
+  return format === '.0%' ? `${Math.round(v * 100)}%` : (+v).toLocaleString('en-US', { maximumFractionDigits: 3 });
+}
+
+function measureYs(m) {
+  if (m.stat) return [{ field: 'value', name: m.yName || m.yLabel }];
+  return Array.isArray(m.y) ? m.y : [{ field: m.y, name: m.yName || m.yLabel }];
+}
+
+async function queryMeasure(m) {
+  const base = { where: m.where || '1=1', returnGeometry: 'false', f: 'json' };
+  const groups = [m.x, m.seriesBy, m.pick].filter(Boolean);
+  // Statistics are computed on the server, so large tables (bike and pedestrian counts, crashes) arrive as a few rows.
+  const params = m.stat
+    ? { ...base, groupByFieldsForStatistics: groups.join(','),
+        outStatistics: JSON.stringify([{ statisticType: m.stat, onStatisticField: m.y, outStatisticFieldName: 'value' }]) }
+    : { ...base, orderByFields: m.x,
+        outFields: [...groups, ...measureYs(m).map((y) => y.field), m.standard && m.standard.field].filter(Boolean).join(',') };
+  const rows = [];
+  for (let offset = 0; ; offset += 2000) {
+    const page = m.stat ? params : { ...params, resultOffset: offset, resultRecordCount: 2000 };
+    const r = await fetch(`${SERVICE}/${m.layer}/query?${new URLSearchParams(page)}`);
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const json = await r.json();
+    if (json.error) throw new Error(json.error.message);
+    const feats = json.features || [];
+    rows.push(...feats.map((f) => f.attributes));
+    if (m.stat || feats.length < 2000) break;
+  }
+  return rows.map((r) => {
+    const row = { ...r };
+    if (m.xType === 'date' && typeof row[m.x] === 'number') row[m.x] = new Date(row[m.x]).toISOString().slice(0, 10);
+    if (m.seriesBy) row[m.seriesBy] = row[m.seriesBy] == null || row[m.seriesBy] === '' ? 'Not stated' : String(row[m.seriesBy]);
+    return row;
+  });
+}
+
+function measureView(m, rows) {
+  let out = rows.filter((r) => r[m.x] != null && r[m.x] !== '');
+  const y0 = measureYs(m)[0].field;
+  if (m.sort) out = [...out].sort((a, b) => (m.sort === 'desc' ? b[y0] - a[y0] : a[y0] - b[y0]));
+  else if (!m.xType || m.xType === 'month') out = [...out].sort((a, b) => a[m.x] - b[m.x]);
+  else out = [...out].sort((a, b) => String(a[m.x]).localeCompare(String(b[m.x])));
+  return m.limit ? out.slice(0, m.limit) : out;
+}
+
+function measureSeries(m, rows, color) {
+  const ys = measureYs(m);
+  const groups = m.seriesBy
+    ? [...new Set(rows.map((r) => r[m.seriesBy]))].sort().map((v) => ({
+        name: (m.seriesNames && m.seriesNames[v]) || `${m.seriesPrefix || ''}${v}`, rows: rows.filter((r) => r[m.seriesBy] === v), field: ys[0].field }))
+    : ys.map((y) => ({ name: y.name, rows, field: y.field }));
+  return groups.map((g, i) => ({ ...g, color: groups.length === 1 ? color : SERIES_COLORS[i % SERIES_COLORS.length] }));
+}
+
+function drawMeasure(el, m, rows, color) {
+  const series = measureSeries(m, rows, color);
+  const horizontal = m.orientation === 'h';
+  const fmt = m.format || ',.3~f';
+  const xOf = (r) => (m.xType === 'month' ? MONTHS[r[m.x] - 1] : r[m.x]);
+  const traces = series.map((s) => {
+    const xs = s.rows.map(xOf);
+    const vs = s.rows.map((r) => r[s.field]);
+    const look = m.type === 'bar' || m.type === 'stacked'
+      ? { type: 'bar', marker: { color: s.color } }
+      : { type: 'scatter', mode: s.rows.length > 40 ? 'lines' : 'lines+markers', line: { color: s.color, width: 2 }, marker: { color: s.color, size: 6 }, connectgaps: false };
+    return { ...look, name: s.name, x: horizontal ? vs : xs, y: horizontal ? xs : vs, orientation: horizontal ? 'h' : undefined,
+      hovertemplate: `${s.name.replace(/%/g, '%%')}: %{${horizontal ? 'x' : 'y'}:${fmt}}<extra></extra>` };
+  });
+  const std = m.standard && !horizontal
+    ? (m.standard.value ?? rows.map((r) => parseFloat(r[m.standard.field])).find(Number.isFinite)) : null;
+  const xAxisType = m.xType === 'date' ? 'date' : m.xType ? 'category' : 'linear';
+  const valueAxis = { ...PLOT_LAYOUT.yaxis, rangemode: m.zero === false ? 'normal' : 'tozero', tickformat: m.format,
+    title: { text: m.yLabel || '', font: { size: 11 } } };
+  const labelAxis = { ...PLOT_LAYOUT.xaxis, type: horizontal ? 'category' : xAxisType, tickformat: xAxisType === 'linear' && !horizontal ? 'd' : undefined,
+    title: m.xLabel && !horizontal ? { text: m.xLabel, font: { size: 11 } } : undefined };
+  if (labelAxis.type === 'category' && !horizontal && m.xType !== 'month') labelAxis.categoryorder = 'category ascending';
+  // With only a few years, mark just those years so ticks do not repeat one year.
+  const years = [...new Set(rows.map((r) => r[m.x]))];
+  if (labelAxis.type === 'linear' && !horizontal && years.length < 6) labelAxis.tickvals = years;
+  if (horizontal) { labelAxis.autorange = 'reversed'; labelAxis.gridcolor = 'transparent'; }
+  Plotly.react(el, traces, {
+    ...PLOT_LAYOUT,
+    hovermode: horizontal ? 'y unified' : 'x unified',
+    barmode: m.type === 'stacked' ? 'stack' : 'group',
+    margin: { ...PLOT_LAYOUT.margin, r: std != null ? 24 : PLOT_LAYOUT.margin.r },
+    xaxis: horizontal ? valueAxis : labelAxis,
+    yaxis: horizontal ? labelAxis : valueAxis,
+    shapes: std != null ? [{ type: 'line', xref: 'paper', x0: 0, x1: 1, y0: std, y1: std, line: { color: '#4e4e4e', width: 1.5, dash: 'dash' } }] : [],
+    annotations: std != null ? [{ xref: 'paper', x: 1, y: std, xanchor: 'right', yanchor: 'bottom', showarrow: false,
+      text: `${(m.standard && m.standard.label) || 'Standard'}: ${fmtValue(std, m.format)}`, font: { size: 11, color: '#4e4e4e' } }] : [],
+  }, PLOT_CONFIG);
+  const legend = $(`${el.id}-legend`);
+  legend.hidden = series.length < 2;
+  legend.innerHTML = series.length < 2 ? '' : series.map((s) => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('');
+}
+
+function measureColumns(m) {
+  const cols = [{ field: m.x, headerName: m.xLabel || 'Year' }];
+  if (m.seriesBy) cols.push({ field: m.seriesBy, headerName: m.seriesLabel || m.seriesBy });
+  if (m.pick) cols.push({ field: m.pick, headerName: m.pickLabel || m.pick });
+  measureYs(m).forEach((y) => cols.push({ field: y.field, headerName: y.name || m.yLabel || 'Value', num: true,
+    valueFormatter: (p) => fmtValue(p.value, m.format) }));
+  if (m.standard && m.standard.field) cols.push({ field: m.standard.field, headerName: m.standard.label || 'Standard' });
+  return cols;
+}
+
+// Measures without a span share rows in pairs; an unpaired last one takes the full row.
+function measurePanel(m, i, all) {
+  const auto = all.filter((x) => !x.span);
+  const span = m.span || (auto.length % 2 && auto[auto.length - 1] === m ? 'span-12' : 'span-6');
+  const source = `Source: <a href="${SERVICE}/${m.layer}" target="_blank" rel="noopener">TRPA LTInfo_Monitoring map service, layer ${esc(m.layer)}</a>.`;
+  return chartPanel(`measure${i}`, span, m.title, m.sub || '', source);
+}
+
+async function wireMeasure(m, i, color) {
+  const id = `measure${i}`;
+  const el = $(id);
+  el.innerHTML = '<div class="loading"><calcite-loader label="Loading data" scale="s"></calcite-loader></div>';
+  let all;
+  try { all = await queryMeasure(m); }
+  catch (e) {
+    console.warn(`${m.title}: ${e.message}`);
+    chartEmpty(id, ['Data could not be loaded', 'The TRPA map service did not respond. Reload the page to try again.']);
+    return;
+  }
+  el.innerHTML = '';
+  if (!all.length) { chartEmpty(id, [`No ${m.title.toLowerCase()} data loaded yet`, 'This chart will fill in once records are added to the map service.']); return; }
+  const choices = m.pick ? [...new Set(all.map((r) => r[m.pick]).filter((v) => v != null && v !== ''))].sort() : [];
+  // Without a pickDefault, open on the choice with the longest record.
+  const recordLength = (c) => all.filter((r) => r[m.pick] === c).length;
+  let picked = choices.includes(m.pickDefault) ? m.pickDefault
+    : choices.reduce((best, c) => (recordLength(c) > recordLength(best) ? c : best), choices[0]);
+  const current = () => measureView(m, m.pick ? all.filter((r) => r[m.pick] === picked) : all);
+  const api = wireTable(id, current(), measureColumns(m), () => `${PROGRAM.name} ${m.title}${m.pick ? ` ${picked}` : ''}`);
+  drawMeasure(el, m, current(), color);
+  if (choices.length > 1) {
+    $(`${id}-panel`).querySelector('.panel-tools').insertAdjacentHTML('afterbegin',
+      `<calcite-select scale="s" label="${esc(m.pickLabel || 'Show')}" data-pick>${choices.map((c) =>
+        `<calcite-option value="${esc(c)}"${c === picked ? ' selected' : ''}>${esc(c)}</calcite-option>`).join('')}</calcite-select>`);
+    $(`${id}-panel`).querySelector('[data-pick]').addEventListener('calciteSelectChange', (e) => {
+      picked = e.target.value;
+      const rows = current();
+      api.setGridOption('rowData', rows);
+      drawMeasure(el, m, rows, color);
+      postHeight();
+    });
+  }
+  postHeight();
 }
 
 function countByYear(years, cumulative) {
@@ -393,8 +591,9 @@ function renderChrome(record, keyImage) {
   const catHref = `../index.html#/category/${PROGRAM.categoryFolder}`;
   $('crumbCat').textContent = PROGRAM.category;
   $('crumbCat').href = catHref;
-  $('crumbHere').textContent = record.ShortName || PROGRAM.name;
-  $('progTitle').textContent = record.MonitoringProgramName || PROGRAM.name;
+  // programs.json names win, so a program can be renamed here before it is renamed in LT Info.
+  $('crumbHere').textContent = PROGRAM.name;
+  $('progTitle').textContent = PROGRAM.name;
   $('chips').innerHTML = [
     `<span class="chip chip-cat">${esc(PROGRAM.category)}</span>`,
     record.MonitoringProgramTypeDisplayName ? `<span class="chip">${esc(record.MonitoringProgramTypeDisplayName)}</span>` : '',
@@ -410,6 +609,26 @@ function renderChrome(record, keyImage) {
 }
 
 /* ---------- Map ---------- */
+// Sites from a map service layer carry no status in LT Info, so they read as monitoring stations.
+function siteStatus(s) { return s.active == null ? 'Monitoring station' : s.active ? 'Active' : 'Inactive'; }
+
+// Sites from PROGRAM.sitesLayer ({ layer, name, code }) in the map service, for programs LT Info has no sites for.
+async function serviceSites(cfg) {
+  const p = new URLSearchParams({ where: '1=1', outFields: '*', outSR: '4326', returnGeometry: 'true', f: 'json' });
+  try {
+    const r = await fetch(`${SERVICE}/${cfg.layer}/query?${p}`);
+    const json = await r.json();
+    if (json.error) throw new Error(json.error.message);
+    return (json.features || []).filter((f) => f.geometry).map((f) => {
+      const code = cfg.code ? f.attributes[cfg.code] : null;
+      return { name: f.attributes[cfg.name] || 'Station', code: code ?? '', active: null, stations: null, first: '', last: '',
+        lon: f.geometry.x, lat: f.geometry.y, span: code ? `ID ${code}` : '' };
+    }).sort((a, b) => a.name.localeCompare(b.name));
+  } catch (e) {
+    console.warn(`Sites layer ${cfg.layer}: ${e.message}`);
+    return [];
+  }
+}
 function renderMap(mapped, color) {
   return new Promise((resolve) => {
     require(['esri/Map', 'esri/views/MapView', 'esri/layers/FeatureLayer', 'esri/Graphic', 'esri/widgets/Legend',
@@ -422,13 +641,13 @@ function renderMap(mapped, color) {
         ],
         source: mapped.map((s, i) => new Graphic({
           geometry: { type: 'point', longitude: s.lon, latitude: s.lat },
-          attributes: { oid: i + 1, name: s.name || 'Site', status: s.active ? 'Active' : 'Inactive', span: s.span, stations: s.stations ?? null },
+          attributes: { oid: i + 1, name: s.name || 'Site', status: siteStatus(s), span: s.span, stations: s.stations ?? null },
         })),
         renderer: {
           type: 'unique-value', field: 'status',
-          uniqueValueInfos: ['Active', 'Inactive'].map((v) => ({
+          uniqueValueInfos: [...new Set(mapped.map(siteStatus))].map((v) => ({
             value: v, label: v,
-            symbol: { type: 'simple-marker', size: mapped.length > 100 ? 7 : 9, color: v === 'Active' ? color : INACTIVE, outline: { color: '#ffffff', width: 1 } },
+            symbol: { type: 'simple-marker', size: mapped.length > 100 ? 7 : 9, color: v === 'Inactive' ? INACTIVE : color, outline: { color: '#ffffff', width: 1 } },
           })),
         },
         popupTemplate: { title: '{name}', content: '{status} · {span}' },
@@ -463,7 +682,8 @@ function renderMap(mapped, color) {
 /* ---------- Page ---------- */
 async function init() {
   const pid = PROGRAM.id;
-  const [record, siteRows, geo, partners, indicators, documents, images] = await Promise.all([
+  const fromService = !!PROGRAM.sitesLayer;
+  const [record, siteRows, geo, partners, indicators, documents, images, layerSites] = await Promise.all([
     getJson(`/monitoring-programs/${pid}`, null),
     getJson(`/monitoring-programs/${pid}/sites?activeOnly=false`, []),
     getJson(`/monitoring-programs/${pid}/sites-as-feature-collection`, { features: [] }),
@@ -471,6 +691,7 @@ async function init() {
     getJson(`/monitoring-programs/${pid}/indicators`, []),
     getJson(`/monitoring-programs/${pid}/documents`, []),
     getJson(`/monitoring-programs/${pid}/images`, []),
+    fromService ? serviceSites(PROGRAM.sitesLayer) : [],
   ]);
   const grid = $('grid');
   if (!record) {
@@ -487,7 +708,7 @@ async function init() {
     const c = f.geometry && f.geometry.type === 'Point' ? f.geometry.coordinates : null;
     if (c) coords[f.properties.MonitoringSiteID] = c;
   });
-  const sites = siteRows.map((r) => {
+  const sites = fromService ? layerSites : siteRows.map((r) => {
     const c = coords[r.MonitoringSiteID];
     const f = year(r.FirstObservationDate), l = year(r.LastObservationDate);
     return {
@@ -510,56 +731,68 @@ async function init() {
   // Never embed a dashboard URL that points back at this page.
   const showDash = dash && new URL(dash, location.href).pathname !== location.pathname;
   const siteLabel = record.SiteLabelPlural || 'Sites';
+  const measures = PROGRAM.measures || [];
 
   renderChrome(record, keyImage);
 
   $('kpis').innerHTML = [
     kpi(`Monitoring ${siteLabel.toLowerCase()}`, hasSites ? sites.length : null, hasSites ? `${mapped.length} mapped` : 'No fixed sites'),
-    kpi('Active sites', hasSites ? active : null, hasSites ? `${Math.round((active / sites.length) * 100)} percent of sites` : ''),
+    kpi('Active sites', hasSites && !fromService ? active : null, hasSites && !fromService ? `${Math.round((active / sites.length) * 100)} percent of sites` : ''),
     kpi('Record began', firstYears.length ? Math.min(...firstYears) : null, 'First observation'),
     kpi('Latest observation', lastYears.length ? Math.max(...lastYears) : null, 'Most recent site visit'),
     kpi('Partners', partners.length, 'Organizations'),
     kpi('Indicators', indicators.length, 'Linked threshold indicators'),
   ].join('');
 
-  grid.innerHTML = `
-    ${showDash ? `
+  // Panels, each built for the span a layout gives it. A panel with nothing to show returns ''.
+  const lone = !hasSites && !measures.length && !showDash;
+  const block = {
+    dash: () => (showDash ? `
       <section class="panel span-12">
         <div class="panel-head"><div><h2>Program dashboard</h2><p>${esc(record.Dashboard.DashboardDescription || `${PROGRAM.name} data, maintained by the program team.`)}</p></div>
           <a href="${esc(dash)}" target="_blank" rel="noopener" class="note">Open full screen &#8599;</a></div>
         <iframe class="dash-frame" src="${esc(dash)}" title="${esc(PROGRAM.name)} dashboard" loading="lazy" allowfullscreen></iframe>
-      </section>` : ''}
-
-    ${hasSites ? `
-      <section class="panel span-7">
-        <div class="panel-head"><div><h2>Where we monitor</h2><p>${mapped.length} mapped ${plural(mapped.length, 'site')}. Select a site for details.</p></div></div>
-        <div class="panel-body flush">${mapped.length ? '<div id="progMap" role="region" aria-label="Map of monitoring sites"></div>'
+      </section>` : ''),
+    map: (span, tall) => (hasSites ? `
+      <section class="panel ${span}">
+        <div class="panel-head"><div><h2>Where we monitor</h2><p>${mapped.length} mapped ${plural(mapped.length, fromService ? 'station' : 'site')}${fromService
+          ? `, from <a href="${SERVICE}/${PROGRAM.sitesLayer.layer}" target="_blank" rel="noopener">TRPA LTInfo_Monitoring layer ${esc(PROGRAM.sitesLayer.layer)}</a>` : ''}. Select a site for details.</p></div></div>
+        <div class="panel-body flush">${mapped.length ? `<div id="progMap"${tall ? ' class="is-tall"' : ''} role="region" aria-label="Map of monitoring sites"></div>`
           : emptyState('No mapped sites', 'Sites for this program are recorded without coordinates.')}</div>
-      </section>
-      ${chartPanel('chartStart', 'span-5', 'When monitoring began', 'Sites by year of first observation, with the running total.')}
-      ${chartPanel('chartLast', 'span-6', 'How current is the record', 'Sites by year of most recent observation.')}
-      ${connectionsPanel(partners, indicators, documents, 'span-6')}
-    ` : `
-      ${connectionsPanel(partners, indicators, documents, 'span-5')}
-      <section class="panel span-7">
-        <div class="panel-head"><div><h2>Program data</h2></div></div>
-        <div class="panel-body">${emptyState('No monitoring sites in Lake Tahoe Info',
-          'This program is not tracked by site. Charts of sites and observations will appear here once sites or a dashboard are added.')}</div>
-      </section>
-    `}
-
-    ${approach ? `
-      <section class="panel span-${desc ? 6 : 12}">
-        <div class="panel-head"><div><h2>How it is monitored</h2></div></div>
-        <div class="panel-body prose">${approach}</div>
-      </section>` : ''}
-    ${desc ? `
-      <section class="panel span-${approach ? 6 : 12}">
-        <div class="panel-head"><div><h2>About this program</h2></div></div>
-        <div class="panel-body prose">${desc}</div>
-      </section>` : ''}
-
-    ${hasSites ? `
+      </section>` : ''),
+    // Site-date charts need LT Info site records; map service sites carry no dates.
+    start: (span) => (hasSites && !fromService ? chartPanel('chartStart', span, 'When monitoring began', 'Sites by year of first observation, with the running total.') : ''),
+    last: (span) => (hasSites && !fromService ? chartPanel('chartLast', span, 'How current is the record', 'Sites by year of most recent observation.') : ''),
+    measures: () => measures.map((m, i) => measurePanel(m, i, measures)).join(''),
+    connections: (span) => connectionsPanel(partners, indicators, documents, span),
+    // Partners, indicators, and documents as three side-by-side panels, for the context template.
+    connectionsSplit: () => {
+      const list = (title, items, none) => `
+        <section class="panel span-4">
+          <div class="panel-head"><div><h2>${title}</h2></div></div>
+          <div class="panel-body">${items.length ? `<ul class="list-plain">${items.join('')}</ul>` : `<p class="note">${none}</p>`}</div>
+        </section>`;
+      return list('Partners', partners.map((p) => `<li>${esc(p.OrganizationName)}</li>`), 'No partners listed yet.')
+        + list('Threshold indicators', indicators.map((i) => `<li><a href="${THRESHOLDS_URL}" target="_blank" rel="noopener">${esc(i.IndicatorDisplayName)}</a></li>`), 'No linked indicators.')
+        + list('Documents', documents.map((d) => `<li><a href="${fileUrl(d.FileResourceGUID)}" target="_blank" rel="noopener">${esc(d.DisplayName)}</a>
+            <span class="note">${esc((d.FileExtension || '').replace('.', '').toUpperCase())}${d.UploadDate ? `, ${fmtDate(d.UploadDate)}` : ''}</span></li>`), 'No documents on file.');
+    },
+    // full: each text panel takes the whole row; otherwise they share it.
+    text: (full) => {
+      const half = !full && approach && desc;
+      return `
+        ${approach ? `
+          <section class="panel span-${half ? 6 : 12}">
+            <div class="panel-head"><div><h2>How it is monitored</h2></div></div>
+            <div class="panel-body prose">${approach}</div>
+          </section>` : ''}
+        ${desc ? `
+          <section class="panel span-${half ? 6 : 12}">
+            <div class="panel-head"><div><h2>About this program</h2></div></div>
+            <div class="panel-body prose">${desc}</div>
+          </section>` : ''}`;
+    },
+    sites: () => (hasSites ? `
       <section class="panel span-12">
         <div class="panel-head">
           <div><h2>Monitoring sites</h2><p>${sites.length} ${plural(sites.length, 'site')}. Select a row to find it on the map.</p></div>
@@ -570,9 +803,42 @@ async function init() {
           <span class="note" id="siteCount"></span>
         </div>
         <div class="sites-grid" id="sitesGrid"></div>
-      </section>` : ''}`;
+      </section>` : ''),
+    noData: (span) => (lone ? `
+      <section class="panel ${span}">
+        <div class="panel-head"><div><h2>Program data</h2></div></div>
+        <div class="panel-body">${emptyState('No monitoring data on this page yet',
+          'This program is not tracked by site. Charts will appear here once sites, map service data, or a dashboard are added.')}</div>
+      </section>` : ''),
+  };
 
-  $('source').textContent = `Source: Lake Tahoe Info monitoring program ${pid}, retrieved ${fmtDate(new Date().toISOString())}.`;
+  // The three page templates. See the PAGE TEMPLATE note at the top of the file.
+  const LAYOUTS = {
+    charts: () => [
+      block.dash(), block.measures(),
+      block.map('span-7'), block.start('span-5'),
+      block.last('span-6'), block.connections(hasSites ? 'span-6' : lone ? 'span-5' : 'span-12'), block.noData('span-7'),
+      block.text(false), block.sites(),
+    ],
+    map: () => [
+      block.dash(), block.map('span-12', true), block.sites(),
+      block.measures(),
+      block.start('span-6'), block.last('span-6'),
+      block.text(false), block.connections(lone ? 'span-5' : 'span-12'), block.noData('span-7'),
+    ],
+    context: () => [
+      block.text(true), block.connectionsSplit(), block.noData('span-12'),
+      block.dash(), block.measures(),
+      block.map('span-12'), block.start('span-6'), block.last('span-6'), block.sites(),
+    ],
+  };
+  const preview = new URLSearchParams(location.search).get('template');
+  const layout = LAYOUTS[preview] ? preview : LAYOUTS[TEMPLATE] ? TEMPLATE : 'charts';
+  document.documentElement.dataset.template = layout;
+  grid.innerHTML = LAYOUTS[layout]().join('');
+
+  $('source').textContent = `Source: Lake Tahoe Info monitoring program ${pid}${measures.length ? ' and the TRPA LTInfo_Monitoring map service' : ''}, retrieved ${fmtDate(new Date().toISOString())}.`;
+  measures.forEach((m, i) => wireMeasure(m, i, color));
 
   if (hasSites) {
     const mapApi = mapped.length ? renderMap(mapped, color) : Promise.resolve(null);
@@ -580,6 +846,7 @@ async function init() {
     const startRows = countByYear(firstYears, true);
     const lastRows = countByYear(lastYears, false);
     const noDates = ['No observation dates loaded yet', 'This chart will show sites by year once dates are recorded.'];
+    if (!fromService) {
     wireChart('chartStart', startRows, [
       { field: 'year', headerName: 'Year' }, { field: 'count', headerName: 'Sites added', num: true }, { field: 'total', headerName: 'Running total', num: true },
     ], (el) => Plotly.newPlot(el, [
@@ -600,22 +867,25 @@ async function init() {
         hovertemplate: '%{y} sites last observed<extra></extra>' },
     ], { ...PLOT_LAYOUT, yaxis: { ...PLOT_LAYOUT.yaxis, title: { text: 'Sites', font: { size: 11 } } } }, PLOT_CONFIG),
     `${PROGRAM.name} sites by most recent observation`, noDates);
+    }
 
     // A working list people scan top to bottom, so no pagination.
-    const rows = sites.map((s, i) => ({
-      _i: s.lat != null ? mapped.indexOf(s) : -1, Site: s.name || '', Status: s.active ? 'Active' : 'Inactive',
+    const rows = sites.map((s) => ({
+      _i: s.lat != null ? mapped.indexOf(s) : -1, Site: s.name || '', 'Station ID': s.code ?? '', Status: siteStatus(s),
       'First observation': s.first, 'Last observation': s.last, Stations: s.stations ?? null, Mapped: s.lat != null ? 'Yes' : 'No',
     }));
     const updateCount = (api) => { $('siteCount').textContent = `Showing ${api.getDisplayedRowCount()} of ${rows.length}`; };
+    const siteCols = fromService ? ['Site', 'Station ID', 'Mapped'] : ['Site', 'Status', 'First observation', 'Last observation', 'Stations', 'Mapped'];
     const sitesApi = agGrid.createGrid($('sitesGrid'), {
       theme: GRID_THEME, rowData: rows,
       columnDefs: [
         { field: 'Site', flex: 2, minWidth: 180 },
+        { field: 'Station ID', minWidth: 130 },
         { field: 'Status', minWidth: 110,
-          cellRenderer: (p) => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${p.value === 'Active' ? color : INACTIVE}"></span>${p.value}` },
+          cellRenderer: (p) => `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;background:${p.value === 'Inactive' ? INACTIVE : color}"></span>${p.value}` },
         { field: 'First observation', minWidth: 140 }, { field: 'Last observation', minWidth: 140 },
         { field: 'Stations', type: 'numericColumn', minWidth: 100 }, { field: 'Mapped', minWidth: 100 },
-      ],
+      ].filter((c) => siteCols.includes(c.field)),
       defaultColDef: { sortable: true, filter: true, resizable: true, flex: 1 },
       onRowClicked: (e) => { if (e.data._i >= 0) mapApi.then((m) => m && m.show(e.data._i)); },
       onFilterChanged: (e) => updateCount(e.api),
@@ -623,7 +893,7 @@ async function init() {
     });
     $('siteFilter').addEventListener('calciteInputInput', (e) => sitesApi.setGridOption('quickFilterText', e.target.value));
     $('sitesCsv').addEventListener('click', () => sitesApi.exportDataAsCsv({
-      fileName: `${slugify(PROGRAM.name)}-sites.csv`, columnKeys: ['Site', 'Status', 'First observation', 'Last observation', 'Stations', 'Mapped'],
+      fileName: `${slugify(PROGRAM.name)}-sites.csv`, columnKeys: siteCols,
     }));
   }
 

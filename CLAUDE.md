@@ -25,6 +25,8 @@ Where they conflict on visual styling inside an LT Info embed (colors, fonts, ca
 ## Conventions
 
 - Python: use the ArcGIS Pro env `%LOCALAPPDATA%\ESRI\conda\envs\arcgispro-py3-plotly\python.exe`.
+- Program pages use one of three templates (`charts`, `map`, `context`), set by `"template"` in `programs.json` and shown on the `const TEMPLATE` line at the top of each page. See [templates/README.md](templates/README.md).
+- Measurement charts come from the TRPA `LTInfo_Monitoring` map service via each program's `measures` in `programs.json`.
 - To add a program, add it to `programs.json` and run the scaffold script. Do not hand-edit `index.html`; edit `templates/index.html`.
 - Program pages follow the embed contract in the `ltinfo-platform` and `trpa-monitoring-dashboard` skills: no chrome, `#f7f7f7` background, Lexend Deca, host styling (not TRPA or EIP brand), table plus CSV behind every chart, explicit empty states, and height posting.
 - Run `trpa-dashboard-qa` before sending a URL to the LT Info admin.

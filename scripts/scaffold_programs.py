@@ -14,6 +14,7 @@ import argparse
 import datetime
 import html
 import json
+import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -21,6 +22,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES = ROOT / "templates"
 API = "https://internalapi.laketahoeinfo.org"
+SERVICE = "https://maps.trpa.org/server/rest/services/LTInfo_Monitoring/MapServer"
+# Page layouts in templates/program-dashboard.html: chart-heavy, map-focused, context-heavy.
+TEMPLATES_ALLOWED = ("charts", "map", "context")
 
 
 def write(path, text):
@@ -53,13 +57,34 @@ def stamp_program(template, category, program, force):
         "categoryFolder": category["folder"],
         "categoryColor": category["themeColor"],
         "siblings": [{"id": p["id"], "name": p["name"], "file": p["file"]} for p in category["programs"]],
+        # Charts of LTInfo_Monitoring map service layers; keys are documented in templates/README.md.
+        "measures": program.get("measures", []),
+        # Map service layer to draw sites from when LT Info has none for the program.
+        "sitesLayer": program.get("sitesLayer"),
     }
+    layout = program.get("template", "charts")
+    if layout not in TEMPLATES_ALLOWED:
+        raise SystemExit(f"Program {program['id']}: template must be one of {', '.join(TEMPLATES_ALLOWED)}, not {layout!r}")
     page = (template
+            .replace("{{TEMPLATE}}", layout)
             .replace("{{PROGRAM_NAME_HTML}}", html.escape(program["name"]))
             .replace("{{CATEGORY_COLOR}}", category["themeColor"])
             .replace("{{PROGRAM_JSON}}", script_json(config)))
     write(out, page)
     return True
+
+
+def service_sites(cfg):
+    """[lat, lon, name] points from a LTInfo_Monitoring map service layer ({layer, name})."""
+    query = urllib.parse.urlencode({"where": "1=1", "outFields": cfg["name"], "outSR": 4326, "returnGeometry": "true", "f": "json"})
+    try:
+        with urllib.request.urlopen(f"{SERVICE}/{cfg['layer']}/query?{query}", timeout=60) as resp:
+            feats = json.loads(resp.read().decode("utf-8")).get("features") or []
+    except Exception as exc:
+        print(f"  skipped sites layer {cfg['layer']}: {exc}")
+        return []
+    return [[round(f["geometry"]["y"], 5), round(f["geometry"]["x"], 5), f["attributes"].get(cfg["name"])]
+            for f in feats if f.get("geometry")]
 
 
 def program_snapshot(args):
@@ -69,7 +94,9 @@ def program_snapshot(args):
     geo = get(f"/monitoring-programs/{pid}/sites-as-feature-collection", {})
     partners = get(f"/monitoring-programs/{pid}/partners", [])
     sites = []
-    for feat in geo.get("features") or []:
+    if program.get("sitesLayer"):
+        sites = service_sites(program["sitesLayer"])
+    for feat in [] if sites else geo.get("features") or []:
         geom = feat.get("geometry") or {}
         coords = geom.get("coordinates") or []
         if geom.get("type") == "Point" and len(coords) >= 2:
@@ -114,8 +141,8 @@ def category_readme(category):
              "One single-page dashboard per monitoring program, built from "
              "[templates/program-dashboard.html](../templates/program-dashboard.html).", ""]
     if category["programs"]:
-        lines += ["| Program | LT Info ID | Page |", "|---|---|---|"]
-        lines += [f"| {p['name']} | {p['id']} | [{p['file']}]({p['file']}) |" for p in category["programs"]]
+        lines += ["| Program | LT Info ID | Template | Page |", "|---|---|---|---|"]
+        lines += [f"| {p['name']} | {p['id']} | {p.get('template', 'charts')} | [{p['file']}]({p['file']}) |" for p in category["programs"]]
     else:
         lines.append("No monitoring programs are assigned to this category yet. "
                      "Add one to programs.json and rerun scripts/scaffold_programs.py.")
