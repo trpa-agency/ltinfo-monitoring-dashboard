@@ -10,3 +10,8 @@ Threshold category 7. One single-page dashboard per monitoring program, built fr
 | Pelagic Water Quality (Clarity) | 66 | charts | [pelagic-water-quality.html](pelagic-water-quality.html) |
 | Periphyton | 13 | charts | [periphyton.html](periphyton.html) |
 | Regional Stormwater Monitoring | 16 | context | [regional-stormwater.html](regional-stormwater.html) |
+| Nearshore Turbidity Monitoring | 12 | charts | [nearshore-turbidity.html](nearshore-turbidity.html) |
+| Aquatic Invasive Plants | 14 | map | [aquatic-invasive-plants.html](aquatic-invasive-plants.html) |
+| Watercraft Inspections | 9093 | charts | [watercraft-inspections.html](watercraft-inspections.html) |
+| Aquatic Plant Survey Zones | 78 | map | [aquatic-plant-survey-zones.html](aquatic-plant-survey-zones.html) |
+| Submerged Aquatic Vegetation | 9034 | map | [submerged-aquatic-vegetation.html](submerged-aquatic-vegetation.html) |

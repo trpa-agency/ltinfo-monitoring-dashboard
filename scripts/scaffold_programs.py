@@ -61,6 +61,16 @@ def stamp_program(template, category, program, force):
         "measures": program.get("measures", []),
         # Map service layer to draw sites from when LT Info has none for the program.
         "sitesLayer": program.get("sitesLayer"),
+        # Polygon layer from the map service to map (and list) in place of sites; keys in templates/README.md.
+        "mapLayer": program.get("mapLayer"),
+        # Layer to count distinct sites per year from, for the Sites monitored each year chart.
+        "sitesPerYear": program.get("sitesPerYear"),
+        # Reference layers drawn under the program's sites or areas.
+        "overlays": program.get("overlays", []),
+        # ltinfo: false for programs with no LT Info record; their description and approach come from here.
+        "ltinfo": program.get("ltinfo", True),
+        "description": program.get("description"),
+        "approach": program.get("approach"),
     }
     layout = program.get("template", "charts")
     if layout not in TEMPLATES_ALLOWED:
@@ -75,24 +85,68 @@ def stamp_program(template, category, program, force):
 
 
 def service_sites(cfg):
-    """[lat, lon, name] points from a LTInfo_Monitoring map service layer ({layer, name})."""
-    query = urllib.parse.urlencode({"where": "1=1", "outFields": cfg["name"], "outSR": 4326, "returnGeometry": "true", "f": "json"})
+    """[lat, lon, name] points from a LTInfo_Monitoring map service layer, one per site (keyed by code, else name),
+    at the site's latest location when the layer has a feature per site per year."""
+    fields = [f for f in (cfg["name"], cfg.get("code"), cfg.get("year")) if f]
+    params = {"where": cfg.get("where") or "1=1", "outFields": ",".join(fields), "outSR": 4326, "returnGeometry": "true", "f": "json"}
+    if cfg.get("year"):
+        params["orderByFields"] = cfg["year"]
     try:
-        with urllib.request.urlopen(f"{SERVICE}/{cfg['layer']}/query?{query}", timeout=60) as resp:
+        with urllib.request.urlopen(f"{SERVICE}/{cfg['layer']}/query?{urllib.parse.urlencode(params)}", timeout=60) as resp:
             feats = json.loads(resp.read().decode("utf-8")).get("features") or []
     except Exception as exc:
         print(f"  skipped sites layer {cfg['layer']}: {exc}")
         return []
-    return [[round(f["geometry"]["y"], 5), round(f["geometry"]["x"], 5), f["attributes"].get(cfg["name"])]
-            for f in feats if f.get("geometry")]
+    sites = {}
+    for f in feats:
+        if not f.get("geometry"):
+            continue
+        a = f["attributes"]
+        key = str(a.get(cfg["code"]) if cfg.get("code") and a.get(cfg["code"]) is not None else a.get(cfg["name"]) or "")
+        if key:
+            sites[key] = [round(f["geometry"]["y"], 5), round(f["geometry"]["x"], 5), a.get(cfg["name"])]
+    return list(sites.values())
+
+
+def service_json(layer, params):
+    query = urllib.parse.urlencode({"f": "json", **params})
+    with urllib.request.urlopen(f"{SERVICE}/{layer}/query?{query}", timeout=60) as resp:
+        data = json.loads(resp.read().decode("utf-8"))
+    if "error" in data:
+        raise RuntimeError(data["error"].get("message"))
+    return data
+
+
+def service_areas(cfg):
+    """The polygon layer behind a program's mapLayer, filtered to the latest pick value (the page's default),
+    with its area count. The home map draws the polygons live from the service with this filter."""
+    try:
+        where = cfg.get("where") or "1=1"
+        if cfg.get("pick"):
+            stats = service_json(cfg["layer"], {"where": where, "groupByFieldsForStatistics": cfg["pick"], "returnGeometry": "false",
+                                                "outStatistics": json.dumps([{"statisticType": "count", "onStatisticField": "OBJECTID",
+                                                                              "outStatisticFieldName": "n"}])})
+            values = sorted(str(f["attributes"][cfg["pick"]]) for f in stats.get("features", []) if f["attributes"].get(cfg["pick"]) not in (None, ""))
+            if values:
+                latest = values[-1].replace("'", "''")
+                where = f"{where} AND {cfg['pick']} = '{latest}'" if cfg.get("where") else f"{cfg['pick']} = '{latest}'"
+        count = service_json(cfg["layer"], {"where": where, "returnCountOnly": "true"}).get("count", 0)
+    except Exception as exc:
+        print(f"  skipped map layer {cfg['layer']}: {exc}")
+        return None
+    return {"layer": cfg["layer"], "where": where, "name": cfg.get("name"), "geometry": cfg.get("geometry", "fill"),
+            "count": count if cfg.get("countAsSites", True) else 0}
 
 
 def program_snapshot(args):
     category, program, summary = args
     pid = program["id"]
-    record = get(f"/monitoring-programs/{pid}", {})
-    geo = get(f"/monitoring-programs/{pid}/sites-as-feature-collection", {})
-    partners = get(f"/monitoring-programs/{pid}/partners", [])
+    lt = program.get("ltinfo", True)
+    record = get(f"/monitoring-programs/{pid}", {}) if lt else {}
+    # LT Info sites only for programs not mapped from the map service.
+    mapped_by_service = program.get("sitesLayer") or program.get("mapLayer") or not lt
+    geo = {} if mapped_by_service else get(f"/monitoring-programs/{pid}/sites-as-feature-collection", {})
+    partners = get(f"/monitoring-programs/{pid}/partners", []) if lt else []
     sites = []
     if program.get("sitesLayer"):
         sites = service_sites(program["sitesLayer"])
@@ -114,6 +168,8 @@ def program_snapshot(args):
         "keyImage": record.get("KeyImageFileResourceGUID") or summary.get("KeyPhotoFileResourceInfoGUID"),
         "partners": [p.get("OrganizationName") for p in partners if isinstance(p, dict) and p.get("OrganizationName")],
         "sites": sites,
+        # Polygons from the program's mapLayer; the home page counts each area as a mapped site.
+        "areas": service_areas(program["mapLayer"]) if program.get("mapLayer") else None,
     }
 
 

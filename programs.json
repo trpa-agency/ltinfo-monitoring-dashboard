@@ -1,20 +1,44 @@
 {
-  "_comment": "Source of truth for folders and pages. Categories are the 10 Threshold Dashboard categories (internalapi /threshold-categories). Programs are the LT Info monitoring programs that carry a category (internalapi /monitoring-programs, captured Oct. 27, 2026), plus LTIMP (15), which is uncategorized in LT Info and placed in Water Quality here. Each program's optional measures list charts layers and tables from the TRPA LTInfo_Monitoring map service (https://maps.trpa.org/server/rest/services/LTInfo_Monitoring/MapServer); see templates/README.md for the keys. Each program's template (charts, map, or context) picks its page layout. Run scripts/scaffold_programs.py --force after editing measures.",
+  "_comment": "Source of truth for folders and pages. Categories are the 10 Threshold Dashboard categories (internalapi /threshold-categories). Programs are the LT Info monitoring programs that carry a category (internalapi /monitoring-programs, captured Oct. 27, 2026), plus LTIMP (15), which is uncategorized in LT Info and placed in Water Quality here. Each program's optional measures list charts layers and tables from the TRPA LTInfo_Monitoring map service (https://maps.trpa.org/server/rest/services/LTInfo_Monitoring/MapServer); see templates/README.md for the keys. Each program's template (charts, map, or context) picks its page layout. Run scripts/scaffold_programs.py --force after editing measures. A program with no LT Info record sets ltinfo: false and gives its own description; its id is 9000 plus its main layer. overlays draw extra map service layers under a program's sites or areas.",
   "categories": [
     {
       "thresholdCategoryId": 1, "name": "Air Quality", "folder": "air-quality", "themeColor": "#9CC3EA",
       "programs": [
-        { "id": 67, "name": "Air Quality", "file": "air-quality.html", "featured": true, "template": "charts",
+        { "id": 41, "name": "Ozone (O3)", "file": "ozone.html", "featured": false, "template": "charts",
+          "sitesLayer": {"layer": 16, "name": "name", "code": "id", "active": "Active_2023", "unit": "station"},
+          "sitesPerYear": {"layer": 46, "year": "Year", "site": "Site", "where": "Pollutant = 'O3'", "unit": "station"},
           "measures": [
-            { "title": "Annual air quality by station", "sub": "Yearly statistic at each monitoring station. Choose a pollutant statistic.",
-              "layer": 46, "x": "Year", "y": "Value", "yLabel": "Value", "seriesBy": "Site", "seriesLabel": "Station",
-              "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "PM2.5 - ANNUAL AVG.", "standard": { "field": "Threshold_Value" }, "span": "span-12" }
+            {"title": "Ozone by station", "sub": "Yearly ozone (O3) statistic at each monitoring station, in parts per million. Some older records are in parts per billion. Choose a statistic.", "layer": 46, "where": "Pollutant = 'O3'", "x": "Year", "y": "Value", "yLabel": "O3 (ppm)", "seriesBy": "Site", "seriesLabel": "Station", "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "O3 - HIGH 8 HR", "standard": {"field": "Threshold_Value"}, "span": "span-12"},
+            {"title": "Daily ozone by station", "sub": "Daily ozone (O3) values at each station from the daily monitoring record, in the units named in each statistic. Choose a statistic.", "layer": 17, "where": "variable LIKE 'O3%'", "x": "date", "xType": "date", "xLabel": "Date", "y": "value", "yName": "O3", "yLabel": "O3", "seriesBy": "id", "seriesLabel": "Station", "seriesNames": {"STL": "Stateline", "TC": "Tahoe City", "IV": "Incline Village", "SLT": "South Lake Tahoe", "BSP": "DL Bliss State Park", "LTC": "Lake Tahoe Community College"}, "pick": "variable", "pickLabel": "Statistic", "span": "span-12"}
           ] },
-        { "id": 26, "name": "Carbon Monoxide Monitoring", "file": "carbon-monoxide.html", "featured": false, "template": "charts",
+        { "id": 26, "name": "Carbon Monoxide (CO)", "file": "carbon-monoxide.html", "featured": false, "template": "charts",
+          "sitesLayer": {"layer": 16, "name": "name", "code": "id", "active": "Active_2023", "unit": "station"},
+          "sitesPerYear": {"layer": 46, "year": "Year", "site": "Site", "where": "Pollutant = 'CO'", "unit": "station"},
           "measures": [
-            { "title": "Carbon monoxide by station", "sub": "Yearly carbon monoxide (CO) statistic at each monitoring station, in parts per million.",
-              "layer": 46, "where": "Pollutant = 'CO'", "x": "Year", "y": "Value", "yLabel": "CO (ppm)", "seriesBy": "Site", "seriesLabel": "Station",
-              "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "CO - HIGH 8 HR", "standard": { "field": "Threshold_Value" }, "span": "span-12" }
+            {"title": "Carbon monoxide by station", "sub": "Yearly carbon monoxide (CO) statistic at each monitoring station, in parts per million. Choose a statistic.", "layer": 46, "where": "Pollutant = 'CO'", "x": "Year", "y": "Value", "yLabel": "CO (ppm)", "seriesBy": "Site", "seriesLabel": "Station", "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "CO - HIGH 8 HR", "standard": {"field": "Threshold_Value"}, "span": "span-12"},
+            {"title": "Daily carbon monoxide by station", "sub": "Daily carbon monoxide (CO) values at each station from the daily monitoring record, in the units named in each statistic. Choose a statistic.", "layer": 17, "where": "variable LIKE 'CO%'", "x": "date", "xType": "date", "xLabel": "Date", "y": "value", "yName": "CO", "yLabel": "CO", "seriesBy": "id", "seriesLabel": "Station", "seriesNames": {"STL": "Stateline", "TC": "Tahoe City", "IV": "Incline Village", "SLT": "South Lake Tahoe", "BSP": "DL Bliss State Park", "LTC": "Lake Tahoe Community College"}, "pick": "variable", "pickLabel": "Statistic", "span": "span-12"}
+          ] },
+        { "id": 42, "name": "Oxides of Nitrogen (NOX)", "file": "oxides-of-nitrogen.html", "featured": false, "template": "charts",
+          "sitesLayer": {"layer": 16, "name": "name", "code": "id", "active": "Active_2023", "unit": "station"},
+          "sitesPerYear": {"layer": 46, "year": "Year", "site": "Site", "where": "Pollutant = 'NO2'", "unit": "station"},
+          "measures": [
+            {"title": "Nitrogen dioxide by station", "sub": "Yearly nitrogen dioxide (NO2) statistic at each monitoring station, in parts per billion. NO2 is the oxide of nitrogen the stations measure. Choose a statistic.", "layer": 46, "where": "Pollutant = 'NO2'", "x": "Year", "y": "Value", "yLabel": "NO2 (ppb)", "seriesBy": "Site", "seriesLabel": "Station", "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "NO2 - ANNUAL AVG.", "standard": {"field": "Threshold_Value"}, "span": "span-12"},
+            {"title": "Daily nitrogen dioxide by station", "sub": "Daily nitrogen dioxide (NO2) values at each station from the daily monitoring record, in the units named in each statistic. Choose a statistic.", "layer": 17, "where": "variable LIKE 'NO2%' OR variable LIKE 'N02%'", "x": "date", "xType": "date", "xLabel": "Date", "y": "value", "yName": "NO2", "yLabel": "NO2", "seriesBy": "id", "seriesLabel": "Station", "seriesNames": {"STL": "Stateline", "TC": "Tahoe City", "IV": "Incline Village", "SLT": "South Lake Tahoe", "BSP": "DL Bliss State Park", "LTC": "Lake Tahoe Community College"}, "pick": "variable", "pickLabel": "Statistic", "span": "span-12"},
+            {"title": "Nitrogen oxide emissions", "sub": "Basin-wide oxides of nitrogen (NOx) emissions estimate each year, with the threshold. The service does not state units.", "layer": 72, "x": "Year", "y": "Value", "yName": "NOx emissions", "yLabel": "NOx emissions", "standard": {"field": "Threshold"}, "span": "span-12"}
+          ] },
+        { "id": 46, "name": "Particulate Matter 2.5", "file": "particulate-matter-2-5.html", "featured": false, "template": "charts",
+          "sitesLayer": {"layer": 16, "name": "name", "code": "id", "active": "Active_2023", "unit": "station"},
+          "sitesPerYear": {"layer": 46, "year": "Year", "site": "Site", "where": "Pollutant = 'PM2.5'", "unit": "station"},
+          "measures": [
+            {"title": "Fine particulate matter by station", "sub": "Yearly fine particulate matter (PM2.5) statistic at each monitoring station, in micrograms per cubic meter. Choose a statistic.", "layer": 46, "where": "Pollutant = 'PM2.5'", "x": "Year", "y": "Value", "yLabel": "PM2.5 (µg/m³)", "seriesBy": "Site", "seriesLabel": "Station", "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "PM2.5 - ANNUAL AVG.", "standard": {"field": "Threshold_Value"}, "span": "span-12"},
+            {"title": "Daily fine particulate matter by station", "sub": "Daily fine particulate matter (PM2.5) values at each station from the daily monitoring record, in the units named in each statistic. Choose a statistic.", "layer": 17, "where": "variable LIKE 'PM 2.5%' OR variable LIKE 'PM2.5%'", "x": "date", "xType": "date", "xLabel": "Date", "y": "value", "yName": "PM2.5", "yLabel": "PM2.5", "seriesBy": "id", "seriesLabel": "Station", "seriesNames": {"STL": "Stateline", "TC": "Tahoe City", "IV": "Incline Village", "SLT": "South Lake Tahoe", "BSP": "DL Bliss State Park", "LTC": "Lake Tahoe Community College"}, "pick": "variable", "pickLabel": "Statistic", "span": "span-12"}
+          ] },
+        { "id": 45, "name": "Particulate Matter 10", "file": "particulate-matter-10.html", "featured": false, "template": "charts",
+          "sitesLayer": {"layer": 16, "name": "name", "code": "id", "active": "Active_2023", "unit": "station"},
+          "sitesPerYear": {"layer": 46, "year": "Year", "site": "Site", "where": "Pollutant = 'PM10'", "unit": "station"},
+          "measures": [
+            {"title": "Particulate matter by station", "sub": "Yearly particulate matter (PM10) statistic at each monitoring station, in micrograms per cubic meter. Choose a statistic.", "layer": 46, "where": "Pollutant = 'PM10'", "x": "Year", "y": "Value", "yLabel": "PM10 (µg/m³)", "seriesBy": "Site", "seriesLabel": "Station", "pick": "Indicator", "pickLabel": "Statistic", "pickDefault": "PM10 - ANNUAL AVG.", "standard": {"field": "Threshold_Value"}, "span": "span-12"},
+            {"title": "Daily particulate matter by station", "sub": "Daily particulate matter (PM10) values at each station from the daily monitoring record, in the units named in each statistic. Choose a statistic.", "layer": 17, "where": "variable LIKE 'PM 10%' OR variable LIKE 'PM10%'", "x": "date", "xType": "date", "xLabel": "Date", "y": "value", "yName": "PM10", "yLabel": "PM10", "seriesBy": "id", "seriesLabel": "Station", "seriesNames": {"STL": "Stateline", "TC": "Tahoe City", "IV": "Incline Village", "SLT": "South Lake Tahoe", "BSP": "DL Bliss State Park", "LTC": "Lake Tahoe Community College"}, "pick": "variable", "pickLabel": "Statistic", "span": "span-12"}
           ] }
       ]
     },
@@ -22,28 +46,14 @@
       "thresholdCategoryId": 2, "name": "Fisheries", "folder": "fisheries", "themeColor": "#B94F41",
       "programs": [
         { "id": 63, "name": "Stream Bioassessment and Physical Habitat", "file": "stream-bioassessment.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 8, "name": "SITE_NAME", "year": "YEAR_OF_COUNT", "status": "STATION_TYPE"},
+          "sitesPerYear": {"layer": 8, "year": "YEAR_OF_COUNT", "site": "SITE_NAME"},
           "measures": [
-            { "title": "Average stream condition score", "sub": "Average California Stream Condition Index (CSCI) score of sites sampled each year. Choose a site type.",
-              "layer": 8, "x": "YEAR_OF_COUNT", "y": "COUNT_VALUE", "stat": "avg", "yName": "Average CSCI score", "yLabel": "CSCI score",
-              "pick": "STATION_TYPE", "pickLabel": "Site type", "type": "bar" },
-            { "title": "Sites sampled each year", "sub": "Bioassessment sites sampled each year, by site type.",
-              "layer": 8, "x": "YEAR_OF_COUNT", "y": "OBJECTID", "stat": "count", "yLabel": "Sites sampled",
-              "seriesBy": "STATION_TYPE", "seriesLabel": "Site type", "type": "stacked" },
-            { "title": "Condition score by site", "sub": "CSCI score each year the site was sampled, for trend and reference sites. Choose a site.",
-              "layer": 8, "where": "STATION_TYPE IN ('Trend', 'Trend Panel A', 'Trend Panel B', 'Reference')", "x": "YEAR_OF_COUNT", "y": "COUNT_VALUE", "yName": "CSCI score", "yLabel": "CSCI score",
-              "pick": "SITE_NAME", "pickLabel": "Site", "span": "span-12" }
-          ] },
-        { "id": 32, "name": "Stream Habitat Condition Monitoring", "file": "stream-habitat-condition.html", "featured": false, "template": "charts",
-          "measures": [
-            { "title": "Average stream condition score", "sub": "Average California Stream Condition Index (CSCI) score at trend sites, by sampling period.",
-              "layer": 84, "x": "Year", "xType": "category", "xLabel": "Period", "y": "Value", "yLabel": "CSCI score", "type": "bar",
-              "seriesBy": "Trend_Panel", "seriesLabel": "Sites", "seriesNames": { "Both": "All trend sites", "A": "Panel A", "B": "Panel B" } },
-            { "title": "Streams by condition class", "sub": "Share of sampled streams in each CSCI condition class, by sampling period.",
-              "layer": 83, "x": "Year", "xType": "category", "xLabel": "Period", "y": "Value", "yLabel": "Share of streams", "format": ".0%",
-              "type": "stacked", "seriesBy": "Condition_Class", "seriesLabel": "Condition class" },
-            { "title": "Stream monitoring sites by score", "sub": "CSCI score at each site and year sampled. Choose a site type.",
-              "layer": 8, "x": "YEAR_OF_COUNT", "y": "COUNT_VALUE", "yLabel": "CSCI score", "stat": "avg", "yName": "Average CSCI score",
-              "pick": "STATION_TYPE", "pickLabel": "Site type", "type": "bar" }
+            {"title": "Average condition score at trend sites", "sub": "Average California Stream Condition Index (CSCI) score at trend sites, by sampling period.", "layer": 84, "x": "Year", "xType": "category", "xLabel": "Period", "y": "Value", "yLabel": "CSCI score", "type": "bar", "seriesBy": "Trend_Panel", "seriesLabel": "Sites", "seriesNames": {"Both": "All trend sites", "A": "Panel A", "B": "Panel B"}},
+            {"title": "Streams by condition class", "sub": "Share of sampled streams in each CSCI condition class, by sampling period.", "layer": 83, "x": "Year", "xType": "category", "xLabel": "Period", "y": "Value", "yLabel": "Share of streams", "format": ".0%", "type": "stacked", "seriesBy": "Condition_Class", "seriesLabel": "Condition class"},
+            {"title": "Average stream condition score", "sub": "Average California Stream Condition Index (CSCI) score of sites sampled each year. Choose a site type.", "layer": 8, "x": "YEAR_OF_COUNT", "y": "COUNT_VALUE", "stat": "avg", "yName": "Average CSCI score", "yLabel": "CSCI score", "pick": "STATION_TYPE", "pickLabel": "Site type", "type": "bar"},
+            {"title": "Sites sampled each year", "sub": "Bioassessment sites sampled each year, by site type.", "layer": 8, "x": "YEAR_OF_COUNT", "y": "OBJECTID", "stat": "count", "yLabel": "Sites sampled", "seriesBy": "STATION_TYPE", "seriesLabel": "Site type", "type": "stacked"},
+            {"title": "Condition score by site", "sub": "CSCI score each year the site was sampled, for trend and reference sites. Choose a site.", "layer": 8, "where": "STATION_TYPE IN ('Trend', 'Trend Panel A', 'Trend Panel B', 'Reference')", "x": "YEAR_OF_COUNT", "y": "COUNT_VALUE", "yName": "CSCI score", "yLabel": "CSCI score", "pick": "SITE_NAME", "pickLabel": "Site", "span": "span-12"}
           ] }
       ]
     },
@@ -53,19 +63,30 @@
     },
     {
       "thresholdCategoryId": 4, "name": "Scenic Resources", "folder": "scenic-resources", "themeColor": "#B0A843",
-      "programs": []
+      "programs": [
+        { "id": 59, "name": "Scenic Monitoring", "file": "scenic-monitoring.html", "featured": false, "template": "map",
+          "mapLayer": {"layer": 22, "title": "Scenic corridors", "unit": "corridor unit", "unitPlural": "Corridor units", "name": "CORRIDOR_NAME", "colorBy": "CURRENT_STATUS", "colorByLabel": "Threshold status", "colors": {"Attainment": "#188c16", "Non-Attainment": "#be4c4c"}, "meta": [{"field": "CATEGORY"}, {"field": "TYPE"}], "fields": [{"field": "CURRENT_STATUS", "label": "Status"}, {"field": "CATEGORY", "label": "Category"}, {"field": "TYPE", "label": "Type"}, {"field": "UNIT", "label": "Unit"}, {"field": "JURISDICTION", "label": "Jurisdiction"}]},
+          "overlays": [{"layer": 24, "title": "Scenic viewpoints", "name": "CORRIDOR_NAME", "geometry": "point", "color": "#3e72b0", "fields": [{"field": "ID", "label": "Viewpoint"}, {"field": "CATEGORY", "label": "Category"}, {"field": "CURRENT_STATUS", "label": "Status"}, {"field": "JURISDICTION", "label": "Jurisdiction"}]}],
+          "sitesPerYear": {"layer": 23, "year": "YEAR", "site": "ID", "unit": "corridor unit"},
+          "measures": [
+            {"title": "Corridor units in attainment", "sub": "Scenic corridor units in and out of attainment, by evaluation year.", "layer": 23, "x": "YEAR", "y": "OBJECTID", "stat": "count", "seriesBy": "STATUS", "seriesLabel": "Status", "yLabel": "Corridor units", "type": "stacked"},
+            {"title": "Average corridor rating", "sub": "Average scenic threshold rating of roadway and shoreline corridor units, by evaluation year.", "layer": 23, "x": "YEAR", "y": "THRESHOLD_RATING", "stat": "avg", "seriesBy": "CATEGORY", "seriesLabel": "Corridor type", "yLabel": "Threshold rating"},
+            {"title": "Viewpoint ratings in attainment", "sub": "Scenic viewpoint ratings in attainment or not, by evaluation year.", "layer": 25, "x": "YEAR", "y": "OBJECTID", "stat": "count", "seriesBy": "THRESHOLD_STATUS", "seriesLabel": "Status", "seriesNames": {"A": "In attainment", "N": "Not in attainment", "N/A": "Not rated"}, "yLabel": "Viewpoint ratings", "type": "stacked"},
+            {"title": "Average viewpoint rating", "sub": "Average scenic threshold rating of roadway and shoreline viewpoints, by evaluation year.", "layer": 25, "x": "YEAR", "y": "THRESHOLD_RATING", "stat": "avg", "seriesBy": "CATEGORY", "seriesLabel": "Viewpoint type", "yLabel": "Threshold rating"},
+            {"title": "Corridor rating by corridor", "sub": "Scenic threshold rating each evaluation year, for roadway and shoreline units. Choose a corridor.", "layer": 23, "x": "YEAR", "y": "THRESHOLD_RATING", "seriesBy": "CATEGORY", "seriesLabel": "Corridor type", "pick": "CORRIDOR_NAME", "pickLabel": "Corridor", "yLabel": "Threshold rating", "span": "span-12"}
+          ] }
+      ]
     },
     {
       "thresholdCategoryId": 5, "name": "Soil Conservation", "folder": "soil-conservation", "themeColor": "#9A5710",
       "programs": [
-        { "id": 49, "name": "SEZ Basin-wide Monitoring and Assessment Plan", "file": "sez-monitoring.html", "featured": false, "template": "charts",
+        { "id": 49, "name": "SEZ Basin-wide Monitoring and Assessment Plan", "file": "sez-monitoring.html", "featured": false, "template": "map",
+          "sitesPerYear": {"layer": 106, "year": "Threshold_Year", "site": "Assessment_Unit_Name", "unit": "assessment unit"},
+          "mapLayer": {"layer": 106, "title": "SEZ assessment units", "unit": "assessment unit", "unitPlural": "Assessment units", "name": "Assessment_Unit_Name", "colorBy": "Final_Rating", "colorByLabel": "Overall rating", "colors": {"A": "#188c16", "B": "#89bf40", "C": "#e69527", "D": "#be4c4c", "Not Assessed": "#989898"}, "labels": {"A": "Rating A", "B": "Rating B", "C": "Rating C", "D": "Rating D"}, "pick": "Threshold_Year", "pickLabel": "Evaluation year", "meta": [{"field": "SEZ_Type"}, {"field": "Acres", "suffix": " acres"}], "fields": [{"field": "Final_Rating", "label": "Overall rating"}, {"field": "Final_Percent", "label": "Score (%)"}, {"field": "SEZ_Type", "label": "SEZ type"}, {"field": "Acres", "label": "Acres"}, {"field": "Ownership_Primary", "label": "Primary owner"}]},
           "measures": [
-            { "title": "SEZ acres enhanced and restored", "sub": "Stream environment zone (SEZ) acres enhanced or restored each year.",
-              "layer": 76, "x": "Year", "y": [{ "field": "Enhanced", "name": "Enhanced" }, { "field": "Restored", "name": "Restored" }],
-              "yLabel": "Acres", "type": "stacked" },
-            { "title": "SEZ assessment units by rating", "sub": "Number of SEZ assessment units in each overall condition rating.",
-              "layer": 106, "x": "Final_Rating", "xType": "category", "xLabel": "Rating", "y": "OBJECTID", "stat": "count",
-              "yName": "Assessment units", "yLabel": "Assessment units", "type": "bar" }
+            {"title": "SEZ acres enhanced and restored", "sub": "Stream environment zone (SEZ) acres enhanced or restored each year.", "layer": 76, "x": "Year", "y": [{"field": "Enhanced", "name": "Enhanced"}, {"field": "Restored", "name": "Restored"}], "yLabel": "Acres", "type": "stacked"},
+            {"title": "SEZ assessment units by rating", "sub": "Number of SEZ assessment units in each overall condition rating, by threshold evaluation year.", "layer": 106, "x": "Final_Rating", "xType": "category", "xLabel": "Rating", "y": "OBJECTID", "stat": "count", "yName": "Assessment units", "yLabel": "Assessment units", "type": "bar", "seriesBy": "Threshold_Year", "seriesLabel": "Evaluation year"},
+            {"title": "SEZ acres restored by project year", "sub": "Stream environment zone (SEZ) acres restored by projects, by the year each project was completed.", "layer": 77, "x": "YearCompleted", "y": "AcresRestored", "stat": "sum", "yName": "Acres restored", "yLabel": "Acres", "type": "bar"}
           ] }
       ]
     },
@@ -73,13 +94,13 @@
       "thresholdCategoryId": 6, "name": "Vegetation Preservation", "folder": "vegetation-preservation", "themeColor": "#415414",
       "programs": [
         { "id": 39, "name": "Tahoe Yellow Cress Monitoring", "file": "tahoe-yellow-cress.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 9, "name": "SITE_NAME", "year": "YEAR_OF_COUNT", "where": "STATUS = 'Surveyed'"},
+          "sitesPerYear": {"layer": 9, "year": "YEAR_OF_COUNT", "site": "SITE_NAME", "where": "STATUS = 'Surveyed'"},
           "measures": [
-            { "title": "Occupied Tahoe yellow cress sites", "sub": "Survey sites where Tahoe yellow cress was found each year.",
-              "layer": 86, "x": "Year", "y": "Occupied_Sites", "yName": "Occupied sites", "yLabel": "Occupied sites", "type": "bar",
-              "standard": { "field": "Threshold", "label": "Threshold standard" } },
-            { "title": "Lake level during surveys", "sub": "Lake Tahoe surface elevation in the survey year, in feet. Low water exposes more beach habitat.",
-              "layer": 86, "x": "Year", "y": "Lake_Level", "yName": "Lake level", "yLabel": "Elevation (ft)", "zero": false }
-          ] },
+            {"title": "Occupied Tahoe yellow cress sites", "sub": "Survey sites where Tahoe yellow cress was found each year.", "layer": 86, "x": "Year", "y": "Occupied_Sites", "yName": "Occupied sites", "yLabel": "Occupied sites", "type": "bar", "standard": {"field": "Threshold", "label": "Threshold"}},
+            {"title": "Lake level during surveys", "sub": "Lake Tahoe surface elevation in the survey year, in feet. Low water exposes more beach habitat.", "layer": 86, "x": "Year", "y": "Lake_Level", "yName": "Lake level", "yLabel": "Elevation (ft)", "zero": false}
+          ],
+          "overlays": [{"layer": 117, "title": "Lake level in 2024", "name": "Year", "geometry": "fill", "color": "#3e72b0", "where": "Year = 2024", "fields": [{"field": "Level_", "label": "Lake level (ft)"}]}] },
         { "id": 83, "name": "Subalpine Conifer", "file": "subalpine-conifer.html", "featured": false, "template": "context" }
       ]
     },
@@ -88,59 +109,108 @@
       "programs": [
         { "id": 82, "name": "Harmful Algae Bloom (HAB) Monitoring", "file": "harmful-algae-bloom.html", "featured": true, "template": "context" },
         { "id": 15, "name": "LTIMP", "file": "ltimp.html", "featured": false, "template": "map",
-          "sitesLayer": { "layer": 33, "name": "station_nm", "code": "site_no" },
+          "sitesPerYear": {"layer": 99, "year": "SampleDatetime", "site": "SiteName", "extract": true, "unit": "station"},
+          "sitesLayer": {"layer": 33, "name": "station_nm", "code": "site_no", "unit": "station"},
           "measures": [
-            { "title": "Suspended sediment", "sub": "Annual average suspended sediment concentration across Lake Tahoe Interagency Monitoring Program (LTIMP) streams.",
-              "layer": 85, "x": "Year", "y": "AnnualAverage", "yName": "Suspended sediment", "yLabel": "Concentration" },
-            { "title": "Total phosphorus", "sub": "Annual average total phosphorus concentration across LTIMP streams.",
-              "layer": 88, "x": "Year", "y": "AverageTotalPhosphorousConcentr", "yName": "Total phosphorus", "yLabel": "Concentration" },
-            { "title": "Total nitrogen", "sub": "Annual average total nitrogen concentration across LTIMP streams.",
-              "layer": 87, "x": "Year", "y": "AverageTotalNitrogenConcentrati", "yName": "Total nitrogen", "yLabel": "Concentration", "span": "span-12" }
+            {"title": "Suspended sediment", "sub": "Annual average suspended sediment concentration across Lake Tahoe Interagency Monitoring Program (LTIMP) streams.", "layer": 85, "x": "Year", "y": "AnnualAverage", "yName": "Suspended sediment", "yLabel": "Concentration"},
+            {"title": "Total phosphorus", "sub": "Annual average total phosphorus concentration across LTIMP streams.", "layer": 88, "x": "Year", "y": "AverageTotalPhosphorousConcentr", "yName": "Total phosphorus", "yLabel": "Concentration"},
+            {"title": "Total nitrogen", "sub": "Annual average total nitrogen concentration across LTIMP streams.", "layer": 87, "x": "Year", "y": "AverageTotalNitrogenConcentrati", "yName": "Total nitrogen", "yLabel": "Concentration", "span": "span-12"},
+            {"title": "Total phosphorus samples", "sub": "Total phosphorus concentration in each sample, with the state standard for the site. Choose a site.", "layer": 100, "x": "SampleDate_Time", "xType": "date", "xLabel": "Sample date", "y": "TotalPhosphorus", "yName": "Total phosphorus", "yLabel": "Concentration", "pick": "SiteName", "pickLabel": "Site", "standard": {"field": "State_Standard", "label": "State standard"}, "span": "span-12"},
+            {"title": "Total nitrogen samples", "sub": "Total nitrogen concentration in each sample, with the state standard where the site has one. Choose a site.", "layer": 101, "x": "SampleDatetime", "xType": "date", "xLabel": "Sample date", "y": "Total_Nitrogen", "yName": "Total nitrogen", "yLabel": "Concentration", "pick": "SiteName", "pickLabel": "Site", "standard": {"field": "State_Standard", "label": "State standard"}, "span": "span-12"}
           ] },
         { "id": 76, "name": "Nearshore Human Health, E. coli Monitoring", "file": "nearshore-human-health.html", "featured": true, "template": "context" },
         { "id": 66, "name": "Pelagic Water Quality (Clarity)", "file": "pelagic-water-quality.html", "featured": true, "template": "charts",
+          "sitesPerYear": {"layer": 12, "year": "year_of_count", "site": "site_name"},
+          "sitesLayer": {"layer": 12, "name": "site_name", "year": "year_of_count"},
           "measures": [
-            { "title": "Lake clarity", "sub": "Average Secchi depth in meters, a measure of how deep a white disk stays visible.",
-              "layer": 14, "x": "year", "y": [{ "field": "annual_average", "name": "Annual" }, { "field": "winter_average", "name": "Winter" }, { "field": "summer_average", "name": "Summer" }],
-              "yLabel": "Secchi depth (m)", "span": "span-12" },
-            { "title": "Primary productivity", "sub": "Annual algal growth in the lake.",
-              "layer": 75, "x": "Year", "y": "Primary_Productivity", "yName": "Primary productivity", "yLabel": "Primary productivity" },
-            { "title": "Mid-lake dissolved nitrogen", "sub": "Annual value at the mid-lake station.",
-              "layer": 71, "x": "Year", "y": "Value", "yName": "Dissolved nitrogen", "yLabel": "Dissolved nitrogen" }
+            {"title": "Lake clarity", "sub": "Average Secchi depth in meters, a measure of how deep a white disk stays visible.", "layer": 14, "x": "year", "y": [{"field": "annual_average", "name": "Annual"}, {"field": "winter_average", "name": "Winter"}, {"field": "summer_average", "name": "Summer"}], "yLabel": "Secchi depth (m)", "span": "span-12"},
+            {"title": "Primary productivity", "sub": "Annual algal growth in the lake.", "layer": 75, "x": "Year", "y": "Primary_Productivity", "yName": "Primary productivity", "yLabel": "Primary productivity"},
+            {"title": "Mid-lake dissolved nitrogen", "sub": "Annual value at the mid-lake station.", "layer": 71, "x": "Year", "y": "Value", "yName": "Dissolved nitrogen", "yLabel": "Dissolved nitrogen"},
+            {"title": "Secchi depth readings", "sub": "Every Secchi depth reading, in meters, by sample date.", "layer": 13, "x": "date", "xType": "date", "xLabel": "Sample date", "y": "secchi_average_measurement", "yName": "Secchi depth", "yLabel": "Secchi depth (m)", "zero": false, "span": "span-12"}
           ] },
         { "id": 13, "name": "Periphyton", "file": "periphyton.html", "featured": true, "template": "charts",
+          "sitesLayer": {"layer": 102, "name": "SITE_NAME", "status": "SiteClass"},
+          "sitesPerYear": {"layer": 21, "year": "Date", "site": "id"},
           "measures": [
-            { "title": "Periphyton at routine sites", "sub": "Attached algae biomass as chlorophyll a, in milligrams per square meter. Choose a site.",
-              "layer": 21, "x": "Date", "xType": "date", "xLabel": "Sample date", "y": "value", "yName": "Chlorophyll a", "yLabel": "Chlorophyll a (mg/m²)",
-              "pick": "id", "pickLabel": "Site", "pickDefault": "Rubicon Point", "span": "span-12" }
+            {"title": "Periphyton at routine sites", "sub": "Attached algae biomass as chlorophyll a, in milligrams per square meter. Choose a site.", "layer": 21, "x": "Date", "xType": "date", "xLabel": "Sample date", "y": "value", "yName": "Chlorophyll a", "yLabel": "Chlorophyll a (mg/m²)", "pick": "id", "pickLabel": "Site", "pickDefault": "Rubicon Point", "span": "span-12"}
           ] },
-        { "id": 16, "name": "Regional Stormwater Monitoring", "file": "regional-stormwater.html", "featured": true, "template": "context" }
+        { "id": 16, "name": "Regional Stormwater Monitoring", "file": "regional-stormwater.html", "featured": true, "template": "context" },
+        { "id": 12, "name": "Nearshore Turbidity Monitoring", "file": "nearshore-turbidity.html", "featured": false, "template": "charts",
+          "measures": [
+            {"title": "Nearshore turbidity by location", "sub": "Turbidity in nephelometric turbidity units (NTU) at each nearshore location, by year.", "layer": 111, "x": "Year", "y": "value", "unpivot": {"prefix": "NTU"}, "yName": "Turbidity", "yLabel": "Turbidity (NTU)", "seriesBy": "Location", "seriesLabel": "Location", "span": "span-12"},
+            {"title": "Turbidity at one location", "sub": "Turbidity in NTU each year at one nearshore location. Choose a location.", "layer": 111, "x": "Year", "y": "value", "unpivot": {"prefix": "NTU"}, "yName": "Turbidity", "yLabel": "Turbidity (NTU)", "type": "bar", "pick": "Location", "pickLabel": "Location", "span": "span-12"}
+          ] },
+        { "id": 14, "name": "Aquatic Invasive Plants", "file": "aquatic-invasive-plants.html", "featured": false, "template": "map",
+          "sitesLayer": {"layer": 114, "name": "Site_Name", "status": "Threshold_Status_2023"},
+          "measures": [
+            {"title": "Invasive plant acres by location", "sub": "Acres of Eurasian watermilfoil and curlyleaf pondweed at each location.", "layer": 95, "x": "Location", "xType": "category", "xLabel": "Location", "y": [{"field": "Eurasian_Watermilfoil", "name": "Eurasian watermilfoil"}, {"field": "Curlyleaf_Pondweed", "name": "Curlyleaf pondweed"}], "yLabel": "Acres", "type": "stacked", "orientation": "h", "sort": "desc", "span": "span-12"},
+            {"title": "Control sites by status", "sub": "Aquatic invasive plant control sites by threshold status in 2023.", "layer": 114, "x": "Threshold_Status_2023", "xType": "category", "xLabel": "Status", "y": "OBJECTID", "stat": "count", "yName": "Sites", "yLabel": "Sites", "type": "bar"},
+            {"title": "Control sites by infestation status", "sub": "Aquatic invasive plant control sites by infestation status code in 2024.", "layer": 114, "x": "Infest_Status_2024", "xType": "category", "xLabel": "Infestation status (2024)", "y": "OBJECTID", "stat": "count", "yName": "Sites", "yLabel": "Sites", "type": "bar"}
+          ] },
+        { "id": 9093, "ltinfo": false, "name": "Watercraft Inspections", "file": "watercraft-inspections.html", "featured": false, "template": "charts",
+          "description": "Watercraft inspected for aquatic invasive species before launching at Lake Tahoe each year, how many needed decontamination, and where the inspection stations are.",
+          "sitesLayer": {"layer": 103, "name": "STATION_NAME", "status": "STATION_TYPE", "unit": "station"},
+          "measures": [
+            {"title": "Watercraft inspected", "sub": "Watercraft inspected each year, by whether they needed decontamination.", "layer": 93, "x": "Year", "y": [{"field": "Watercraft_Decontaminated", "name": "Decontaminated"}, {"field": "No_Decontamination_Necessary", "name": "No decontamination needed"}], "yLabel": "Watercraft", "type": "stacked", "span": "span-12"}
+          ] },
+        { "id": 78, "name": "Aquatic Plant Survey Zones", "file": "aquatic-plant-survey-zones.html", "featured": false, "template": "map",
+          "mapLayer": {"layer": 42, "title": "Aquatic vegetation survey zones", "unit": "survey zone", "unitPlural": "Survey zones", "name": "Location_1", "colorBy": "Strata", "colorByLabel": "Stratum", "colors": {"Marina/Embayment": "#3e72b0", "Nearshore Open Water": "#5a9cb0", "Marsh": "#89bf40", "Mrash": "#89bf40", "Stream": "#e49937"}, "labels": {"Mrash": "Marsh (recorded as Mrash)"}, "meta": [{"field": "Strata"}, {"field": "Acres", "suffix": " acres"}], "fields": [{"field": "Strata", "label": "Stratum"}, {"field": "Acres", "label": "Acres"}, {"field": "Orient", "label": "Orientation"}]},
+          "measures": [
+            {"title": "Survey zone acres by stratum", "sub": "Acres of aquatic vegetation survey zones in each stratum.", "layer": 42, "x": "Strata", "xType": "category", "xLabel": "Stratum", "y": "Acres", "stat": "sum", "yName": "Acres", "yLabel": "Acres", "type": "bar"},
+            {"title": "Survey zones by stratum", "sub": "Number of aquatic vegetation survey zones in each stratum.", "layer": 42, "x": "Strata", "xType": "category", "xLabel": "Stratum", "y": "OBJECTID", "stat": "count", "yName": "Survey zones", "yLabel": "Survey zones", "type": "bar"}
+          ] },
+        { "id": 9034, "ltinfo": false, "name": "Submerged Aquatic Vegetation", "file": "submerged-aquatic-vegetation.html", "featured": false, "template": "map",
+          "description": "Mapped patches of targeted submerged aquatic vegetation in Lake Tahoe.",
+          "mapLayer": {"layer": 34, "title": "Targeted submerged aquatic vegetation", "unit": "vegetation patch", "unitPlural": "Vegetation patches", "list": false, "countAsSites": false, "fields": [{"field": "Type", "label": "Type"}]} }
       ]
     },
     {
       "thresholdCategoryId": 8, "name": "Wildlife", "folder": "wildlife", "themeColor": "#9E2220",
-      "programs": []
+      "programs": [
+        { "id": 2, "name": "Osprey", "file": "osprey.html", "featured": false, "template": "charts",
+          "measures": [
+            {"title": "Active osprey nests", "sub": "Active nests counted each year, with the threshold.", "layer": 96, "where": "Wildlife_Species = 'Osprey'", "x": "Year", "y": "Total", "yName": "Active nests", "yLabel": "Active nests", "type": "bar", "span": "span-12", "standard": {"field": "Threshold_Value"}}
+          ] },
+        { "id": 4, "name": "Bald Eagle", "file": "bald-eagle.html", "featured": false, "template": "charts",
+          "measures": [
+            {"title": "Active bald eagle nests", "sub": "Active nests counted each year, with the threshold.", "layer": 96, "where": "Wildlife_Species = 'Bald Eagle - nesting'", "x": "Year", "y": "Total", "yName": "Active nests", "yLabel": "Active nests", "type": "bar", "standard": {"field": "Threshold_Value"}},
+            {"title": "Wintering bald eagles", "sub": "Individuals counted each year.", "layer": 96, "where": "Wildlife_Species = 'Bald Eagle - winter'", "x": "Year", "y": "Total", "yName": "Individuals", "yLabel": "Individuals", "type": "bar"}
+          ] },
+        { "id": 6, "name": "Peregrine Falcon", "file": "peregrine-falcon.html", "featured": false, "template": "charts",
+          "measures": [
+            {"title": "Active peregrine falcon nests", "sub": "Active nests counted each year, with the threshold.", "layer": 96, "where": "Wildlife_Species = 'Peregrine Falcon'", "x": "Year", "y": "Total", "yName": "Active nests", "yLabel": "Active nests", "type": "bar", "span": "span-12", "standard": {"field": "Threshold_Value"}}
+          ] },
+        { "id": 29, "name": "Northern Goshawk", "file": "northern-goshawk.html", "featured": false, "template": "charts",
+          "measures": [
+            {"title": "Reproductively active goshawk territories", "sub": "Active territories counted each year, with the threshold.", "layer": 96, "where": "Wildlife_Species = 'Northern Goshawk'", "x": "Year", "y": "Total", "yName": "Active territories", "yLabel": "Active territories", "type": "bar", "span": "span-12", "standard": {"field": "Threshold_Value"}}
+          ] },
+        { "id": 7, "name": "Waterfowl", "file": "waterfowl.html", "featured": false, "template": "charts",
+          "measures": [
+            {"title": "Average human activity rating", "sub": "Average human activity rating score across waterfowl sites, by survey year.", "layer": 96, "where": "Wildlife_Species = 'Waterfowl'", "x": "Year", "y": "Total", "yName": "Average rating", "yLabel": "Human activity rating", "type": "bar"},
+            {"title": "Human activity rating by site", "sub": "Human activity rating at each waterfowl site, by survey year. Choose a site.", "layer": 94, "x": "Year", "y": "value", "unpivot": {"prefix": "F"}, "yName": "Rating", "yLabel": "Human activity rating", "type": "bar", "pick": "Name", "pickLabel": "Site"}
+          ] }
+      ]
     },
     {
       "thresholdCategoryId": 9, "name": "Noise", "folder": "noise", "themeColor": "#675EA1",
       "programs": [
         { "id": 65, "name": "Noise - Highways", "file": "noise-highways.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 11, "name": "SITE_NAME", "year": "YEAR_OF_COUNT"},
+          "sitesPerYear": {"layer": 11, "year": "YEAR_OF_COUNT", "site": "SITE_NAME"},
           "measures": [
-            { "title": "Highway noise by year", "sub": "Average community noise equivalent level (CNEL) at highway monitoring sites, in decibels.",
-              "layer": 11, "x": "YEAR_OF_COUNT", "y": "CNEL_AVG_VALUE", "stat": "avg", "yLabel": "Average CNEL (dB)",
-              "seriesBy": "HIGHWAY", "seriesLabel": "Highway", "seriesPrefix": "Highway ", "type": "bar", "span": "span-12" }
+            {"title": "Highway noise by year", "sub": "Average community noise equivalent level (CNEL) at highway monitoring sites, in decibels.", "layer": 11, "x": "YEAR_OF_COUNT", "y": "CNEL_AVG_VALUE", "stat": "avg", "yLabel": "Average CNEL (dB)", "seriesBy": "HIGHWAY", "seriesLabel": "Highway", "seriesPrefix": "Highway ", "type": "bar", "span": "span-12"}
           ] },
         { "id": 61, "name": "Noise - Plan Areas", "file": "noise-plan-areas.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 6, "name": "SITE_NAME", "year": "YEAR_OF_COUNT"},
+          "sitesPerYear": {"layer": 6, "year": "YEAR_OF_COUNT", "site": "SITE_NAME"},
           "measures": [
-            { "title": "Noise by land use", "sub": "Average CNEL of all sites in the land use type, by monitoring period, in decibels. Choose a land use.",
-              "layer": 74, "x": "Year", "xType": "category", "xLabel": "Period", "y": "Value", "yName": "Average CNEL", "yLabel": "Average CNEL (dB)",
-              "pick": "Category", "pickLabel": "Land use", "type": "bar", "standard": { "field": "Threshold_Value" }, "span": "span-12" }
+            {"title": "Noise by land use", "sub": "Average CNEL of all sites in the land use type, by monitoring period, in decibels. Choose a land use.", "layer": 74, "x": "Year", "xType": "category", "xLabel": "Period", "y": "Value", "yName": "Average CNEL", "yLabel": "Average CNEL (dB)", "pick": "Category", "pickLabel": "Land use", "type": "bar", "standard": {"field": "Threshold_Value"}, "span": "span-12"}
           ] },
         { "id": 62, "name": "Noise - Shorezone", "file": "noise-shorezone.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 7, "name": "SITE_NAME", "year": "YEAR_OF_COUNT"},
+          "sitesPerYear": {"layer": 7, "year": "YEAR_OF_COUNT", "site": "SITE_NAME"},
           "measures": [
-            { "title": "Shorezone noise exceedances", "sub": "Average noise standard exceedances per day, across all shorezone sites.",
-              "layer": 78, "x": "Year", "y": "Value", "yName": "Exceedances per day", "yLabel": "Exceedances per day", "type": "bar",
-              "standard": { "field": "Threshold_Value" }, "span": "span-12" }
+            {"title": "Shorezone noise exceedances", "sub": "Average noise standard exceedances per day, across all shorezone sites.", "layer": 78, "x": "Year", "y": "Value", "yName": "Exceedances per day", "yLabel": "Exceedances per day", "type": "bar", "standard": {"field": "Threshold_Value"}, "span": "span-12"}
           ] }
       ]
     },
@@ -148,43 +218,39 @@
       "thresholdCategoryId": 10, "name": "Transportation and Sustainable Communities", "folder": "transportation-and-sustainable-communities", "themeColor": "#DB5B00",
       "programs": [
         { "id": 33, "name": "Bicycle and Pedestrian", "file": "bicycle-and-pedestrian.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 5, "name": "counter_name", "code": "counter_id", "unit": "counter"},
+          "sitesPerYear": {"layer": 1, "year": "count_date", "site": "counter_name", "extract": true, "unit": "counter"},
           "measures": [
-            { "title": "Busiest counters", "sub": "Total bicycle and pedestrian counts recorded at the 15 busiest counters.",
-              "layer": 1, "x": "counter_name", "xLabel": "Counter", "y": "count_of_bike_ped", "stat": "sum", "yName": "Total count", "yLabel": "Total count",
-              "type": "bar", "orientation": "h", "sort": "desc", "limit": 15 },
-            { "title": "Counts by month", "sub": "Total bicycle and pedestrian counts across all counters, by month of the year.",
-              "layer": 1, "x": "month_of_year", "xType": "month", "xLabel": "Month", "y": "count_of_bike_ped", "stat": "sum", "yName": "Total count", "yLabel": "Total count",
-              "type": "bar" }
+            {"title": "Busiest counters", "sub": "Total bicycle and pedestrian counts recorded at the 15 busiest counters.", "layer": 1, "x": "counter_name", "xLabel": "Counter", "y": "count_of_bike_ped", "stat": "sum", "yName": "Total count", "yLabel": "Total count", "type": "bar", "orientation": "h", "sort": "desc", "limit": 15},
+            {"title": "Counts by month", "sub": "Total bicycle and pedestrian counts across all counters, by month of the year.", "layer": 1, "x": "month_of_year", "xType": "month", "xLabel": "Month", "y": "count_of_bike_ped", "stat": "sum", "yName": "Total count", "yLabel": "Total count", "type": "bar"}
           ] },
         { "id": 77, "name": "Congestion-Travel Time", "file": "congestion-travel-time.html", "featured": true, "template": "charts",
+          "mapLayer": {"layer": 109, "title": "Travel time segments", "unit": "segment", "unitPlural": "Segments", "name": "NAME", "geometry": "line", "fields": [{"field": "NAME", "label": "Segment"}]},
+          "sitesPerYear": {"layer": 110, "year": "Year", "site": "Name", "unit": "segment"},
           "measures": [
-            { "title": "Travel time by season", "sub": "Travel time on the selected corridor segment, by season. Choose a segment.",
-              "layer": 110, "x": "Year", "y": "Value", "yLabel": "Travel time (minutes)", "seriesBy": "Season", "seriesLabel": "Season",
-              "pick": "Name", "pickLabel": "Segment", "type": "bar", "span": "span-12" }
-          ] },
+            {"title": "Travel time by season", "sub": "Travel time on the selected corridor segment, by season. Choose a segment.", "layer": 110, "x": "Year", "y": "Value", "yLabel": "Travel time (minutes)", "seriesBy": "Season", "seriesLabel": "Season", "pick": "Name", "pickLabel": "Segment", "type": "bar", "span": "span-12"}
+          ],
+          "overlays": [{"layer": 18, "title": "Congestion road segments", "name": "road", "geometry": "line", "color": "#989898", "fields": [{"field": "direction", "label": "Direction"}, {"field": "intersection", "label": "Intersection"}]}] },
         { "id": 34, "name": "Safety", "file": "safety.html", "featured": true, "template": "charts",
           "measures": [
-            { "title": "Crashes by severity", "sub": "Reported crashes each year, by most severe outcome.",
-              "layer": 108, "x": "Year", "y": "OBJECTID", "stat": "count", "yLabel": "Crashes", "seriesBy": "Crash_Severity", "seriesLabel": "Severity",
-              "type": "stacked", "span": "span-12" }
+            {"title": "Crashes by severity", "sub": "Reported crashes each year, by most severe outcome.", "layer": 108, "x": "Year", "y": "OBJECTID", "stat": "count", "yLabel": "Crashes", "seriesBy": "Crash_Severity", "seriesLabel": "Severity", "type": "stacked", "span": "span-12"}
           ] },
         { "id": 68, "name": "Socio-Economic", "file": "socio-economic.html", "featured": true, "template": "context" },
         { "id": 64, "name": "Traffic Volumes", "file": "traffic-volumes.html", "featured": true, "template": "map",
+          "sitesLayer": {"layer": 10, "name": "site_name", "code": "Station_Number", "year": "year_of_count"},
+          "sitesPerYear": {"layer": 10, "year": "year_of_count", "site": "site_name"},
           "measures": [
-            { "title": "Winter traffic volume", "sub": "Winter traffic volume at the Park Avenue count site in South Lake Tahoe.",
-              "layer": 97, "x": "Year", "y": "Value", "yName": "Vehicles", "yLabel": "Vehicles", "type": "bar",
-              "standard": { "field": "Threshold", "label": "Threshold standard" }, "span": "span-12" }
-          ] },
+            {"title": "Winter traffic volume", "sub": "Winter traffic volume at the Park Avenue count site in South Lake Tahoe.", "layer": 97, "x": "Year", "y": "Value", "yName": "Vehicles", "yLabel": "Vehicles", "type": "bar", "standard": {"field": "Threshold", "label": "Threshold"}, "span": "span-12"}
+          ],
+          "overlays": [{"layer": 105, "title": "Winter traffic count site", "name": "id", "geometry": "point", "color": "#be4c4c", "fields": [{"field": "Operator", "label": "Operator"}]}] },
         { "id": 36, "name": "Transit", "file": "transit.html", "featured": true, "template": "charts",
+          "mapLayer": {"layer": 2, "title": "Transit routes", "unit": "route", "unitPlural": "Routes", "name": "ROUTE_NAME", "geometry": "line", "colorBy": "PROVIDER", "colorByLabel": "Provider", "colors": {"TART": "#3e72b0", "TTD": "#e49937", "SSTMA": "#89bf40"}, "meta": [{"field": "PROVIDER"}, {"field": "SEASON"}], "fields": [{"field": "ROUTE_NUMBER", "label": "Route"}, {"field": "PROVIDER", "label": "Provider"}, {"field": "SEASON", "label": "Season"}, {"field": "Frequency", "label": "Frequency"}, {"field": "WEBSITE", "label": "Website"}]},
           "measures": [
-            { "title": "Transit routes by provider", "sub": "Routes in the consolidated Tahoe transit route layer, by operator.",
-              "layer": 2, "x": "PROVIDER", "xType": "category", "xLabel": "Provider", "y": "OBJECTID", "stat": "count", "yName": "Routes", "yLabel": "Routes",
-              "seriesBy": "SEASON", "seriesLabel": "Season", "type": "stacked", "span": "span-12" }
+            {"title": "Transit routes by provider", "sub": "Routes in the consolidated Tahoe transit route layer, by operator.", "layer": 2, "x": "PROVIDER", "xType": "category", "xLabel": "Provider", "y": "OBJECTID", "stat": "count", "yName": "Routes", "yLabel": "Routes", "seriesBy": "SEASON", "seriesLabel": "Season", "type": "stacked", "span": "span-12"}
           ] },
         { "id": 69, "name": "Travel Behavior", "file": "travel-behavior.html", "featured": true, "template": "charts",
           "measures": [
-            { "title": "Vehicle miles traveled", "sub": "Estimated vehicle miles traveled (VMT) in the Tahoe Region.",
-              "layer": 92, "x": "Year", "y": "VMT", "yName": "VMT", "yLabel": "Vehicle miles traveled", "span": "span-12" }
+            {"title": "Vehicle miles traveled", "sub": "Estimated vehicle miles traveled (VMT) in the Tahoe Region.", "layer": 92, "x": "Year", "y": "VMT", "yName": "VMT", "yLabel": "Vehicle miles traveled", "span": "span-12"}
           ] }
       ]
     }

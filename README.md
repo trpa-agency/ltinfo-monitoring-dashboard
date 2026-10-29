@@ -20,3 +20,5 @@ Add a program: add it to `programs.json`, then run
 ```
 
 See [templates/README.md](templates/README.md) for how a program page is built out.
+
+Own a program page? [EDITING-PROGRAM-PAGES.md](EDITING-PROGRAM-PAGES.md) covers updating one: what to change in `programs.json`, the chart settings, running the script, and what not to touch.
