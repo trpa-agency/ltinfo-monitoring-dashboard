@@ -1,0 +1,176 @@
+---
+// mon-lego-checked: EsaCard holds the panel, EsaButton is the CSV action, EsaLoadingSpinner and
+// EsaEmptyState are the loading, empty, and error states, and esa-text-field and esa-badge live
+// inside mon-site-list; no esa-* provides a map or a map-plus-list split, so mon-map,
+// mon-site-list, and this MapPanel grid are the reusable homes.
+//
+// MapPanel: the card around a program map. A map on the left, the synced site or area list on the
+// right (stacked under 760 px), a CSV button and an optional "tools" slot (a pick select) in the
+// card header, and a source line in the footer. The page script fills it through the mon-map and
+// mon-site-list elements it contains; find them inside the section by id.
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaButton from '@esa/ecology/esa-button.astro';
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import EsaLoadingSpinner from '@esa/ecology/esa-loading-spinner.astro';
+
+interface Props {
+  /** Id of the panel section; the page script finds the panel by it. */
+  id: string;
+  title: string;
+  /** What one row is called: "site", "station", "assessment unit". */
+  unit?: string;
+  /** The layer behind the map, linked in the footer. */
+  source?: { href: string; label: string };
+  /** A 560 px map instead of 420 px (340 px when stacked either way). */
+  tall?: boolean;
+  /** Empty state copy, in the embed contract's form: "No sites loaded yet." plus what the section will show. */
+  emptyTitle?: string;
+  emptyDescription?: string;
+  csvLabel?: string;
+  /** false drops the list (areas with no names worth listing); the map fills the panel. */
+  list?: boolean;
+}
+
+const {
+  id,
+  title,
+  unit = 'site',
+  source,
+  tall = false,
+  emptyTitle = 'No sites loaded yet',
+  emptyDescription = 'This section will show the monitoring sites on a map with a list beside it.',
+  csvLabel = 'Download CSV',
+  list = true,
+} = Astro.props;
+---
+<section
+  class:list={['mon-map-panel', { 'mon-map-panel--tall': tall, 'mon-map-panel--no-list': !list }]}
+  id={id}
+  data-mon-panel
+  aria-busy="true"
+  aria-label={title}
+>
+  <EsaCard title={title} padding="compact">
+    <div slot="actions" class="mon-map-panel__tools">
+      <slot name="tools" />
+      <EsaButton size="sm" variant="secondary" appearance="outline" icon="download" data-mon-csv>{csvLabel}</EsaButton>
+    </div>
+    <div class="mon-map-panel__split">
+      <div class="mon-map-panel__map">
+        <mon-map aria-label={`${title} map`}></mon-map>
+        <div class="mon-map-panel__state" data-mon-state="loading">
+          <EsaLoadingSpinner size="md" label={`Loading ${title}`} />
+        </div>
+        <div class="mon-map-panel__state" data-mon-state="empty" hidden>
+          <EsaEmptyState size="sm" title={emptyTitle} description={emptyDescription} />
+        </div>
+        <div class="mon-map-panel__state" data-mon-state="error" hidden>
+          <EsaEmptyState
+            size="sm"
+            title="Data could not be loaded"
+            description="The TRPA map service did not respond. Reload the page to try again."
+          />
+        </div>
+      </div>
+      {list && (
+        <mon-site-list unit={unit}>
+          <template data-mon-badge><EsaBadge value="Not mapped" size="xs" /></template>
+        </mon-site-list>
+      )}
+    </div>
+    {source && (
+      <p slot="footer" class="mon-map-panel__source">
+        Source: <a href={source.href} target="_blank" rel="noopener">{source.label}</a>
+      </p>
+    )}
+  </EsaCard>
+</section>
+
+<script>
+  // The two elements the panel is built from. The page script that fills the panel imports them
+  // too; both guard customElements.define, so the order the modules load in does not matter.
+  import './mon-map.ts';
+  import './mon-site-list.ts';
+</script>
+
+<style>
+  .mon-map-panel {
+    --mon-map-height: 420px;
+    display: block;
+    min-width: 0;
+  }
+  .mon-map-panel--tall {
+    --mon-map-height: 560px;
+  }
+  /* The card header does not wrap on its own; at phone widths the title and the tools need to. */
+  .mon-map-panel :global(.esa-card__header) {
+    flex-wrap: wrap;
+    gap: var(--spacing-200, 0.5rem);
+  }
+  .mon-map-panel__tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: var(--spacing-200, 0.5rem);
+    margin-left: auto;
+  }
+  .mon-map-panel__split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: var(--spacing-400, 1rem);
+    align-items: stretch;
+  }
+  .mon-map-panel--no-list .mon-map-panel__split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .mon-map-panel__map {
+    position: relative;
+    min-width: 0;
+    height: var(--mon-map-height);
+  }
+  .mon-map-panel__map mon-map {
+    display: block;
+    height: var(--mon-map-height);
+  }
+  .mon-map-panel__split mon-site-list {
+    height: var(--mon-map-height);
+    max-height: var(--mon-map-height);
+  }
+  /* Loading, empty, and error states sit over the map so the Leaflet canvas keeps its size. */
+  .mon-map-panel__state {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    padding: var(--spacing-400, 1rem);
+    border-radius: var(--radius-sm, 0.25rem);
+    background: color-mix(in srgb, var(--color-background-elevation-raised, #ffffff) 82%, transparent);
+  }
+  .mon-map-panel__state[hidden] {
+    display: none;
+  }
+  .mon-map-panel__source {
+    margin: 0;
+    color: var(--color-content-default-secondary, #646464);
+  }
+  .mon-map-panel__source a {
+    color: var(--color-content-link, #337ab7);
+    text-decoration: underline;
+  }
+  @media (max-width: 760px) {
+    .mon-map-panel,
+    .mon-map-panel--tall {
+      --mon-map-height: 340px;
+    }
+    .mon-map-panel__split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .mon-map-panel__split mon-site-list {
+      height: auto;
+      max-height: 340px;
+    }
+  }
+</style>

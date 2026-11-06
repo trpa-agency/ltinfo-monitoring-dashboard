@@ -1,0 +1,5 @@
+# Normalize line endings to LF in the repo and in every checkout, including
+# Windows machines with core.autocrlf on. The Dockerfile, compose.yaml,
+# nginx/default.conf, and the workflow's shell steps run on Linux, where a CR
+# at the end of a line is a syntax error or a stray byte in a value.
+* text=auto eol=lf

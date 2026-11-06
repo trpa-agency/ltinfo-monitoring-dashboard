@@ -5,6 +5,12 @@
         "source": "github",
         "repo": "trpa-agency/trpa-claude-skills"
       }
+    },
+    "ecology": {
+      "source": {
+        "source": "github",
+        "repo": "esassoc/ecology"
+      }
     }
   },
   "enabledPlugins": {
@@ -16,6 +22,19 @@
     "trpa-dashboard-stack@trpa-claude-skills": true,
     "trpa-dashboard-qa@trpa-claude-skills": true,
     "trpa-data-services@trpa-claude-skills": true,
-    "trpa-repo-handoff@trpa-claude-skills": true
+    "trpa-repo-handoff@trpa-claude-skills": true,
+    "spoke-kit@ecology": true
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CFG=\"${CLAUDE_CONFIG_DIR:-$HOME/.claude}\"; grep -sq '\"ecology\"' \"$CFG/settings.json\" \"$CFG/plugins/known_marketplaces.json\" || echo 'WARNING: the ecology plugin marketplace is not installed, so component-first enforcement and the spoke skills are OFF. Accept the plugin install prompt, or run: claude plugin marketplace add esassoc/ecology, then enable spoke-kit@ecology via /plugin.'"
+          }
+        ]
+      }
+    ]
   }
 }

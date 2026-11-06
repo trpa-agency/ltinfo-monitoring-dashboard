@@ -1,0 +1,3602 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9018906,
+          38.89213923
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 844,
+        "MonitoringSiteName": "634001CLD",
+        "CanonicalName": "634001CLD",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1155272,
+          39.05301279
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 843,
+        "MonitoringSiteName": "634001GNL",
+        "CanonicalName": "634001GNL",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9703888,
+          38.9208917
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 842,
+        "MonitoringSiteName": "634001HVL",
+        "CanonicalName": "634001HVL",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1193736,
+          39.18346983
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 841,
+        "MonitoringSiteName": "634001LKF",
+        "CanonicalName": "634001LKF",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0054785,
+          38.73337433
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 840,
+        "MonitoringSiteName": "634001MEI",
+        "CanonicalName": "634001MEI",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.944638,
+          39.24674
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 813,
+        "MonitoringSiteName": "634001RSW",
+        "CanonicalName": "634001RSW",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9824465,
+          38.88091321
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 839,
+        "MonitoringSiteName": "634001SAX",
+        "CanonicalName": "634001SAX",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.932454,
+          39.148772
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 812,
+        "MonitoringSiteName": "634001SCH",
+        "CanonicalName": "634001SCH",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0567743,
+          38.93462498
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 838,
+        "MonitoringSiteName": "634001TAY",
+        "CanonicalName": "634001TAY",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9678686,
+          38.89999947
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 837,
+        "MonitoringSiteName": "634001TRT",
+        "CanonicalName": "634001TRT",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9839702,
+          38.87583315
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 836,
+        "MonitoringSiteName": "634002SAX",
+        "CanonicalName": "634002SAX",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9679338,
+          38.89404055
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 835,
+        "MonitoringSiteName": "634002TRT",
+        "CanonicalName": "634002TRT",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1622238,
+          39.1074114
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 834,
+        "MonitoringSiteName": "634BLW001",
+        "CanonicalName": "634BLW001",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.996657,
+          38.776313
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 811,
+        "MonitoringSiteName": "634BMCH89",
+        "CanonicalName": "634BMCH89",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.109222,
+          38.925114
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 810,
+        "MonitoringSiteName": "634CAS001",
+        "CanonicalName": "634CAS001",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93802,
+          38.96626
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 921,
+        "MonitoringSiteName": "634EDG001",
+        "CanonicalName": "634EDG001",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.143582,
+          39.044517
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 809,
+        "MonitoringSiteName": "634GEN001",
+        "CanonicalName": "634GEN001",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.916,
+          38.9239
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 808,
+        "MonitoringSiteName": "634HVC-1",
+        "CanonicalName": "634HVC-1",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.931,
+          38.9221
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 807,
+        "MonitoringSiteName": "634HVC-2",
+        "CanonicalName": "634HVC-2",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.951904,
+          38.915276
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 806,
+        "MonitoringSiteName": "634HVC-3",
+        "CanonicalName": "634HVC-3",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.965812,
+          38.871555
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 805,
+        "MonitoringSiteName": "634LHC-1",
+        "CanonicalName": "634LHC-1",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.141387,
+          39.072004
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 904,
+        "MonitoringSiteName": "634MCK001",
+        "CanonicalName": "634MCK001",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.15301,
+          39.018952
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 804,
+        "MonitoringSiteName": "634MKCBLG",
+        "CanonicalName": "634MKCBLG",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.03056,
+          39.23933
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 914,
+        "MonitoringSiteName": "634S10104",
+        "CanonicalName": "634S10104",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.98731,
+          38.92136
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 913,
+        "MonitoringSiteName": "634S10114",
+        "CanonicalName": "634S10114",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94453,
+          39.24567
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 912,
+        "MonitoringSiteName": "634S11160",
+        "CanonicalName": "634S11160",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.99481,
+          38.92487
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 911,
+        "MonitoringSiteName": "634S11162",
+        "CanonicalName": "634S11162",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.975967,
+          39.253467
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 940,
+        "MonitoringSiteName": "634S11168",
+        "CanonicalName": "634S11168",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.95755,
+          38.86091
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 803,
+        "MonitoringSiteName": "634S11173",
+        "CanonicalName": "634S11173",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9447,
+          39.24005
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 910,
+        "MonitoringSiteName": "634S12224",
+        "CanonicalName": "634S12224",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.95827,
+          38.8724
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 802,
+        "MonitoringSiteName": "634S13237",
+        "CanonicalName": "634S13237",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.99088,
+          38.90426
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 909,
+        "MonitoringSiteName": "634S13242",
+        "CanonicalName": "634S13242",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.18794,
+          39.10898
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 908,
+        "MonitoringSiteName": "634S14251",
+        "CanonicalName": "634S14251",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01289,
+          38.87143
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 907,
+        "MonitoringSiteName": "634S14257",
+        "CanonicalName": "634S14257",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94755,
+          39.25066
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 906,
+        "MonitoringSiteName": "634S14296",
+        "CanonicalName": "634S14296",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0476977,
+          38.868276
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 903,
+        "MonitoringSiteName": "634S16265",
+        "CanonicalName": "634S16265",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1351468,
+          39.195435
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 902,
+        "MonitoringSiteName": "634S16291",
+        "CanonicalName": "634S16291",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94476,
+          38.857001
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 801,
+        "MonitoringSiteName": "634S16293",
+        "CanonicalName": "634S16293",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9974321,
+          38.769518
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 901,
+        "MonitoringSiteName": "634S16297",
+        "CanonicalName": "634S16297",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9468989,
+          38.89843
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 900,
+        "MonitoringSiteName": "634S16302",
+        "CanonicalName": "634S16302",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1658957,
+          39.136011
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 899,
+        "MonitoringSiteName": "634S16303",
+        "CanonicalName": "634S16303",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1329617,
+          39.002553
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 898,
+        "MonitoringSiteName": "634S16307",
+        "CanonicalName": "634S16307",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9940908,
+          38.757494
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 897,
+        "MonitoringSiteName": "634S16309",
+        "CanonicalName": "634S16309",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9003434,
+          38.88997
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 896,
+        "MonitoringSiteName": "634S16310",
+        "CanonicalName": "634S16310",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1354807,
+          39.227721
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 895,
+        "MonitoringSiteName": "634S16311",
+        "CanonicalName": "634S16311",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9309252,
+          38.872748
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 894,
+        "MonitoringSiteName": "634S16313",
+        "CanonicalName": "634S16313",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0137507,
+          38.796112
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 893,
+        "MonitoringSiteName": "634S16317",
+        "CanonicalName": "634S16317",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.8959295,
+          38.89934
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 892,
+        "MonitoringSiteName": "634S16318",
+        "CanonicalName": "634S16318",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9278363,
+          39.116803
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 891,
+        "MonitoringSiteName": "634S16351",
+        "CanonicalName": "634S16351",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9195818,
+          38.965549
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 890,
+        "MonitoringSiteName": "634S16358",
+        "CanonicalName": "634S16358",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9665328,
+          39.280487
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 889,
+        "MonitoringSiteName": "634S16360",
+        "CanonicalName": "634S16360",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9389294,
+          38.973342
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 888,
+        "MonitoringSiteName": "634S16362",
+        "CanonicalName": "634S16362",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9361293,
+          39.284995
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 887,
+        "MonitoringSiteName": "634S16364",
+        "CanonicalName": "634S16364",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9424074,
+          39.015562
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 886,
+        "MonitoringSiteName": "634S16368",
+        "CanonicalName": "634S16368",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9384545,
+          39.246535
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 885,
+        "MonitoringSiteName": "634S16380",
+        "CanonicalName": "634S16380",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9774,
+          38.93065
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 883,
+        "MonitoringSiteName": "634S17322",
+        "CanonicalName": "634S17322",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.16626,
+          39.10868
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 882,
+        "MonitoringSiteName": "634S17323",
+        "CanonicalName": "634S17323",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01817,
+          38.73396
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 881,
+        "MonitoringSiteName": "634S17325",
+        "CanonicalName": "634S17325",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.97366,
+          38.82569
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 880,
+        "MonitoringSiteName": "634S17329",
+        "CanonicalName": "634S17329",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.96985,
+          38.79676
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 879,
+        "MonitoringSiteName": "634S17334",
+        "CanonicalName": "634S17334",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.11691,
+          38.87505
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 878,
+        "MonitoringSiteName": "634S17335",
+        "CanonicalName": "634S17335",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.929377,
+          38.850325
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 800,
+        "MonitoringSiteName": "634S17337",
+        "CanonicalName": "634S17337",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01916,
+          38.82042
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 877,
+        "MonitoringSiteName": "634S17341",
+        "CanonicalName": "634S17341",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.07797,
+          38.92114
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 876,
+        "MonitoringSiteName": "634S17342",
+        "CanonicalName": "634S17342",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.15804,
+          39.07961
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 875,
+        "MonitoringSiteName": "634S17343",
+        "CanonicalName": "634S17343",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.02933,
+          39.24439
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 874,
+        "MonitoringSiteName": "634S17344",
+        "CanonicalName": "634S17344",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.03299,
+          38.88079
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 873,
+        "MonitoringSiteName": "634S17345",
+        "CanonicalName": "634S17345",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.95706,
+          38.903
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 872,
+        "MonitoringSiteName": "634S17346",
+        "CanonicalName": "634S17346",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.97856,
+          39.27113
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 871,
+        "MonitoringSiteName": "634S17384",
+        "CanonicalName": "634S17384",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.91824,
+          39.14246
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 870,
+        "MonitoringSiteName": "634S17387",
+        "CanonicalName": "634S17387",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93802,
+          38.96626
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 869,
+        "MonitoringSiteName": "634S17390",
+        "CanonicalName": "634S17390",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.92039,
+          39.27781
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 868,
+        "MonitoringSiteName": "634S17392",
+        "CanonicalName": "634S17392",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.91149,
+          39.05564
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 867,
+        "MonitoringSiteName": "634S17400",
+        "CanonicalName": "634S17400",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9482,
+          39.27041
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 866,
+        "MonitoringSiteName": "634S17408",
+        "CanonicalName": "634S17408",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94322,
+          39.26032
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 865,
+        "MonitoringSiteName": "634S17416",
+        "CanonicalName": "634S17416",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1315794,
+          39.19350399
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 864,
+        "MonitoringSiteName": "634S18347",
+        "CanonicalName": "634S18347",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0844999,
+          38.84455104
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 863,
+        "MonitoringSiteName": "634S18353",
+        "CanonicalName": "634S18353",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1868452,
+          39.08290875
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 862,
+        "MonitoringSiteName": "634S18355",
+        "CanonicalName": "634S18355",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.075423,
+          38.87888715
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 861,
+        "MonitoringSiteName": "634S18357",
+        "CanonicalName": "634S18357",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1443193,
+          39.04415628
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 860,
+        "MonitoringSiteName": "634S18359",
+        "CanonicalName": "634S18359",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1257818,
+          39.05190899
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 859,
+        "MonitoringSiteName": "634S18363",
+        "CanonicalName": "634S18363",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01621,
+          38.80656
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 858,
+        "MonitoringSiteName": "634S18369",
+        "CanonicalName": "634S18369",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0864547,
+          38.92874667
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 857,
+        "MonitoringSiteName": "634S18370",
+        "CanonicalName": "634S18370",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0237047,
+          39.24827121
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 856,
+        "MonitoringSiteName": "634S18372",
+        "CanonicalName": "634S18372",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9818073,
+          38.86930997
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 855,
+        "MonitoringSiteName": "634S18373",
+        "CanonicalName": "634S18373",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1895642,
+          39.00358224
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 854,
+        "MonitoringSiteName": "634S18374",
+        "CanonicalName": "634S18374",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9944513,
+          38.88559061
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 853,
+        "MonitoringSiteName": "634S18377",
+        "CanonicalName": "634S18377",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.19580500000001,
+          39.14133126
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 852,
+        "MonitoringSiteName": "634S18379",
+        "CanonicalName": "634S18379",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9312736,
+          39.31322179
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 851,
+        "MonitoringSiteName": "634S18420",
+        "CanonicalName": "634S18420",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.931724,
+          39.118949
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 850,
+        "MonitoringSiteName": "634S18424",
+        "CanonicalName": "634S18424",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9362111,
+          39.06976247
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 849,
+        "MonitoringSiteName": "634S18428",
+        "CanonicalName": "634S18428",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9360101,
+          39.02360073
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 848,
+        "MonitoringSiteName": "634S18444",
+        "CanonicalName": "634S18444",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9420784,
+          39.25645825
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 847,
+        "MonitoringSiteName": "634S18447",
+        "CanonicalName": "634S18447",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9235263,
+          38.97876481
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 846,
+        "MonitoringSiteName": "634S18449",
+        "CanonicalName": "634S18449",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9872654,
+          39.26728218
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 845,
+        "MonitoringSiteName": "634S18459",
+        "CanonicalName": "634S18459",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0411085,
+          38.88045172
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 833,
+        "MonitoringSiteName": "634S19217",
+        "CanonicalName": "634S19217",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.95884,
+          38.864036
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 799,
+        "MonitoringSiteName": "634S19385",
+        "CanonicalName": "634S19385",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9082414,
+          38.89268311
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 832,
+        "MonitoringSiteName": "634S19410",
+        "CanonicalName": "634S19410",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.984062,
+          38.867719
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 798,
+        "MonitoringSiteName": "634S19473",
+        "CanonicalName": "634S19473",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.915214,
+          39.117856
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 797,
+        "MonitoringSiteName": "634S19488",
+        "CanonicalName": "634S19488",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0268705,
+          38.88048181
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 831,
+        "MonitoringSiteName": "634S19498",
+        "CanonicalName": "634S19498",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0090857,
+          38.79130588
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 830,
+        "MonitoringSiteName": "634S19505",
+        "CanonicalName": "634S19505",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9744011,
+          38.88757913
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 829,
+        "MonitoringSiteName": "634S19557",
+        "CanonicalName": "634S19557",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0381849,
+          38.85251874
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 828,
+        "MonitoringSiteName": "634S19562",
+        "CanonicalName": "634S19562",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.943787,
+          38.83610863
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 827,
+        "MonitoringSiteName": "634S19573",
+        "CanonicalName": "634S19573",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.932166,
+          38.972127
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 796,
+        "MonitoringSiteName": "634S19577",
+        "CanonicalName": "634S19577",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9061243,
+          38.89065775
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 826,
+        "MonitoringSiteName": "634S19605",
+        "CanonicalName": "634S19605",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0124339,
+          38.87374015
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 825,
+        "MonitoringSiteName": "634S19606",
+        "CanonicalName": "634S19606",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0195725,
+          38.79500194
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 824,
+        "MonitoringSiteName": "634S19658",
+        "CanonicalName": "634S19658",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0546024,
+          38.93012663
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 823,
+        "MonitoringSiteName": "634S19662",
+        "CanonicalName": "634S19662",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.930934,
+          39.087351
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 795,
+        "MonitoringSiteName": "634S19696",
+        "CanonicalName": "634S19696",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0280525,
+          38.85059937
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 822,
+        "MonitoringSiteName": "634S19714",
+        "CanonicalName": "634S19714",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.920814,
+          39.173959
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 794,
+        "MonitoringSiteName": "634S19732",
+        "CanonicalName": "634S19732",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9909114,
+          38.91027279
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 821,
+        "MonitoringSiteName": "634S19738",
+        "CanonicalName": "634S19738",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0965201,
+          39.1970288
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 820,
+        "MonitoringSiteName": "634S19751",
+        "CanonicalName": "634S19751",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.944714,
+          39.244209
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 793,
+        "MonitoringSiteName": "634S19759",
+        "CanonicalName": "634S19759",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1929544,
+          39.10661921
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 819,
+        "MonitoringSiteName": "634S19800",
+        "CanonicalName": "634S19800",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.143546,
+          39.070161
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 771,
+        "MonitoringSiteName": "634S20383",
+        "CanonicalName": "634S20383",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.019075,
+          38.831981
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 770,
+        "MonitoringSiteName": "634S20393",
+        "CanonicalName": "634S20393",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.210621,
+          39.096931
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 769,
+        "MonitoringSiteName": "634S20395",
+        "CanonicalName": "634S20395",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.092392,
+          39.21915
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 768,
+        "MonitoringSiteName": "634S20396",
+        "CanonicalName": "634S20396",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.005316,
+          38.787056
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 767,
+        "MonitoringSiteName": "634S20397",
+        "CanonicalName": "634S20397",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.997892,
+          38.928063
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 766,
+        "MonitoringSiteName": "634S20398",
+        "CanonicalName": "634S20398",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.183284,
+          39.110372
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 765,
+        "MonitoringSiteName": "634S20403",
+        "CanonicalName": "634S20403",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.007544,
+          38.758448
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 764,
+        "MonitoringSiteName": "634S20409",
+        "CanonicalName": "634S20409",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.024602,
+          38.846664
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 763,
+        "MonitoringSiteName": "634S20413",
+        "CanonicalName": "634S20413",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.930517,
+          38.899465
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 762,
+        "MonitoringSiteName": "634S20414",
+        "CanonicalName": "634S20414",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.020034,
+          38.831021
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 761,
+        "MonitoringSiteName": "634S20423",
+        "CanonicalName": "634S20423",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.018671,
+          38.728116
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 760,
+        "MonitoringSiteName": "634S20425",
+        "CanonicalName": "634S20425",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.941257,
+          39.277268
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 792,
+        "MonitoringSiteName": "634S20463",
+        "CanonicalName": "634S20463",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.937059,
+          39.08851
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 791,
+        "MonitoringSiteName": "634S20472",
+        "CanonicalName": "634S20472",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.938432,
+          39.066596
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 790,
+        "MonitoringSiteName": "634S20492",
+        "CanonicalName": "634S20492",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.950512,
+          39.257188
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 789,
+        "MonitoringSiteName": "634S20495",
+        "CanonicalName": "634S20495",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.939664,
+          39.254812
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 759,
+        "MonitoringSiteName": "634S20511",
+        "CanonicalName": "634S20511",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.942767,
+          39.275673
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 788,
+        "MonitoringSiteName": "634S20527",
+        "CanonicalName": "634S20527",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.930215,
+          39.316822
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 787,
+        "MonitoringSiteName": "634S20547",
+        "CanonicalName": "634S20547",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.024321,
+          38.846374
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 786,
+        "MonitoringSiteName": "634S22514",
+        "CanonicalName": "634S22514",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.985759,
+          38.915089
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 785,
+        "MonitoringSiteName": "634S22522",
+        "CanonicalName": "634S22522",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.028083,
+          39.255997
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 784,
+        "MonitoringSiteName": "634S22523",
+        "CanonicalName": "634S22523",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.978239,
+          38.80143
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 783,
+        "MonitoringSiteName": "634S22525",
+        "CanonicalName": "634S22525",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.126921,
+          39.052231
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 782,
+        "MonitoringSiteName": "634S22528",
+        "CanonicalName": "634S22528",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.016783,
+          38.805547
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 781,
+        "MonitoringSiteName": "634S22530",
+        "CanonicalName": "634S22530",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.943354,
+          39.249556
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 938,
+        "MonitoringSiteName": "634S22531",
+        "CanonicalName": "634S22531",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.957459,
+          38.905663
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 780,
+        "MonitoringSiteName": "634S22534",
+        "CanonicalName": "634S22534",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.992438,
+          38.922967
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 779,
+        "MonitoringSiteName": "634S22538",
+        "CanonicalName": "634S22538",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.921207,
+          39.265875
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 937,
+        "MonitoringSiteName": "634S22539",
+        "CanonicalName": "634S22539",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.145162,
+          39.067219
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 778,
+        "MonitoringSiteName": "634S22540",
+        "CanonicalName": "634S22540",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.924091,
+          39.223886
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 936,
+        "MonitoringSiteName": "634S22543",
+        "CanonicalName": "634S22543",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.160368,
+          39.013535
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 777,
+        "MonitoringSiteName": "634S22544",
+        "CanonicalName": "634S22544",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.019528,
+          38.822916
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 776,
+        "MonitoringSiteName": "634S22546",
+        "CanonicalName": "634S22546",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.931268,
+          39.315543
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 920,
+        "MonitoringSiteName": "634S22547",
+        "CanonicalName": "634S22547",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9236,
+          39.13957
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 935,
+        "MonitoringSiteName": "634S22552",
+        "CanonicalName": "634S22552",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.974221,
+          38.887615
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 775,
+        "MonitoringSiteName": "634S22557",
+        "CanonicalName": "634S22557",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.949474,
+          39.255104
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 934,
+        "MonitoringSiteName": "634S23559",
+        "CanonicalName": "634S23559",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.03759,
+          38.852693
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 933,
+        "MonitoringSiteName": "634S23562",
+        "CanonicalName": "634S23562",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93231,
+          39.165798
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 932,
+        "MonitoringSiteName": "634S23568",
+        "CanonicalName": "634S23568",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.997205,
+          38.76658
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 931,
+        "MonitoringSiteName": "634S23569",
+        "CanonicalName": "634S23569",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94415,
+          39.015496
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 930,
+        "MonitoringSiteName": "634S23572",
+        "CanonicalName": "634S23572",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.956277,
+          39.260352
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 929,
+        "MonitoringSiteName": "634S23575",
+        "CanonicalName": "634S23575",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.933304,
+          38.971617
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 928,
+        "MonitoringSiteName": "634S23577",
+        "CanonicalName": "634S23577",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.981403,
+          38.869528
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 774,
+        "MonitoringSiteName": "634SAX0FS",
+        "CanonicalName": "634SAX0FS",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.98142,
+          38.87088
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 905,
+        "MonitoringSiteName": "634SAXOFS",
+        "CanonicalName": "634SAXOFS",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.976485,
+          38.930045
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 884,
+        "MonitoringSiteName": "634TRT002",
+        "CanonicalName": "634TRT002",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.97191,
+          38.91296
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 915,
+        "MonitoringSiteName": "634TRT003",
+        "CanonicalName": "634TRT003",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.931255,
+          38.87031
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 773,
+        "MonitoringSiteName": "634UHC-1",
+        "CanonicalName": "634UHC-1",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.991377,
+          38.905765
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 772,
+        "MonitoringSiteName": "634UTR002",
+        "CanonicalName": "634UTR002",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.00146,
+          38.87912
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 918,
+        "MonitoringSiteName": "634UTR004",
+        "CanonicalName": "634UTR004",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.02308,
+          38.86235
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 917,
+        "MonitoringSiteName": "634UTR005",
+        "CanonicalName": "634UTR005",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.02056,
+          38.83708
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 916,
+        "MonitoringSiteName": "634UTR006",
+        "CanonicalName": "634UTR006",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.03604,
+          38.8816
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 269,
+        "MonitoringSiteName": "Angora Creek",
+        "CanonicalName": "634TPB153",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.00096,
+          38.78313
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 279,
+        "MonitoringSiteName": "Big Meadow Creek - middle",
+        "CanonicalName": "634TPB097",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.99815,
+          38.77957
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 280,
+        "MonitoringSiteName": "Big Meadow Creek - upper",
+        "CanonicalName": "634REFBMW",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93948,
+          38.97367
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 300,
+        "MonitoringSiteName": "Burke Creek - lower",
+        "CanonicalName": "634TPA074",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.91798,
+          38.97965
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 308,
+        "MonitoringSiteName": "Burke Creek - upper",
+        "CanonicalName": "634TPB138",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.16278,
+          39.20423
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 255,
+        "MonitoringSiteName": "Burton Creek",
+        "CanonicalName": "634TPB155",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.08044,
+          38.95113
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 268,
+        "MonitoringSiteName": "Cascade Creek - lower",
+        "CanonicalName": "634TPA070",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.10642,
+          38.92731
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 265,
+        "MonitoringSiteName": "Cascade Creek - upper",
+        "CanonicalName": "634TPA038",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.95886,
+          38.90833
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 289,
+        "MonitoringSiteName": "Cold Creek",
+        "CanonicalName": "634TPA042",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94105,
+          39.25674
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 299,
+        "MonitoringSiteName": "Deer Creek - lower",
+        "CanonicalName": "634TPB108",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94617,
+          39.27209
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 294,
+        "MonitoringSiteName": "Deer Creek - upper",
+        "CanonicalName": "634TPB096",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.98581,
+          39.25928
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 285,
+        "MonitoringSiteName": "First Creek",
+        "CanonicalName": "634TPB088",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.16033,
+          39.02992
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 256,
+        "MonitoringSiteName": "General Creek",
+        "CanonicalName": "634REFGNL",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.08372,
+          38.87562
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 267,
+        "MonitoringSiteName": "Glen Alpine Creek",
+        "CanonicalName": "634TPA025",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": []
+      },
+      "properties": {
+        "MonitoringSiteID": 303,
+        "MonitoringSiteName": "Glenbrook Creek - lower",
+        "CanonicalName": "634TPA052",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.89941,
+          39.07524
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 310,
+        "MonitoringSiteName": "Glenbrook Creek - upper",
+        "CanonicalName": "634REFGBK",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.03116,
+          39.25071
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 271,
+        "MonitoringSiteName": "Griff Creek - middle",
+        "CanonicalName": "634TPA040",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01305,
+          39.25777
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 278,
+        "MonitoringSiteName": "Griff Creek tributary",
+        "CanonicalName": "634TPA024",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94593,
+          38.91724
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 295,
+        "MonitoringSiteName": "Heavenly Valley Creek",
+        "CanonicalName": "634TPB122",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93754,
+          39.24755
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 302,
+        "MonitoringSiteName": "Incline Creek - golf course",
+        "CanonicalName": "634TPA032",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93392,
+          39.06595
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 305,
+        "MonitoringSiteName": "Logan House Creek",
+        "CanonicalName": "634TPA036",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1196,
+          39.01972
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 263,
+        "MonitoringSiteName": "Lonely Gulch Creek",
+        "CanonicalName": "634TPA075",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.16573,
+          39.08913
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 253,
+        "MonitoringSiteName": "Madden Creek",
+        "CanonicalName": "634TPA039",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.14663,
+          39.06578
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 261,
+        "MonitoringSiteName": "McKinney Creek - middle",
+        "CanonicalName": "634TPA023",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.18381,
+          39.04399
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 252,
+        "MonitoringSiteName": "McKinney Creek - upper",
+        "CanonicalName": "634TPB103",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.14764,
+          39.01961
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 260,
+        "MonitoringSiteName": "Meeks Creek - middle",
+        "CanonicalName": "634TPB119",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.16496,
+          39.00627
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 254,
+        "MonitoringSiteName": "Meeks Creek - upper",
+        "CanonicalName": "634REFMKS",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.91891,
+          39.0735
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 307,
+        "MonitoringSiteName": "North Logan House Creek",
+        "CanonicalName": "634REFNLH",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93448,
+          39.01617
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 304,
+        "MonitoringSiteName": "North Zephyr Creek",
+        "CanonicalName": "634TPB084",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.03468,
+          38.85433
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 270,
+        "MonitoringSiteName": "Osgood Creek",
+        "CanonicalName": "634TPB105",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.15278,
+          39.07583
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 259,
+        "MonitoringSiteName": "Quail Creek - lower",
+        "CanonicalName": "634TPA087",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.15389,
+          39.07227
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 258,
+        "MonitoringSiteName": "Quail Creek - upper",
+        "CanonicalName": "634TPB151",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94924,
+          39.25485
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 291,
+        "MonitoringSiteName": "Rosewood Creek",
+        "CanonicalName": "634TPB124",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.10772,
+          38.98923
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 264,
+        "MonitoringSiteName": "Rubicon Creek",
+        "CanonicalName": "634TPB134",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.98585,
+          38.85731
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 284,
+        "MonitoringSiteName": "Saxon Creek - middle",
+        "CanonicalName": "634REFSAX",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.98699,
+          38.84863
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 283,
+        "MonitoringSiteName": "Saxon Creek - upper",
+        "CanonicalName": "634TPB109",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.92381,
+          39.13916
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 306,
+        "MonitoringSiteName": "Secret Harbor Creek",
+        "CanonicalName": "634TPA047",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.91687,
+          39.10914
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 309,
+        "MonitoringSiteName": "Slaughterhouse Creek",
+        "CanonicalName": "634TPA063",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94292,
+          39.25541
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 298,
+        "MonitoringSiteName": "Third Creek - Fairway Blvd",
+        "CanonicalName": "634TPA044",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94667,
+          39.2668
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 293,
+        "MonitoringSiteName": "Third Creek - golf course",
+        "CanonicalName": "634TPA028",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.94773,
+          39.27604
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 292,
+        "MonitoringSiteName": "Third Creek - upper",
+        "CanonicalName": "634TPB140",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.98085,
+          38.87902
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 286,
+        "MonitoringSiteName": "Trout Creek - Fountain Place",
+        "CanonicalName": "634TPB125",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.97774,
+          38.88442
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 287,
+        "MonitoringSiteName": "Trout Creek - Pioneer Trail",
+        "CanonicalName": "634TPA061",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.93944,
+          38.85402
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 301,
+        "MonitoringSiteName": "Trout Creek - upper",
+        "CanonicalName": "634REFTRT",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9919,
+          38.93664
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 282,
+        "MonitoringSiteName": "Trout Creek - Upper Truckee Marsh",
+        "CanonicalName": "634TPA050",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.02019,
+          38.82249
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 275,
+        "MonitoringSiteName": "Upper Truckee River - Christmas Valley",
+        "CanonicalName": "634TPA021",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01965,
+          38.8299
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 276,
+        "MonitoringSiteName": "Upper Truckee River - Christmas Valley 2",
+        "CanonicalName": "634TPA085",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0304,
+          38.76539
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 272,
+        "MonitoringSiteName": "Upper Truckee River - headwaters",
+        "CanonicalName": "634TPB145",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.02834,
+          38.77929
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 273,
+        "MonitoringSiteName": "Upper Truckee River - middle",
+        "CanonicalName": "634REFUTR",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.99315,
+          38.89151
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 281,
+        "MonitoringSiteName": "Upper Truckee River - Reach 5",
+        "CanonicalName": "634TPB141",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.02685,
+          38.85961
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 274,
+        "MonitoringSiteName": "Upper Truckee River - Tahoe Paradise Park",
+        "CanonicalName": "634TPA041",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.01605,
+          38.76332
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 277,
+        "MonitoringSiteName": "Upper Truckee River tributary",
+        "CanonicalName": "634TPA033",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1585,
+          39.13312
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 257,
+        "MonitoringSiteName": "Ward Creek - lower",
+        "CanonicalName": "634TPB123",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.22485,
+          39.13057
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 251,
+        "MonitoringSiteName": "Ward Creek - upper",
+        "CanonicalName": "634TPB143",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.09324,
+          39.21944
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 266,
+        "MonitoringSiteName": "Watson Creek",
+        "CanonicalName": "634TPB136",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.95805,
+          39.24569
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 290,
+        "MonitoringSiteName": "Wood Creek",
+        "CanonicalName": "634TPB112",
+        "LayerColor": "#a39039"
+      }
+    }
+  ]
+}

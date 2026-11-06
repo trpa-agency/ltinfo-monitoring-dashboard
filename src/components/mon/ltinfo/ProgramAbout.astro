@@ -1,0 +1,95 @@
+---
+// mon-lego-checked: esa-empty-state is the empty state. No esa-* renders CMS rich
+// text (esa-rich-text-editor is a static reference mock of an editor, not a
+// reader), so the sanitized HTML lands in a plain typography-body-md container
+// whose nested p, ul, and heading rules are the custom part.
+//
+// ProgramAbout: the program description and monitoring approach from the LT Info
+// record, sanitized at build. The order follows the host's program page: the
+// description leads the page as its intro, and the Program Overview card then
+// lists the monitoring approach and the program website. Takes data as props
+// and fetches nothing; pass `record` from loadProgramContent.
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import '@esa/tokens/typography.css';
+import type { ProgramRecord } from '../../../lib/ltinfo-api';
+import { sanitizeHtml, isSafeHref } from '../../../lib/sanitize';
+
+interface Props {
+  /** The LT Info program record, or null when it could not be loaded. */
+  record: ProgramRecord | null | undefined;
+}
+const { record } = Astro.props;
+
+const description = sanitizeHtml(record?.MonitoringProgramDescription);
+const approach = sanitizeHtml(record?.MonitoringApproach);
+const website = record?.MonitoringProgramUrl && isSafeHref(record.MonitoringProgramUrl) ? record.MonitoringProgramUrl.trim() : '';
+const hasContent = !!(description || approach || website);
+---
+{hasContent ? (
+  <div class="mon-about">
+    {description && <div class="mon-about__text typography-body-md" set:html={description} />}
+    {approach && (
+      <>
+        <h3 class="mon-about__heading typography-label-md-strong">Monitoring approach</h3>
+        <div class="mon-about__text typography-body-md" set:html={approach} />
+      </>
+    )}
+    {website && (
+      <p class="mon-about__website typography-body-sm">
+        Program website: <a href={website} target="_blank" rel="noopener">{website}</a>
+      </p>
+    )}
+  </div>
+) : (
+  <EsaEmptyState
+    size="sm"
+    title="No program description loaded yet."
+    description="This section will show the monitoring approach and program description from Lake Tahoe Info."
+  />
+)}
+
+<style>
+  .mon-about {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-300, 0.75rem);
+    color: var(--color-content-default, #333333);
+  }
+  .mon-about__heading {
+    margin: var(--spacing-200, 0.5rem) 0 0;
+    color: var(--color-content-default, #333333);
+  }
+  .mon-about__text :global(p),
+  .mon-about__text :global(ul),
+  .mon-about__text :global(ol),
+  .mon-about__text :global(blockquote) {
+    margin: 0 0 var(--spacing-300, 0.75rem);
+  }
+  .mon-about__text :global(:last-child) {
+    margin-bottom: 0;
+  }
+  .mon-about__text :global(h3),
+  .mon-about__text :global(h4) {
+    margin: var(--spacing-300, 0.75rem) 0 var(--spacing-100, 0.25rem);
+    font-size: var(--typography-label-md-font-size, 1rem);
+    font-weight: var(--typography-font-weight-semibold, 600);
+    line-height: var(--typography-label-md-line-height, 1.3);
+  }
+  .mon-about__text :global(blockquote) {
+    padding-left: var(--spacing-400, 1rem);
+    border-left: var(--border-width-thick, 3px) solid var(--color-border-default, #cecece);
+    color: var(--color-content-default-secondary, #656565);
+  }
+  .mon-about__text :global(a) {
+    color: var(--color-content-link, #337ab7);
+    text-decoration: underline;
+  }
+  .mon-about__text :global(a:hover) {
+    color: var(--color-content-link-hover, #23527c);
+  }
+  .mon-about__website {
+    margin: 0;
+    color: var(--color-content-default-secondary, #656565);
+    overflow-wrap: anywhere;
+  }
+</style>

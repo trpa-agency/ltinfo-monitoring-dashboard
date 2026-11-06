@@ -1,0 +1,12 @@
+[
+  {
+    "MonitoringProgramImageID": 78,
+    "MonitoringProgramID": 68,
+    "FileResourceInfoID": 15523,
+    "FileResourceGUID": "353e0f47-d7b0-4d7d-9dad-04ef7c84be13",
+    "Caption": "census",
+    "SortOrder": 0,
+    "IsKeyPhoto": true,
+    "PhotoCredit": "https://www.census.gov/data.html"
+  }
+]

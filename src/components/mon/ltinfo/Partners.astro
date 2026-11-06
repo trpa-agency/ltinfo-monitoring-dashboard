@@ -1,0 +1,89 @@
+---
+// mon-lego-checked: esa-badge carries each organization's short name and
+// esa-empty-state the empty state. No esa-* is a plain list of named records
+// (esa-link-column is a footer sitemap and styles every row as a link), so the
+// list markup is custom.
+//
+// Partners: the partner organizations of a program from GET
+// /monitoring-programs/{id}/partners, with the record's relationship label when
+// LT Info sets one and a link when an organization carries a URL (the API has no
+// URL field today, so rows render as text until it does). Fetches nothing.
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import '@esa/tokens/typography.css';
+import type { Partner } from '../../../lib/ltinfo-api';
+import { isSafeHref } from '../../../lib/sanitize';
+
+interface Props {
+  partners: Partner[] | null | undefined;
+  /** record.OrganizationRelationshipLabel, shown under the heading when set. */
+  relationshipLabel?: string | null;
+  /** Section heading. Pass '' to render the list with no heading. */
+  heading?: string;
+}
+const { partners, relationshipLabel, heading = 'Partners' } = Astro.props;
+
+const rows = (partners ?? [])
+  .filter((p) => p && typeof p.OrganizationName === 'string' && p.OrganizationName.trim())
+  .slice()
+  .sort((a, b) => (a.SortOrder ?? 0) - (b.SortOrder ?? 0));
+const label = (relationshipLabel ?? '').trim();
+---
+<div class="mon-partners">
+  {heading && <h3 class="mon-partners__heading typography-label-md-strong">{heading}</h3>}
+  {label && <p class="mon-partners__label typography-body-sm">{label}</p>}
+  {rows.length ? (
+    <ul class="mon-partners__list typography-body-md" aria-label={heading || 'Partners'}>
+      {rows.map((p) => {
+        const href = p.OrganizationUrl && isSafeHref(p.OrganizationUrl) ? p.OrganizationUrl : null;
+        const short = (p.OrganizationShortName ?? '').trim();
+        return (
+          <li class="mon-partners__row">
+            {href ? (
+              <a href={href} target="_blank" rel="noopener">{p.OrganizationName}</a>
+            ) : (
+              <span>{p.OrganizationName}</span>
+            )}
+            {short && short !== p.OrganizationName && <EsaBadge value={short} size="xs" />}
+          </li>
+        );
+      })}
+    </ul>
+  ) : (
+    <EsaEmptyState
+      size="sm"
+      title="No partners loaded yet."
+      description="This section will show the partner organizations listed for this program on Lake Tahoe Info."
+    />
+  )}
+</div>
+
+<style>
+  .mon-partners {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-200, 0.5rem);
+    color: var(--color-content-default, #333333);
+  }
+  .mon-partners__heading {
+    margin: 0;
+  }
+  .mon-partners__label {
+    margin: 0;
+    color: var(--color-content-default-secondary, #656565);
+  }
+  .mon-partners__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-150, 0.375rem);
+  }
+  .mon-partners__row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-200, 0.5rem);
+  }
+</style>

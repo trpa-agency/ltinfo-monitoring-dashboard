@@ -1,0 +1,32 @@
+{
+  "name": "ltinfo-monitoring-dashboard",
+  "version": "0.0.1",
+  "description": "LT Info Monitoring Dashboard program pages: an Astro spoke of the ESA Ecology hub (../ecology), themed for monitoring.laketahoeinfo.org.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check:contrast": "node ../ecology/scripts/check-contrast.mjs src/styles/theme-ltinfo.css && node ../ecology/scripts/check-contrast.mjs src/styles/theme-ltinfo.css --assurance wcag-aa",
+    "check:urls": "node scripts/check-urls.mjs",
+    "doctor": "node ../ecology/scripts/doctor.mjs"
+  },
+  "dependencies": {
+    "@esa/docs": "file:../ecology/packages/docs",
+    "@esa/ecology": "file:../ecology/packages/ecology",
+    "@esa/tokens": "file:../ecology/packages/tokens",
+    "astro": "^5.0.0",
+    "leaflet": "^1.9.4",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@esa/design-layer": "file:../ecology/packages/design-layer",
+    "@esa/handoff": "file:../ecology/packages/handoff",
+    "@types/leaflet": "^1.9.22",
+    "@types/node": "^22.19.0",
+    "typescript": "^5.9.0"
+  }
+}

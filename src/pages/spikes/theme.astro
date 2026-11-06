@@ -1,0 +1,209 @@
+---
+// Spike 4: the LT Info theme applied to Ecology legos, inside a mock of the host's
+// Dashboard card. A QA page: it exists to compare the re-skinned components against
+// https://monitoring.laketahoeinfo.org/monitoring-programs/39. Everything inside the
+// mock is an Ecology lego; the only spoke component is the host chrome around it.
+// Layout is the hub's primitives (stack, grid, cluster) and type roles; the page's own
+// CSS sets only widths, knobs, and spacing.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HostCardMock from '../../components/mon/HostCardMock.astro';
+import EsaStat from '@esa/ecology/esa-stat.astro';
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaButton from '@esa/ecology/esa-button.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import EsaPill from '@esa/ecology/esa-pill.astro';
+import EsaAlertBox from '@esa/ecology/esa-alert-box.astro';
+
+// Invented sample figures. Nothing here is program data.
+const stats = [
+  { label: 'Monitoring sites', value: '42', sub: 'Surveyed in 2026' },
+  { label: 'Years of record', value: '18', sub: '2008 to 2026' },
+  { label: 'Measurements', value: '1,245', sub: 'Across all sites' },
+  { label: 'Latest survey', value: '2026', sub: 'Field season ended Sep. 30' },
+];
+---
+<!-- manifest:
+  layout: stack(md)
+  sections:
+    - page title    -> typography-heading-md
+    - compare note  -> esa-card
+    - host card     -> mon-host-card-mock
+    - summary stats -> esa-stat
+    - panels        -> esa-card
+    - measurements  -> esa-empty-state
+    - load error    -> esa-alert-box
+-->
+<BaseLayout title="Theme spike">
+  <main class="theme-spike stack" data-gap="md">
+    <h1 class="theme-spike__title typography-heading-md">Theme spike</h1>
+    <!-- The note sits in a white card so its link is #337ab7 on #ffffff (4.56:1, AA);
+         on the #f7f7f7 page it would measure 4.25:1. Embed copy with links follows the
+         same rule: links live on cards, not on the card-body gray. -->
+    <EsaCard padding="compact">
+      <p class="theme-spike__note typography-body-sm">
+        This page exists to compare the LT Info theme against
+        <a href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">monitoring.laketahoeinfo.org/monitoring-programs/39</a>.
+        The green card is a static mock of the host's Dashboard card; everything inside it is an Ecology component wearing the theme.
+      </p>
+    </EsaCard>
+
+    <HostCardMock>
+      <div class="embed stack" data-gap="md">
+        <section class="embed__stats grid" data-gap="md" aria-label="Program summary">
+          {stats.map((s) => (
+            <EsaCard padding="compact">
+              <EsaStat value={s.value} label={s.label} sub={s.sub} />
+            </EsaCard>
+          ))}
+        </section>
+
+        <section class="embed__panels grid" data-gap="md" aria-label="Panels">
+          <EsaCard title="Stand density">
+            <div class="embed__controls cluster" data-gap="sm" data-align="end">
+              <esa-button-toggle id="view-toggle" label="View" value="chart" size="sm"></esa-button-toggle>
+              <EsaButton variant="primary" appearance="outline" size="sm" icon="download">CSV</EsaButton>
+              <div class="embed__select">
+                <esa-select id="site-select" label="Site" placeholder="All sites" size="sm"></esa-select>
+              </div>
+            </div>
+            <p>Mean trees per acre by survey year, with one line per site group. The chart and its table carry the same values.</p>
+            <p class="embed__state typography-body-sm" data-view-state>Showing the chart view for all sites.</p>
+          </EsaCard>
+
+          <EsaCard title="Sites">
+            <p>
+              The program tracks <EsaBadge value="42" variant="primary" /> sites across the subalpine zone.
+              Each site is tagged with its forest type, for example <EsaPill label="Whitebark pine" variant="primary" removable={false} />.
+            </p>
+            <p>Sites are revisited on a five-year rotation, so about one fifth of the network is surveyed each summer.</p>
+            <EsaButton variant="primary" size="sm" href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">View all sites</EsaButton>
+          </EsaCard>
+        </section>
+
+        <EsaCard title="Measurements">
+          <EsaEmptyState
+            title="No measurements loaded yet."
+            description="This section will show the program's measurement charts once the map service returns data."
+          />
+        </EsaCard>
+
+        <p class="embed__text">
+          Subalpine conifer monitoring tracks the health of high-elevation forests around the Basin. Read the
+          <a href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">program page on LT Info</a> for the full description, partners, and documents.
+        </p>
+
+        <EsaAlertBox variant="danger" title="Data could not be loaded">
+          The TRPA map service did not respond. Reload the page to try again.
+        </EsaAlertBox>
+      </div>
+    </HostCardMock>
+  </main>
+</BaseLayout>
+
+<script>
+  // The two Lit legos. Their option lists are arrays, so they are set as properties
+  // here rather than as attributes in the markup.
+  import '@esa/ecology/esa-button-toggle';
+  import '@esa/ecology/esa-select';
+
+  type Option = { label: string; value: string };
+  type OptionHost = HTMLElement & { options: Option[]; value: string | string[] };
+
+  const toggle = document.getElementById('view-toggle') as OptionHost | null;
+  const select = document.getElementById('site-select') as OptionHost | null;
+  const state = document.querySelector<HTMLElement>('[data-view-state]');
+
+  const SITES: Option[] = [
+    { label: 'All sites', value: 'all' },
+    { label: 'Desolation Wilderness', value: 'desolation' },
+    { label: 'Mount Rose', value: 'mount-rose' },
+  ];
+
+  let view = 'chart';
+  let site = 'all';
+
+  const describe = (): void => {
+    if (!state) return;
+    const siteLabel = SITES.find((s) => s.value === site)?.label ?? 'all sites';
+    state.textContent = `Showing the ${view} view for ${siteLabel.toLowerCase()}.`;
+  };
+
+  if (toggle) {
+    toggle.options = [
+      { label: 'Chart', value: 'chart' },
+      { label: 'Table', value: 'table' },
+    ];
+    toggle.addEventListener('change', (event) => {
+      view = String((event as CustomEvent<{ value: string }>).detail.value);
+      describe();
+    });
+  }
+
+  if (select) {
+    select.options = SITES;
+    select.value = site;
+    select.addEventListener('change', (event) => {
+      site = String((event as CustomEvent<{ value: string }>).detail.value);
+      describe();
+    });
+  }
+</script>
+
+<style>
+  /* Page width and padding only. Rhythm comes from the stack primitive on <main>. */
+  .theme-spike {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: var(--spacing-500, 1.5rem) var(--spacing-400, 1rem) var(--spacing-800, 4rem);
+  }
+
+  .theme-spike__title {
+    margin: 0;
+    color: var(--color-content-default, #333333);
+  }
+
+  .theme-spike__note {
+    margin: 0;
+    color: var(--color-content-default-secondary, #656565);
+    overflow-wrap: anywhere;
+  }
+
+  /* The embed body: white cards on the card-body gray, spaced on the spacing scale.
+     Both grids are the hub's .grid primitive; --grid-min sets how many columns fit.
+     Stats run four across at the 980 px card width and drop to one on a phone;
+     panels sit side by side above about 700 px and stack below it. */
+  .embed__stats {
+    --grid-min: 11rem;
+  }
+
+  .embed__panels {
+    --grid-min: 20rem;
+    align-items: start;
+  }
+
+  .embed__controls {
+    margin-bottom: var(--spacing-400, 1rem);
+  }
+
+  .embed__select {
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+
+  .embed p {
+    margin: 0 0 var(--spacing-300, 0.75rem);
+  }
+
+  .embed p:last-child {
+    margin-bottom: 0;
+  }
+
+  .embed__state {
+    color: var(--color-content-default-secondary, #656565);
+  }
+
+  .embed__text {
+    margin: 0;
+  }
+</style>

@@ -1,0 +1,13 @@
+---
+import DocsLayout from '../../../layouts/DocsLayout.astro';
+import ColorFoundation from '@esa/docs/ColorFoundation.astro';
+
+// The semantic roles + their live values come from @esa/docs and read from the
+// active theme at runtime. The only spoke-specific part is this spoke's own
+// primitive ramp(s) — pass them via the `ramps` prop.
+---
+<DocsLayout title="Color — Monitoring Dashboard" activeHref="/design-system/foundations/color">
+  {/* TODO(spoke-init): pass this spoke's primitive ramp(s), e.g.
+      ramps={[{ name: 'Neutrals', steps: [{ step: '1', token: 'ltinfo-neutral-1' }, ...] }]} */}
+  <ColorFoundation brand="Monitoring Dashboard" />
+</DocsLayout>

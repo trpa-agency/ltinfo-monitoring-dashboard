@@ -1,0 +1,42 @@
+[
+  {
+    "MonitoringProgramImageID": 33,
+    "MonitoringProgramID": 39,
+    "FileResourceInfoID": 13722,
+    "FileResourceGUID": "f1f0df92-cbaa-4672-875c-18a114ecc2f4",
+    "Caption": "Tahoe Yellow Cress (Rorippa subumbellata) on a Tahoe beach",
+    "SortOrder": 3,
+    "IsKeyPhoto": true,
+    "PhotoCredit": null
+  },
+  {
+    "MonitoringProgramImageID": 34,
+    "MonitoringProgramID": 39,
+    "FileResourceInfoID": 13723,
+    "FileResourceGUID": "caaaff70-fa48-4a08-a9ae-3301e95d4234",
+    "Caption": "Tahoe Yellow Cress (Rorippa subumbellata). TYC has plump round fruits, fleshy leaves, and a compact growth form",
+    "SortOrder": 4,
+    "IsKeyPhoto": false,
+    "PhotoCredit": null
+  },
+  {
+    "MonitoringProgramImageID": 35,
+    "MonitoringProgramID": 39,
+    "FileResourceInfoID": 13724,
+    "FileResourceGUID": "6418ab4d-edcb-45bd-8913-fd10345b6421",
+    "Caption": "A hard to distinguish, commonly found relative to TYC is the western cress (Rorippa curvisiliqua). It is often taller, the fruits are elongated and narrow, and the leaves are less fleshy and turn purple with age.",
+    "SortOrder": 5,
+    "IsKeyPhoto": false,
+    "PhotoCredit": null
+  },
+  {
+    "MonitoringProgramImageID": 69,
+    "MonitoringProgramID": 39,
+    "FileResourceInfoID": 15209,
+    "FileResourceGUID": "6e60d322-856d-468b-af17-5ddc84f6693d",
+    "Caption": "Monitoring Tahoe yellow cress.",
+    "SortOrder": 6,
+    "IsKeyPhoto": false,
+    "PhotoCredit": "Mike Vollmer"
+  }
+]

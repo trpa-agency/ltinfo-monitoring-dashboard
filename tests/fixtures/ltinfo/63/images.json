@@ -1,0 +1,42 @@
+[
+  {
+    "MonitoringProgramImageID": 36,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 13725,
+    "FileResourceGUID": "5766ebd7-bdde-44ba-84a4-07c540ae366a",
+    "Caption": "TRPA staff measure substrate type in the Upper Truckee River.",
+    "SortOrder": 0,
+    "IsKeyPhoto": true,
+    "PhotoCredit": null
+  },
+  {
+    "MonitoringProgramImageID": 58,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 14078,
+    "FileResourceGUID": "f2bdfc30-0c69-4bdd-90b9-8421deb90da4",
+    "Caption": "TRPA staff take stream canopy cover measurements.",
+    "SortOrder": 1,
+    "IsKeyPhoto": false,
+    "PhotoCredit": null
+  },
+  {
+    "MonitoringProgramImageID": 57,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 14077,
+    "FileResourceGUID": "9ccec397-5fe8-47cf-91c9-65e43c3d58b4",
+    "Caption": "TRPA staff collect macroinvertebrates in the Upper Truckee River.",
+    "SortOrder": 2,
+    "IsKeyPhoto": false,
+    "PhotoCredit": null
+  },
+  {
+    "MonitoringProgramImageID": 37,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 13726,
+    "FileResourceGUID": "08de6f79-6c94-49ac-ae1b-db73857db7fc",
+    "Caption": "Stoneflies are macroinvertebrates that generally indicate healthy stream biology. Photo: Kerry Wixted",
+    "SortOrder": 3,
+    "IsKeyPhoto": false,
+    "PhotoCredit": null
+  }
+]

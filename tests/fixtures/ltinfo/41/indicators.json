@@ -1,0 +1,14 @@
+[
+  {
+    "IndicatorID": 72,
+    "IndicatorDisplayName": "3-Year Average of the 4th Highest 8-hour Average Concentration of Ozone"
+  },
+  {
+    "IndicatorID": 74,
+    "IndicatorDisplayName": "Highest 1-Hour Concentration of NO2"
+  },
+  {
+    "IndicatorID": 70,
+    "IndicatorDisplayName": "Highest 8-Hour Average Concentration of Ozone"
+  }
+]

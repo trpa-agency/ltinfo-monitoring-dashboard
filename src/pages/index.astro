@@ -1,0 +1,163 @@
+---
+// Home page for the v2 branch. A plain landing page for the Astro rebuild of the LT Info
+// Monitoring Dashboard program pages, kept until Phase 4 replaces it: the design system
+// section, the Phase 0 spike pages (from src/data/prototypes.ts), the host harness, and a
+// few program pages at their real routes (programHref follows whatever the route is).
+// Layout is the hub's primitives (stack, grid) and type roles inside esa-card legos.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import { withBase } from '../lib/base';
+import { allPrograms, programHref } from '../lib/programs';
+import { prototypesByNewest, type PrototypeStatus } from '../data/prototypes';
+
+const spikes = prototypesByNewest();
+
+// Three program pages, one per template: charts (ozone), map (Tahoe Yellow Cress), and
+// the SEZ polygon map. Matched on <folder>/<file> from programs.json.
+const SAMPLE_PAGES = new Set([
+  'air-quality/ozone.html',
+  'vegetation-preservation/tahoe-yellow-cress.html',
+  'soil-conservation/sez-monitoring.html',
+]);
+const samples = allPrograms().filter(({ program, category }) =>
+  SAMPLE_PAGES.has(`${category.folder}/${program.file}`),
+);
+
+const STATUS_LABEL: Record<PrototypeStatus, string> = {
+  live: 'Live',
+  'in-progress': 'In progress',
+  planned: 'Planned',
+  archived: 'Archived',
+};
+const STATUS_VARIANT: Record<PrototypeStatus, 'success' | 'warning' | 'neutral'> = {
+  live: 'success',
+  'in-progress': 'warning',
+  planned: 'neutral',
+  archived: 'neutral',
+};
+---
+<BaseLayout title="Monitoring Dashboard v2">
+  <main class="home stack" data-gap="lg">
+    <header class="stack" data-gap="xs">
+      <p class="home__eyebrow typography-eyebrow-sm">LT Info Monitoring Dashboard</p>
+      <h1 class="home__title typography-heading-lg">Program pages, v2 build</h1>
+      <p class="home__intro typography-body-md">
+        This is the Astro rebuild of the program dashboards that embed in the Dashboard card of each
+        program page on <a href="https://monitoring.laketahoeinfo.org/">monitoring.laketahoeinfo.org</a>.
+        It is built as a spoke of the ESA Ecology design system and themed to the LT Info host. The
+        pages on <code>main</code> stay live until Phase 5 cuts over; this home page stands in until
+        Phase 4 replaces it.
+      </p>
+    </header>
+
+    <section class="stack" data-gap="sm" aria-labelledby="h-programs">
+      <h2 id="h-programs" class="home__h2 typography-title-strong">Program pages</h2>
+      <EsaCard>
+        <p class="home__p">
+          One page per program in <code>programs.json</code>, at <code>&lt;category-folder&gt;/&lt;program&gt;.html</code>.
+          Three to start with, one per template:
+        </p>
+        <ul class="home__list">
+          {samples.map(({ program, category }) => (
+            <li>
+              <a href={programHref(program, category)}>{program.name}</a>
+              <span class="home__meta typography-meta"> {category.name}</span>
+            </li>
+          ))}
+        </ul>
+        <p class="home__p">
+          <a href={withBase('/host-harness.html')}>Host harness</a>: a stand-in for the LT Info Dashboard
+          card, for checking the embed contract (chrome hiding, height posting, 375 px width).
+        </p>
+      </EsaCard>
+    </section>
+
+    <section class="stack" data-gap="sm" aria-labelledby="h-spikes">
+      <h2 id="h-spikes" class="home__h2 typography-title-strong">Spike pages</h2>
+      <div class="grid" data-gap="md">
+        {spikes.map((p) => (
+          <EsaCard title={p.title}>
+            <div class="stack" data-gap="xs">
+              <p class="home__p typography-body-sm">{p.description}</p>
+              <p class="home__p">
+                <a href={withBase(p.route)}>Open {p.title.toLowerCase()}</a>
+              </p>
+              <div>
+                <EsaBadge value={STATUS_LABEL[p.status]} variant={STATUS_VARIANT[p.status]} size="sm" />
+              </div>
+            </div>
+          </EsaCard>
+        ))}
+      </div>
+    </section>
+
+    <section class="stack" data-gap="sm" aria-labelledby="h-design">
+      <h2 id="h-design" class="home__h2 typography-title-strong">Design system</h2>
+      <EsaCard>
+        <p class="home__p">
+          The <a href={withBase('/design-system')}>design system section</a> documents the LT Info
+          theme (color, type, spacing, radius, icons) and the inherited Ecology components wearing it.
+          The <a href={withBase('/patterns')}>pattern library</a> is the scaffold placeholder.
+        </p>
+      </EsaCard>
+    </section>
+
+    <footer class="home__foot typography-meta">
+      Tahoe Regional Planning Agency. A spoke of the ESA Ecology design system.
+    </footer>
+  </main>
+
+  <style>
+    /* Width, padding, and small spacing only; rhythm comes from the stack primitive. */
+    .home {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: var(--spacing-600, 2rem) var(--spacing-400, 1rem) var(--spacing-800, 4rem);
+    }
+    .home__eyebrow {
+      margin: 0;
+      color: var(--color-content-default-secondary, #656565);
+    }
+    .home__title {
+      margin: 0;
+      color: var(--color-content-default, #333333);
+    }
+    .home__intro {
+      margin: 0;
+      max-width: 70ch;
+      color: var(--color-content-default-secondary, #656565);
+    }
+    .home__h2 {
+      margin: 0;
+      color: var(--color-content-default, #333333);
+    }
+    .home__p {
+      margin: 0 0 var(--spacing-300, 0.75rem);
+    }
+    .home__p:last-child {
+      margin-bottom: 0;
+    }
+    .home__list {
+      margin: 0 0 var(--spacing-300, 0.75rem);
+      padding-left: var(--spacing-500, 1.5rem);
+    }
+    .home__list li {
+      margin-bottom: var(--spacing-100, 0.25rem);
+    }
+    .home__meta {
+      color: var(--color-content-default-secondary, #656565);
+    }
+    code {
+      font-size: 0.9em;
+      padding: 0.1em 0.35em;
+      border-radius: var(--radius-xs, 2px);
+      background: var(--color-background-elevation-sunken, #efefef);
+    }
+    .home__foot {
+      padding-top: var(--spacing-400, 1rem);
+      border-top: var(--border-width-default, 1px) solid var(--color-border-default-subtle, #e0e0e0);
+      color: var(--color-content-default-secondary, #656565);
+    }
+  </style>
+</BaseLayout>

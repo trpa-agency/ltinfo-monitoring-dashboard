@@ -1,0 +1,88 @@
+---
+// mon-lego-checked: esa-button is the "Open full screen" action. No esa-* frames
+// an external page, so the <iframe> and its sizing are custom.
+//
+// DashboardFrame: the program's own dashboard, embedded when the LT Info admin
+// has configured one (record.Dashboard with a DashboardUrl, or an uploaded HTML
+// file resource). Renders nothing otherwise. The frame takes the admin's
+// DashboardHeight when set, else the --mon-dashboard-frame-height token. Pass
+// `selfHref` (this page's own URL) so a dashboard that points back at the page is
+// skipped instead of nesting it. Fetches nothing.
+import EsaButton from '@esa/ecology/esa-button.astro';
+import '@esa/tokens/typography.css';
+import type { ProgramDashboard } from '../../../lib/ltinfo-api';
+import { dashboardSrc } from '../../../lib/ltinfo-api';
+import { isSafeHref } from '../../../lib/sanitize';
+
+interface Props {
+  dashboard: ProgramDashboard | null | undefined;
+  /** The program name, for the frame title. */
+  programName: string;
+  /** This page's own absolute URL; a dashboard URL that resolves to it is not framed. */
+  selfHref?: string;
+  /** Show the admin's DashboardDescription above the frame. Default true. */
+  showDescription?: boolean;
+}
+const { dashboard, programName, selfHref, showDescription = true } = Astro.props;
+
+let src = dashboardSrc(dashboard);
+if (src && !isSafeHref(src)) src = null;
+if (src && selfHref) {
+  try {
+    const a = new URL(src);
+    const b = new URL(selfHref);
+    if (a.origin === b.origin && a.pathname.replace(/\/+$/, '') === b.pathname.replace(/\/+$/, '')) src = null;
+  } catch {
+    // An unparseable selfHref cannot match; keep the frame.
+  }
+}
+const height = dashboard?.DashboardHeight && dashboard.DashboardHeight > 0 ? `${Math.round(dashboard.DashboardHeight)}px` : null;
+const description = showDescription ? (dashboard?.DashboardDescription ?? '').trim() : '';
+---
+{src && (
+  <div class="mon-dashboard-frame" style={height ? `--mon-dashboard-frame-height: ${height}` : undefined}>
+    <div class="mon-dashboard-frame__head">
+      {description && <p class="mon-dashboard-frame__description typography-body-sm">{description}</p>}
+      <EsaButton size="sm" variant="secondary" appearance="outline" icon="external-link" href={src} target="_blank" rel="noopener">
+        Open full screen
+      </EsaButton>
+    </div>
+    <iframe
+      class="mon-dashboard-frame__iframe"
+      src={src}
+      title={`${programName} dashboard`}
+      loading="lazy"
+      allowfullscreen
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+)}
+
+<style>
+  .mon-dashboard-frame {
+    --mon-dashboard-frame-height: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-300, 0.75rem);
+  }
+  .mon-dashboard-frame__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--spacing-300, 0.75rem);
+  }
+  .mon-dashboard-frame__description {
+    margin: 0;
+    flex: 1 1 24rem;
+    color: var(--color-content-default-secondary, #656565);
+  }
+  .mon-dashboard-frame__iframe {
+    display: block;
+    width: 100%;
+    height: var(--mon-dashboard-frame-height);
+    border: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--color-background-elevation-raised, #ffffff);
+  }
+</style>

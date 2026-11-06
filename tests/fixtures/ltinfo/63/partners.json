@@ -1,0 +1,34 @@
+[
+  {
+    "MonitoringProgramPartnerID": 212,
+    "OrganizationID": 27,
+    "OrganizationName": "California Lahontan Regional Water Quality Control Board",
+    "OrganizationShortName": "Lahontan",
+    "LogoFileResourceGuid": "8dcbd8d6-75b7-4424-9588-d499759a005e",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 213,
+    "OrganizationID": 35,
+    "OrganizationName": "Nevada Division of Environmental Protection",
+    "OrganizationShortName": "NDEP",
+    "LogoFileResourceGuid": "ff1e4d90-729e-4f75-9800-b21005f2a8d5",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 214,
+    "OrganizationID": 18,
+    "OrganizationName": "Tahoe Regional Planning Agency",
+    "OrganizationShortName": "TRPA",
+    "LogoFileResourceGuid": "cc60c8a7-4135-49e3-8bbe-ad0a8ee83f21",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 215,
+    "OrganizationID": 1098,
+    "OrganizationName": "California Department of Fish & Wildlife",
+    "OrganizationShortName": "CDFW",
+    "LogoFileResourceGuid": "ad673778-894f-43c1-b66f-d45030948855",
+    "SortOrder": 0
+  }
+]

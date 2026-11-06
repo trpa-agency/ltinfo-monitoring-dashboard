@@ -1,0 +1,131 @@
+---
+/* manifest:
+  layout: stack(md)
+  sections:
+    - page header -> esa-container
+    - sites panels -> mon-sites-panel
+*/
+// mon-lego-checked: esa-container frames the page; the panels are SitesPanel (MapPanel,
+// an esa-card composition, around the mon-sites-panel element). The heading is page copy.
+//
+// Spike 3: Leaflet maps from map service GeoJSON, with a synced site list.
+//
+// Two program maps on the LT Info page background in a 980 px container, the width of the
+// Dashboard card on monitoring.laketahoeinfo.org:
+//   (a) Tahoe Yellow Cress sites: layer 9 collapsed to one point per site, with the 2024 lake
+//       level polygon (layer 117) under it.
+//   (b) SEZ assessment units: layer 106 colored by overall rating, one evaluation year at a time.
+// Both render through SitesPanel, the same component the program pages use, so this page is a
+// living check of that one implementation. The configs are the programs' sitesLayer, overlays,
+// and mapLayer entries in programs.json, read at build time.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EsaContainer from '@esa/ecology/esa-container.astro';
+import SitesPanel from '../../components/mon/SitesPanel.astro';
+import { allPrograms } from '../../lib/programs.ts';
+import type { SitesPanelConfig } from '../../lib/sites.ts';
+
+// A program's site config from programs.json. Fails the build when the entry moves, which is
+// the point: the page is driven by the content model.
+function siteConfig(file: string): SitesPanelConfig {
+  const entry = allPrograms().find((e) => e.program.file === file);
+  if (!entry) throw new Error(`programs.json has no program file "${file}"`);
+  const { program, category } = entry;
+  return {
+    program: program.name,
+    color: category.themeColor,
+    sitesLayer: program.sitesLayer,
+    mapLayer: program.mapLayer,
+    overlays: program.overlays,
+  };
+}
+
+const tyc = siteConfig('tahoe-yellow-cress.html');
+const sez = siteConfig('sez-monitoring.html');
+---
+<BaseLayout title="Spike 3: Leaflet maps">
+  <main class="spike-map">
+    <EsaContainer maxWidth="980px">
+      <div class="spike-map__stack">
+        <!-- Standalone only: embed.ts hides everything marked data-standalone when framed. -->
+        <header class="spike-map__head" data-standalone>
+          <p class="typography-eyebrow-sm spike-map__eyebrow">Phase 0 spike 3</p>
+          <h1 class="typography-heading-md spike-map__title">Leaflet maps from map service GeoJSON</h1>
+          <p class="typography-body-sm spike-map__lede">
+            Two program maps read GeoJSON from the TRPA LTInfo_Monitoring map service. Each has a legend, a Home
+            button, a synced list with a filter, popups built from the configured fields, and a CSV download. The
+            mouse wheel scrolls the page, not the map.
+          </p>
+        </header>
+
+        <SitesPanel
+          id="tyc"
+          title="Tahoe Yellow Cress sites"
+          config={tyc}
+          tall
+          emptyTitle="No sites loaded yet"
+          emptyDescription="This section will show each Tahoe yellow cress survey site on a map with the list beside it."
+        />
+
+        <SitesPanel
+          id="sez"
+          config={sez}
+          emptyTitle="No assessment units loaded yet"
+          emptyDescription="This section will show the SEZ assessment units colored by overall rating for one evaluation year."
+        />
+      </div>
+    </EsaContainer>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  /* The embed contract: the page background is the LT Info Dashboard card body color, not white. */
+  html[data-theme='ltinfo'] body {
+    background: var(--color-background-default, #f7f7f7);
+  }
+  /* No chrome when framed in the LT Info Dashboard card (embed.ts sets the class and `hidden`). */
+  html.is-embed [data-standalone],
+  [data-standalone][hidden] {
+    display: none !important;
+  }
+  /* Framed, the page must not size itself from the frame: the frame is sized from the page. */
+  html.is-embed .spike-map {
+    min-height: 0;
+    padding-block: var(--spacing-300, 0.75rem) var(--spacing-400, 1rem);
+  }
+</style>
+
+<style>
+  .spike-map {
+    min-height: 100vh;
+    padding-block: var(--spacing-500, 1.5rem);
+    background: var(--color-background-default, #f7f7f7);
+  }
+  .spike-map__stack {
+    display: grid;
+    gap: var(--spacing-500, 1.5rem);
+    min-width: 0;
+  }
+  .spike-map__head {
+    display: grid;
+    gap: var(--spacing-100, 0.25rem);
+  }
+  .spike-map__eyebrow {
+    margin: 0;
+    color: var(--color-content-brand, #4a5d2e);
+  }
+  .spike-map__title {
+    margin: 0;
+    color: var(--color-content-default, #333333);
+  }
+  .spike-map__lede {
+    margin: 0;
+    max-width: 70ch;
+    color: var(--color-content-default-secondary, #646464);
+  }
+</style>
+
+<script>
+  // The embed contract (chrome hiding and height posting) has one home: src/lib/embed.ts.
+  import { initEmbed } from '../../lib/embed.ts';
+  initEmbed();
+</script>

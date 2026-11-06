@@ -1,0 +1,266 @@
+---
+// ProgramSections: the five dashboard sections of a program page on a
+// 12-column grid. The ORDER and the spans come from CSS keyed off
+// main[data-template] (charts, map, or context), so the ?template= override in
+// src/lib/embed.ts reorders the page by setting one attribute, with no
+// re-render. The markup order below is the charts order.
+//
+// Each section is filled from the program's programs.json entry:
+//   measurements    one ChartPanel per measure, spans from panelSpans()
+//   sites           a SitesPanel for the sitesLayer or mapLayer, plus overlays
+//   sites-per-year  a ChartPanel over the sitesPerYear count
+//   partners        Partners, Indicators, and Documents from the LT Info content
+//   about           KeyPhoto, ProgramAbout, and DashboardFrame from the LT Info content
+// A section with nothing to fill keeps its esa-card with the contract's empty
+// state: what is absent, then what the section will show.
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import ChartPanel from './ChartPanel.astro';
+import SitesPanel from './SitesPanel.astro';
+import ProgramAbout from './ltinfo/ProgramAbout.astro';
+import Partners from './ltinfo/Partners.astro';
+import Indicators from './ltinfo/Indicators.astro';
+import Documents from './ltinfo/Documents.astro';
+import KeyPhoto from './ltinfo/KeyPhoto.astro';
+import DashboardFrame from './ltinfo/DashboardFrame.astro';
+import type { ProgramContent } from '../../lib/ltinfo-api.ts';
+import { panelSpans, sitesPerYearMeasure, type PanelSource } from '../../lib/measures.ts';
+import type { GeoJsonSitesConfig, SitesPanelConfig } from '../../lib/sites.ts';
+import type { Category, Program, Template } from '../../lib/programs.ts';
+
+interface Props {
+  program: Program;
+  category: Category;
+  template: Template;
+  /**
+   * LT Info sites hook. Programs with neither sitesLayer nor mapLayer draw their
+   * sites from the LT Info API once src/lib/ltinfo-api.ts delivers the
+   * sites-as-feature-collection URL for program.id. Pass it here as
+   * { url, name: 'MonitoringSiteName', active: 'Active', first: 'FirstObservationDate',
+   *   last: 'LastObservationDate' } and the Sites section renders the same SitesPanel
+   * the service-backed programs use; nothing else changes. Program.astro forwards it.
+   */
+  geojson?: GeoJsonSitesConfig;
+  /** Build-time LT Info content from loadProgramContent(); absent means every LT Info section shows its empty state. */
+  content?: ProgramContent;
+}
+const { program, category, template, geojson, content } = Astro.props;
+
+interface Section {
+  /** Stable key, also the data-section value the CSS keys off. */
+  key: 'measurements' | 'sites' | 'sites-per-year' | 'partners' | 'about';
+  title: string;
+  /** Contract wording: "No {measurement} loaded yet." */
+  empty: string;
+  /** Contract wording: "This section will show {what}." */
+  will: string;
+}
+
+const SECTIONS: Section[] = [
+  {
+    key: 'measurements',
+    title: 'Measurements',
+    empty: 'No measurements loaded yet.',
+    will: 'This section will show measurement charts from the TRPA map service, each with a table view and a CSV download.',
+  },
+  {
+    key: 'sites',
+    title: 'Sites',
+    empty: 'No sites loaded yet.',
+    will: 'This section will show a map of the monitoring sites with the same sites listed beside it.',
+  },
+  {
+    key: 'sites-per-year',
+    title: 'Sites monitored each year',
+    empty: 'No site records loaded yet.',
+    will: 'This section will show how many sites were monitored in each year of the record.',
+  },
+  {
+    key: 'partners',
+    title: 'Partners, indicators, and documents',
+    empty: 'No partners, indicators, or documents loaded yet.',
+    will: 'This section will show the partner organizations, linked threshold indicators, and documents from Lake Tahoe Info.',
+  },
+  {
+    key: 'about',
+    title: 'About the program',
+    empty: 'No program description loaded yet.',
+    will: 'This section will show the monitoring approach and program description from Lake Tahoe Info.',
+  },
+];
+const section = (key: Section['key']): Section => SECTIONS.find((s) => s.key === key)!;
+
+// Measurements: the program's measures, paired into span-6 panels.
+const measures = program.measures ?? [];
+const spans = panelSpans(measures);
+
+// Sites: the service source from programs.json, else the LT Info GeoJSON hook, else nothing.
+const sitesConfig: SitesPanelConfig | null =
+  program.sitesLayer || program.mapLayer || geojson
+    ? {
+        program: program.name,
+        color: category.themeColor,
+        sitesLayer: program.sitesLayer,
+        mapLayer: program.mapLayer,
+        overlays: program.overlays,
+        geojson: program.sitesLayer || program.mapLayer ? undefined : geojson,
+      }
+    : null;
+
+// Sites monitored each year: a bar chart over the distinct site count per year.
+const perYear = program.sitesPerYear;
+const perYearSource: PanelSource | null = perYear ? { kind: 'sites-per-year', config: perYear } : null;
+const sitesEmpty = { title: section('sites').empty, description: section('sites').will };
+const perYearEmpty = { title: section('sites-per-year').empty, description: section('sites-per-year').will };
+
+// LT Info content. The components render their own empty states; when the whole
+// partners group is empty the section shows one empty state instead of three.
+const record = content?.record ?? null;
+const hasConnections = Boolean(content && (content.partners.length || content.indicators.length || content.documents.length));
+---
+<!-- mon-lego-checked: esa-card and esa-empty-state are the legos in use, with ChartPanel and SitesPanel (esa-card compositions) filling the sections. No esa-* owns a 12-column dashboard grid with template-driven section order (the layouts.css .grid primitive is auto-fit and cannot span or order), so mon-sections here is the reusable home for it. -->
+<div class="mon-sections">
+  <section class="mon-section" data-section="measurements" aria-label={section('measurements').title}>
+    {measures.length ? (
+      <div class="mon-measures">
+        {measures.map((m, i) => <ChartPanel id={`measure${i}`} program={program.name} measure={m} span={spans[i]} />)}
+      </div>
+    ) : (
+      <EsaCard title={section('measurements').title}>
+        <div class="mon-section__body">
+          <EsaEmptyState title={section('measurements').empty} description={section('measurements').will} size="sm" />
+        </div>
+      </EsaCard>
+    )}
+  </section>
+
+  <section class="mon-section" data-section="sites" aria-label={section('sites').title}>
+    {sitesConfig ? (
+      <SitesPanel id="sites" config={sitesConfig} tall={template === 'map'} emptyTitle={sitesEmpty.title} emptyDescription={sitesEmpty.description} />
+    ) : (
+      <EsaCard title={section('sites').title}>
+        <div class="mon-section__body">
+          <EsaEmptyState title={sitesEmpty.title} description={sitesEmpty.description} size="sm" />
+        </div>
+      </EsaCard>
+    )}
+  </section>
+
+  <section class="mon-section" data-section="sites-per-year" aria-label={section('sites-per-year').title}>
+    {perYear && perYearSource ? (
+      <ChartPanel id="sites-per-year" program={program.name} measure={sitesPerYearMeasure(perYear)} source={perYearSource} empty={perYearEmpty} />
+    ) : (
+      <EsaCard title={section('sites-per-year').title}>
+        <div class="mon-section__body">
+          <EsaEmptyState title={perYearEmpty.title} description={perYearEmpty.description} size="sm" />
+        </div>
+      </EsaCard>
+    )}
+  </section>
+
+  <section class="mon-section" data-section="partners" aria-label={section('partners').title}>
+    <EsaCard title={section('partners').title}>
+      {hasConnections && content ? (
+        <div class="mon-section__content stack" data-gap="md">
+          <Partners partners={content.partners} />
+          <Indicators indicators={content.indicators} />
+          <Documents documents={content.documents} />
+        </div>
+      ) : (
+        <div class="mon-section__body">
+          <EsaEmptyState title={section('partners').empty} description={section('partners').will} size="sm" />
+        </div>
+      )}
+    </EsaCard>
+  </section>
+
+  <section class="mon-section" data-section="about" aria-label={section('about').title}>
+    <EsaCard title={section('about').title}>
+      {record ? (
+        <div class="mon-section__content stack" data-gap="md">
+          <KeyPhoto images={content?.images} record={record} programName={program.name} />
+          <ProgramAbout record={record} />
+          <DashboardFrame dashboard={record.Dashboard} programName={program.name} selfHref={Astro.url.href} />
+        </div>
+      ) : (
+        <div class="mon-section__body">
+          <EsaEmptyState title={section('about').empty} description={section('about').will} size="sm" />
+        </div>
+      )}
+    </EsaCard>
+  </section>
+</div>
+
+<style>
+  .mon-sections {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--spacing-400, 16px);
+  }
+  .mon-section {
+    grid-column: span 12;
+    min-width: 0;
+    /* Default order is the markup order (charts). The per-template blocks below
+       move sections; a section with no rule keeps its markup position. */
+    order: 0;
+    --mon-section-min: 200px;
+  }
+  /* The card fills the grid cell so paired sections line up. */
+  .mon-section > :global(.esa-card),
+  .mon-section > :global(mon-chart-panel),
+  .mon-section > :global(mon-chart-panel > .esa-card) {
+    height: 100%;
+  }
+  .mon-section__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--mon-section-min, 200px);
+  }
+  /* Measurement panels: span-6 pairs share a row; everything stacks below 768 px. */
+  .mon-measures {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--spacing-400, 16px);
+  }
+  .mon-measures > :global(.span-12) {
+    grid-column: span 12;
+  }
+  .mon-measures > :global(.span-6) {
+    grid-column: span 6;
+  }
+  @media (max-width: 767px) {
+    .mon-measures > :global(.span-6) {
+      grid-column: span 12;
+    }
+  }
+
+  /* ---- charts (default): measurements, sites, sites per year, partners, about ---- */
+  .mon-section[data-section='measurements'] { order: 1; --mon-section-min: 280px; }
+  .mon-section[data-section='sites'] { order: 2; --mon-section-min: 360px; }
+  .mon-section[data-section='sites-per-year'] { order: 3; grid-column: span 6; --mon-section-min: 240px; }
+  .mon-section[data-section='partners'] { order: 4; grid-column: span 6; --mon-section-min: 240px; }
+  .mon-section[data-section='about'] { order: 5; }
+
+  /* ---- map: sites (tall), measurements, sites per year, about, partners ---- */
+  :global(main[data-template='map']) .mon-section[data-section='sites'] { order: 1; --mon-section-min: 560px; }
+  :global(main[data-template='map']) .mon-section[data-section='measurements'] { order: 2; }
+  :global(main[data-template='map']) .mon-section[data-section='sites-per-year'] { order: 3; grid-column: span 6; }
+  :global(main[data-template='map']) .mon-section[data-section='about'] { order: 4; grid-column: span 6; }
+  :global(main[data-template='map']) .mon-section[data-section='partners'] { order: 5; grid-column: span 12; }
+
+  /* ---- context: about, partners, measurements, sites, sites per year ---- */
+  :global(main[data-template='context']) .mon-section[data-section='about'] { order: 1; grid-column: span 7; --mon-section-min: 280px; }
+  :global(main[data-template='context']) .mon-section[data-section='partners'] { order: 2; grid-column: span 5; --mon-section-min: 280px; }
+  :global(main[data-template='context']) .mon-section[data-section='measurements'] { order: 3; }
+  :global(main[data-template='context']) .mon-section[data-section='sites'] { order: 4; }
+  :global(main[data-template='context']) .mon-section[data-section='sites-per-year'] { order: 5; grid-column: span 12; }
+
+  /* ---- one column on a phone and inside the 980 px Dashboard card at phone widths ---- */
+  @media (max-width: 720px) {
+    .mon-section,
+    :global(main[data-template]) .mon-section {
+      grid-column: span 12;
+    }
+  }
+</style>

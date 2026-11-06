@@ -1,0 +1,1660 @@
+[
+  {
+    "MonitoringSiteID": 113,
+    "MonitoringSiteName": "4-H Camp/City Pump House",
+    "Description": null,
+    "CanonicalName": "4-H Camp/City Pump House",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1978-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 37,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "UNR / City",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 707,
+    "MonitoringSiteName": "Baldwin Bch Enclosures",
+    "Description": null,
+    "CanonicalName": "Baldwin Bch Enclosures",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2003-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 10616,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 130,
+    "MonitoringSiteName": "Baldwin Beach",
+    "Description": null,
+    "CanonicalName": "Baldwin Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 39,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 118,
+    "MonitoringSiteName": "Bijou (Timber Cove Lodge)",
+    "Description": null,
+    "CanonicalName": "Bijou (Timber Cove Lodge)",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2001-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 40,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Public",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 91,
+    "MonitoringSiteName": "Blackwood North",
+    "Description": null,
+    "CanonicalName": "Blackwood North",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 41,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 90,
+    "MonitoringSiteName": "Blackwood South",
+    "Description": null,
+    "CanonicalName": "Blackwood South",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 42,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 98,
+    "MonitoringSiteName": "Burnt Cedar Beach",
+    "Description": null,
+    "CanonicalName": "Burnt Cedar Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2002-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 43,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "IVGID",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 132,
+    "MonitoringSiteName": "Cascade Creek",
+    "Description": null,
+    "CanonicalName": "Cascade Creek",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 44,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 106,
+    "MonitoringSiteName": "Cave Rock",
+    "Description": null,
+    "CanonicalName": "Cave Rock",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1993-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 45,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Nevada State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 88,
+    "MonitoringSiteName": "Cherry St/Tahoe Swiss Village",
+    "Description": null,
+    "CanonicalName": "Cherry St/Tahoe Swiss Village",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1993-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 46,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 101,
+    "MonitoringSiteName": "Chimney Rock",
+    "Description": null,
+    "CanonicalName": "Chimney Rock",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 47,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 97,
+    "MonitoringSiteName": "Crystal Point",
+    "Description": null,
+    "CanonicalName": "Crystal Point",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1993-01-01",
+    "LastObservationDate": "2020-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 48,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 133,
+    "MonitoringSiteName": "CTC Cascade Creek",
+    "Description": null,
+    "CanonicalName": "CTC Cascade Creek",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2003-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 49,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California Tahoe Conservancy",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 79,
+    "MonitoringSiteName": "DL Bliss State Park",
+    "Description": null,
+    "CanonicalName": "DL Bliss State Park",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 50,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 95,
+    "MonitoringSiteName": "Dollar Point",
+    "Description": null,
+    "CanonicalName": "Dollar Point",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1993-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 51,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 76,
+    "MonitoringSiteName": "Eagle Creek/Avalanche",
+    "Description": null,
+    "CanonicalName": "Eagle Creek/Avalanche",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 52,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 75,
+    "MonitoringSiteName": "Eagle Point",
+    "Description": null,
+    "CanonicalName": "Eagle Point",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 53,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 943,
+    "MonitoringSiteName": "Ebright Enclosure",
+    "Description": null,
+    "CanonicalName": "Ebright Enclosure",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2022-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 10743,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 114,
+    "MonitoringSiteName": "Edgewood",
+    "Description": null,
+    "CanonicalName": "Edgewood",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 54,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 119,
+    "MonitoringSiteName": "El Dorado Beach",
+    "Description": null,
+    "CanonicalName": "El Dorado Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 55,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "City of South Lake Tahoe",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 111,
+    "MonitoringSiteName": "Elk Point",
+    "Description": null,
+    "CanonicalName": "Elk Point",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2021-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 56,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 77,
+    "MonitoringSiteName": "Emerald Bay Boat Camp",
+    "Description": null,
+    "CanonicalName": "Emerald Bay Boat Camp",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 57,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 945,
+    "MonitoringSiteName": "Emerald Bay SE",
+    "Description": null,
+    "CanonicalName": "Emerald Bay SE",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2025-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": []
+  },
+  {
+    "MonitoringSiteID": 78,
+    "MonitoringSiteName": "Emerald Point",
+    "Description": null,
+    "CanonicalName": "Emerald Point",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1980-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 58,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 104,
+    "MonitoringSiteName": "Glenbrook",
+    "Description": null,
+    "CanonicalName": "Glenbrook",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 59,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 99,
+    "MonitoringSiteName": "Hidden Beach",
+    "Description": null,
+    "CanonicalName": "Hidden Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2002-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 60,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Nevada State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 126,
+    "MonitoringSiteName": "Jameson",
+    "Description": null,
+    "CanonicalName": "Jameson",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2001-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 61,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 92,
+    "MonitoringSiteName": "Kaspian Campground",
+    "Description": null,
+    "CanonicalName": "Kaspian Campground",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 62,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 96,
+    "MonitoringSiteName": "Kings Beach",
+    "Description": null,
+    "CanonicalName": "Kings Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2022-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 63,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 127,
+    "MonitoringSiteName": "Kiva Beach/Valhalla",
+    "Description": null,
+    "CanonicalName": "Kiva Beach/Valhalla",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 64,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 124,
+    "MonitoringSiteName": "Lighthouse",
+    "Description": null,
+    "CanonicalName": "Lighthouse",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 65,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 105,
+    "MonitoringSiteName": "Logan Shoals/Vista",
+    "Description": null,
+    "CanonicalName": "Logan Shoals/Vista",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2021-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 66,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 109,
+    "MonitoringSiteName": "Marla Bay",
+    "Description": null,
+    "CanonicalName": "Marla Bay",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2001-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 67,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 86,
+    "MonitoringSiteName": "McKinney Creek",
+    "Description": null,
+    "CanonicalName": "McKinney Creek",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 68,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 87,
+    "MonitoringSiteName": "McKinney North/Shores",
+    "Description": null,
+    "CanonicalName": "McKinney North/Shores",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1993-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 69,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 82,
+    "MonitoringSiteName": "Meeks Bay",
+    "Description": null,
+    "CanonicalName": "Meeks Bay",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 70,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 705,
+    "MonitoringSiteName": "Meeks Bay Enclosures",
+    "Description": null,
+    "CanonicalName": "Meeks Bay Enclosures",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2003-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 10744,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 81,
+    "MonitoringSiteName": "Meeks Bay Vista",
+    "Description": null,
+    "CanonicalName": "Meeks Bay Vista",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1980-01-01",
+    "LastObservationDate": "2016-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 72,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 437,
+    "MonitoringSiteName": "Nevada Beach",
+    "Description": null,
+    "CanonicalName": "Nevada Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1978-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": []
+  },
+  {
+    "MonitoringSiteID": 944,
+    "MonitoringSiteName": "Nevada Beach Enclosure",
+    "Description": null,
+    "CanonicalName": "Nevada Beach Enclosure",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2025-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": []
+  },
+  {
+    "MonitoringSiteID": 125,
+    "MonitoringSiteName": "Pope Beach",
+    "Description": null,
+    "CanonicalName": "Pope Beach",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 74,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 120,
+    "MonitoringSiteName": "Regan/Al Tahoe",
+    "Description": null,
+    "CanonicalName": "Regan/Al Tahoe",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 75,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 110,
+    "MonitoringSiteName": "Roundhill",
+    "Description": null,
+    "CanonicalName": "Roundhill",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 76,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 80,
+    "MonitoringSiteName": "Rubicon Bay",
+    "Description": null,
+    "CanonicalName": "Rubicon Bay",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 77,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 100,
+    "MonitoringSiteName": "Sand Harbor",
+    "Description": null,
+    "CanonicalName": "Sand Harbor",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 78,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Nevada State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 102,
+    "MonitoringSiteName": "Secret Harbor",
+    "Description": null,
+    "CanonicalName": "Secret Harbor",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 79,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 942,
+    "MonitoringSiteName": "Ski Beach Enclosure",
+    "Description": null,
+    "CanonicalName": "Ski Beach Enclosure",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2022-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 10745,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 103,
+    "MonitoringSiteName": "Skunk Harbor",
+    "Description": null,
+    "CanonicalName": "Skunk Harbor",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 80,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 107,
+    "MonitoringSiteName": "Skyland",
+    "Description": null,
+    "CanonicalName": "Skyland",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2021-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 81,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 115,
+    "MonitoringSiteName": "South of Edgewood",
+    "Description": null,
+    "CanonicalName": "South of Edgewood",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2009-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 82,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 84,
+    "MonitoringSiteName": "Sugar Pine Point State Park",
+    "Description": null,
+    "CanonicalName": "Sugar Pine Point State Park",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "2001-01-01",
+    "LastObservationDate": "2023-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 83,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California State Parks",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 94,
+    "MonitoringSiteName": "Sunnyside",
+    "Description": null,
+    "CanonicalName": "Sunnyside",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 84,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 123,
+    "MonitoringSiteName": "Tahoe Keys",
+    "Description": null,
+    "CanonicalName": "Tahoe Keys",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 85,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 116,
+    "MonitoringSiteName": "Tahoe Meadows",
+    "Description": null,
+    "CanonicalName": "Tahoe Meadows",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 86,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 89,
+    "MonitoringSiteName": "Tahoe Pines (Fleur Du Lac)",
+    "Description": null,
+    "CanonicalName": "Tahoe Pines (Fleur Du Lac)",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1997-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 87,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 85,
+    "MonitoringSiteName": "Tahoma",
+    "Description": null,
+    "CanonicalName": "Tahoma",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 88,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 438,
+    "MonitoringSiteName": "Tallac Creek",
+    "Description": null,
+    "CanonicalName": "Tallac Creek",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": []
+  },
+  {
+    "MonitoringSiteID": 708,
+    "MonitoringSiteName": "Tallac Enclosure",
+    "Description": null,
+    "CanonicalName": "Tallac Enclosure",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 10746,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 128,
+    "MonitoringSiteName": "Taylor Creek",
+    "Description": null,
+    "CanonicalName": "Taylor Creek",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 91,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 706,
+    "MonitoringSiteName": "Taylor Creek Enclosure",
+    "Description": null,
+    "CanonicalName": "Taylor Creek Enclosure",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 10747,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 117,
+    "MonitoringSiteName": "Timber Cove",
+    "Description": null,
+    "CanonicalName": "Timber Cove",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2020-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 93,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 121,
+    "MonitoringSiteName": "Upper Truckee East",
+    "Description": null,
+    "CanonicalName": "Upper Truckee East",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 94,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California Tahoe Conservancy",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 122,
+    "MonitoringSiteName": "Upper Truckee West",
+    "Description": null,
+    "CanonicalName": "Upper Truckee West",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2024-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 95,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "California Tahoe Conservancy",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 93,
+    "MonitoringSiteName": "Ward Creek",
+    "Description": null,
+    "CanonicalName": "Ward Creek",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1979-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 96,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "Private",
+        "LabelHelpText": null
+      }
+    ]
+  },
+  {
+    "MonitoringSiteID": 108,
+    "MonitoringSiteName": "Zephyr Cove",
+    "Description": null,
+    "CanonicalName": "Zephyr Cove",
+    "Active": true,
+    "MonitoringSiteColor": "#a39039",
+    "MonitoringProgramID": 39,
+    "MonitoringProgramName": "Tahoe Yellow Cress Monitoring",
+    "Latitude": null,
+    "Longitude": null,
+    "StationCount": 1,
+    "CollisionCount": 0,
+    "FirstObservationDate": "1991-01-01",
+    "LastObservationDate": "2025-01-01",
+    "Organizations": [],
+    "Metadata": [
+      {
+        "MonitoringSiteMetadatumID": 97,
+        "MonitoringSiteAttributeID": 6,
+        "AttributeName": "Ownership",
+        "AttributeValue": "USFS / private",
+        "LabelHelpText": null
+      }
+    ]
+  }
+]

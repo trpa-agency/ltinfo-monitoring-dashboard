@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LT Info host harness</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap" />
+  <style>
+    /* A stand-in for a program page on monitoring.laketahoeinfo.org: the site
+       bar, a 980 px column, and the Dashboard card whose body holds the iframe.
+       Static and copied verbatim from public/, so every URL here is relative. */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Lexend Deca', system-ui, sans-serif;
+      font-weight: 400;
+      color: #333333;
+      background: #ffffff;
+    }
+    a { color: #337ab7; }
+    .host-bar {
+      background: #2f3f56;
+      color: #ffffff;
+      padding: 14px 24px;
+      font-weight: 600;
+    }
+    .host-bar span { font-weight: 400; opacity: 0.8; margin-left: 12px; }
+    .column {
+      width: 980px;
+      max-width: 100%;
+      margin: 24px auto 48px;
+      padding: 0 12px;
+    }
+    h1 { font-size: 28px; font-weight: 600; margin: 0 0 16px; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin: 0 0 16px;
+      font-size: 14px;
+    }
+    .controls input {
+      flex: 1 1 320px;
+      min-width: 0;
+      font: inherit;
+      padding: 6px 8px;
+      border: 1px solid #cccccc;
+      border-radius: 3px;
+    }
+    .controls button {
+      font: inherit;
+      font-weight: 500;
+      padding: 6px 14px;
+      border: 1px solid #789440;
+      border-radius: 3px;
+      background: #789440;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    .card {
+      border: 1px solid #dddddd;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #ffffff;
+    }
+    .card__header {
+      background: #789440;
+      color: #ffffff;
+      padding: 10px 15px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .card__body {
+      background: #f7f7f7;
+      padding: 15px;
+    }
+    .dashboard-frame {
+      display: block;
+      width: 100%;
+      height: 600px;
+      border: 0;
+      background: #f7f7f7;
+    }
+    .status {
+      margin: 16px 0 0;
+      font-size: 13px;
+      color: #555555;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+    .status code { font-family: inherit; color: #333333; }
+  </style>
+</head>
+<body>
+  <header class="host-bar">Lake Tahoe Info<span>Monitoring Dashboard host harness</span></header>
+
+  <main class="column">
+    <h1 id="page-title">Program page</h1>
+
+    <form class="controls" id="src-form">
+      <label for="src">Dashboard URL</label>
+      <input id="src" name="src" type="text" value="./air-quality/ozone.html" spellcheck="false" />
+      <button type="submit">Load</button>
+    </form>
+
+    <section class="card" aria-label="Dashboard card">
+      <div class="card__header">DASHBOARD</div>
+      <div class="card__body">
+        <iframe
+          class="dashboard-frame"
+          title="Monitoring Program Dashboard"
+          allowfullscreen
+          src="./air-quality/ozone.html"
+        ></iframe>
+      </div>
+    </section>
+
+    <p class="status">
+      Heights received (<code>ltinfo-embed:height</code>):
+      <span id="heights">none yet</span>
+    </p>
+  </main>
+
+  <script>
+    (function () {
+      var frame = document.querySelector('.dashboard-frame');
+      var heights = document.getElementById('heights');
+      var form = document.getElementById('src-form');
+      var input = document.getElementById('src');
+      var received = [];
+
+      // The LT Info host listens for this message and sizes the Dashboard card's
+      // iframe to the posted height. Only messages from this frame count, and
+      // only heights that are real numbers.
+      window.addEventListener('message', function (event) {
+        var data = event.data;
+        if (!data || data.type !== 'ltinfo-embed:height') return;
+        if (event.source !== frame.contentWindow) return;
+        var height = Number(data.height);
+        if (!isFinite(height) || height <= 0) return;
+        var px = Math.ceil(height);
+        frame.style.height = px + 'px';
+        received.push(px);
+        heights.textContent = received.join(', ');
+      });
+
+      // Change the framed page: a different program, or ?template=map on the same one.
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        var src = input.value.trim();
+        if (!src) return;
+        received = [];
+        heights.textContent = 'none yet (loading ' + src + ')';
+        frame.style.height = '600px';
+        frame.src = src;
+      });
+    })();
+  </script>
+</body>
+</html>

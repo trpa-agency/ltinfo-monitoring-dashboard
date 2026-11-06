@@ -1,0 +1,84 @@
+---
+/* manifest:
+  layout: stack(md)
+  sections:
+    - chrome -> mon-standalone-chrome
+    - summary tiles -> esa-stat
+    - dashboard sections -> mon-program-sections
+*/
+// One prerendered dashboard page per program in programs.json, at
+// /<category folder>/<program file>, for example /air-quality/ozone.html, the
+// same address the live site serves and the LT Info admin points each
+// program's DashboardUrl at. build.format 'file' writes each route as its own
+// .html file. The folders are checked against RESERVED_ROUTES in programs.ts
+// so no program page can shadow /spikes, /design-system, /patterns, or /.
+//
+// Build-time data (Decision 5): the program's LT Info record, partners,
+// indicators, documents, images, and sites are fetched here, in Node, once per
+// build. A fetch failure falls back to a recorded fixture or to the section's
+// empty state and never fails the build (src/lib/ltinfo-api.ts). Programs with
+// neither a sitesLayer nor a mapLayer get their site map from the LT Info
+// feature collection, enriched with each site's active flag and record dates
+// from the sites route and handed to the Sites panel as a data: URL, so the
+// page opens with no call to the LT Info API.
+import Program from '../../layouts/Program.astro';
+import programsJson from '../../../programs.json' with { type: 'json' };
+import { assertProgramsFile } from '../../lib/programs-schema.ts';
+import { allPrograms, programSlug, templateOf, type Category, type Program as ProgramRecord, type Template } from '../../lib/programs.ts';
+import { LTINFO_API, loadProgramContent, routePath, type ProgramContent } from '../../lib/ltinfo-api.ts';
+import type { GeoJsonSitesConfig } from '../../lib/sites.ts';
+
+export function getStaticPaths() {
+  // Fails the build with a list of paths when programs.json has a typo, a
+  // duplicate id, or a key templates/README.md does not document.
+  assertProgramsFile(programsJson);
+  return allPrograms().map(({ program, category }) => ({
+    params: { folder: category.folder, program: programSlug(program) },
+    props: { program, category, template: templateOf(program) },
+  }));
+}
+
+interface Props {
+  program: ProgramRecord;
+  category: Category;
+  template: Template;
+}
+const { program, category, template } = Astro.props;
+
+const content: ProgramContent = await loadProgramContent(program);
+
+/** LT Info sites for programs with no map service source: the feature collection with the sites route's fields merged in. */
+function ltinfoSitesHook(c: ProgramContent): GeoJsonSitesConfig | undefined {
+  if (program.sitesLayer || program.mapLayer || program.ltinfo === false) return undefined;
+  const byId = new Map(c.sites.map((s) => [s.MonitoringSiteID, s]));
+  const features = c.featureCollection.features
+    .filter((f) => Array.isArray(f.geometry?.coordinates) && f.geometry.coordinates.length === 2)
+    .map((f) => {
+      const site = byId.get(f.properties?.MonitoringSiteID);
+      return {
+        ...f,
+        properties: {
+          ...f.properties,
+          Active: site ? (site.Active ? 1 : 0) : null,
+          FirstObservationDate: site?.FirstObservationDate ?? null,
+          LastObservationDate: site?.LastObservationDate ?? null,
+        },
+      };
+    });
+  if (!features.length) return undefined;
+  const collection = { type: 'FeatureCollection', features };
+  return {
+    url: `data:application/json,${encodeURIComponent(JSON.stringify(collection))}`,
+    sourceHref: `${LTINFO_API}${routePath(program.id, 'feature-collection')}`,
+    sourceLabel: 'Lake Tahoe Info monitoring sites',
+    name: 'MonitoringSiteName',
+    code: 'MonitoringSiteID',
+    active: 'Active',
+    first: 'FirstObservationDate',
+    last: 'LastObservationDate',
+    unit: 'site',
+  };
+}
+const geojson = ltinfoSitesHook(content);
+---
+<Program program={program} category={category} template={template} geojson={geojson} content={content} />
