@@ -1,0 +1,122 @@
+---
+// Program: the layout for one monitoring program dashboard. Standalone it has
+// the LT Info chrome (StandaloneChrome); framed in the Dashboard card on
+// monitoring.laketahoeinfo.org the chrome is hidden and only <main> remains,
+// on the card body color, posting its height to the parent (src/lib/embed.ts).
+//
+// The body is a row of four esa-stat tiles and the five sections of
+// ProgramSections, ordered by the template (charts, map, or context). The page
+// passes the template from programs.json; ?template= in the URL overrides it
+// at runtime by setting data-template on <main>.
+import BaseLayout from './BaseLayout.astro';
+import StandaloneChrome from '../components/mon/StandaloneChrome.astro';
+import ProgramSections from '../components/mon/ProgramSections.astro';
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaStat from '@esa/ecology/esa-stat.astro';
+import { DEFAULT_TEMPLATE, type Category, type Program, type Template } from '../lib/programs.ts';
+import '@esa/tokens/layouts.css';
+
+interface Props {
+  program: Program;
+  category: Category;
+  template?: Template;
+}
+const { program, category, template = DEFAULT_TEMPLATE } = Astro.props;
+
+// Placeholder tiles. The reference template's first four KPIs, with "n/a" until
+// a later spike loads sites and dated records.
+const STATS = [
+  { label: 'Total sites', value: 'n/a', sub: 'Not loaded yet' },
+  { label: 'Active sites', value: 'n/a', sub: 'Not loaded yet' },
+  { label: 'Record began', value: 'n/a', sub: 'First year in the data' },
+  { label: 'Latest data', value: 'n/a', sub: 'Most recent year in the data' },
+];
+---
+<BaseLayout title={`${program.name} | Monitoring Dashboard`}>
+  <!-- Runs as the body parses, before any chrome paints, so a framed page never
+       flashes the standalone shell. src/lib/embed.ts repeats the check after
+       load and does the rest. (The hub's Handoff inspector, whose gate fetch
+       used to log a 404 on every page, is mounted by BaseLayout only when the
+       route has a bundle on disk, so program pages load with a clean console.) -->
+  <script is:inline>
+    if (window.self !== window.top) document.documentElement.classList.add('is-embed');
+  </script>
+
+  <div class="mon-page">
+    <StandaloneChrome program={program} category={category}>
+      <main id="main" class="mon-main stack" data-gap="md" data-template={template} data-program-id={program.id}>
+        <div class="mon-stats grid" data-gap="md" aria-label="Program summary">
+          {STATS.map((stat) => (
+            <EsaCard padding="compact">
+              <EsaStat value={stat.value} label={stat.label} sub={stat.sub} />
+            </EsaCard>
+          ))}
+        </div>
+        <ProgramSections />
+        <slot />
+      </main>
+    </StandaloneChrome>
+  </div>
+
+  <style is:global>
+    /* The page is the LT Info card body color standalone and framed alike; the
+       theme pins --color-background-default to #f7f7f7. `html body` outranks the
+       base layout's `body` rule whichever stylesheet lands first. */
+    html body {
+      background: var(--color-background-default, #f7f7f7);
+    }
+    /* Framed: no chrome. The class is set inline above and again by embed.ts,
+       which also sets `hidden`; the author `display` on the legos would beat
+       the hidden attribute alone, hence the rule. */
+    html.is-embed [data-standalone],
+    [data-standalone][hidden] {
+      display: none !important;
+    }
+    /* Framed: the container gutter shrinks to the 12 px the current dashboards
+       use inside the card body, which has padding of its own. */
+    html.is-embed .esa-container {
+      padding-inline: var(--spacing-300, 12px);
+    }
+  </style>
+
+  <style>
+    .mon-page {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    /* Framed, the page must not size itself from the frame: the frame is sized
+       from the page, and a 100vh floor would feed back into the height posts. */
+    :global(html.is-embed) .mon-page {
+      min-height: 0;
+    }
+    /* No min-width override on .mon-main. The sidebar primitive sets
+       `.sidebar > :last-child { min-inline-size: var(--sidebar-content-min) }`
+       (62 percent, set on .mon-layout in StandaloneChrome), and that minimum is
+       what makes the side nav drop below the dashboard at phone widths. A
+       `min-width: 0` here ties it in specificity and wins or loses by stylesheet
+       order: it lost in the production bundle and won on the dev server, where
+       main collapsed to 47 px beside the nav and the sections overflowed 375 px.
+       Because the minimum is explicit, the flex item's automatic min-content
+       floor does not apply, so wide content inside main cannot widen it. */
+    :global(html.is-embed) .mon-main {
+      padding-block: var(--spacing-300, 12px) var(--spacing-400, 16px);
+    }
+    .mon-stats {
+      --grid-min: 10rem;
+    }
+    /* Phone widths, standalone or inside the Dashboard card: two tiles across
+       instead of a four-row stack. The auto-fit grid cannot fit two 10rem tracks
+       plus the gap in 311 px, so the column count is fixed here. */
+    @media (max-width: 720px) {
+      .mon-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+  </style>
+
+  <script>
+    import { initEmbed } from '../lib/embed.ts';
+    initEmbed();
+  </script>
+</BaseLayout>

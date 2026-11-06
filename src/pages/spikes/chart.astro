@@ -1,0 +1,123 @@
+---
+// mon-lego-checked: esa-page-header and esa-container frame the page; the panels
+// are ChartPanel (an esa-card composition). The 12-column grid is page layout.
+//
+// Spike 2: native SVG measurement charts with a Table view and a CSV download,
+// driven by programs.json measure configs and live data from the TRPA map
+// service. Five panels: ozone by station (pick, many series, threshold), daily
+// ozone (date axis), streams by condition class (stacked shares), busiest
+// counters (ranked horizontal bars), and a deliberately broken measure.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EsaContainer from '@esa/ecology/esa-container.astro';
+import EsaPageHeader from '@esa/ecology/esa-page-header.astro';
+import ChartPanel from '../../components/mon/ChartPanel.astro';
+import type { Measure } from '../../lib/measures';
+import { panelSpans } from '../../lib/measures';
+import programs from '../../../programs.json';
+
+interface ProgramRecord {
+  name: string;
+  measures?: Measure[];
+}
+interface CategoryRecord {
+  programs: ProgramRecord[];
+}
+const allPrograms: ProgramRecord[] = (programs as { categories: CategoryRecord[] }).categories.flatMap((c) => c.programs);
+
+// A measure by program name and title, from programs.json. Fails the build when
+// the config moves, which is the point: the page is driven by the content model.
+function findMeasure(programName: string, title: string): Measure {
+  const program = allPrograms.find((p) => p.name === programName);
+  const measure = program?.measures?.find((m) => m.title === title);
+  if (!measure) throw new Error(`programs.json has no measure "${title}" under "${programName}"`);
+  return measure;
+}
+
+const broken: Measure = {
+  title: 'Broken on purpose',
+  sub: 'A misspelled field in the filter, to show the error state.',
+  layer: 46,
+  where: "Pollutnt = 'O3'",
+  x: 'Year',
+  y: 'Value',
+  yLabel: 'O3 (ppm)',
+};
+
+const panels: { program: string; measure: Measure }[] = [
+  { program: 'Ozone (O3)', measure: findMeasure('Ozone (O3)', 'Ozone by station') },
+  { program: 'Ozone (O3)', measure: findMeasure('Ozone (O3)', 'Daily ozone by station') },
+  { program: 'Stream Bioassessment and Physical Habitat', measure: findMeasure('Stream Bioassessment and Physical Habitat', 'Streams by condition class') },
+  { program: 'Bicycle and Pedestrian', measure: findMeasure('Bicycle and Pedestrian', 'Busiest counters') },
+  { program: 'Ozone (O3)', measure: broken },
+];
+const spans = panelSpans(panels.map((p) => p.measure));
+---
+<BaseLayout title="Spike 2: measurement charts">
+  <main class="mon-spike">
+    <EsaContainer maxWidth="980px">
+      <EsaPageHeader title="Spike 2: measurement charts" eyebrow="Monitoring Dashboard v2" />
+      <p class="mon-spike__intro typography-body-md">
+        Native SVG charts from programs.json measure configs and live rows from the TRPA LTInfo_Monitoring map service.
+        Each panel has a Chart and Table view and a CSV download. The last panel queries a misspelled field on purpose to show the error state.
+      </p>
+      <div class="mon-grid">
+        {panels.map((p, i) => (
+          <ChartPanel id={`measure${i}`} program={p.program} measure={p.measure} span={spans[i]} />
+        ))}
+      </div>
+    </EsaContainer>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  /* Embed contract: the page sits on the LT Info card body color. */
+  body {
+    background: var(--color-background-default, #f7f7f7);
+  }
+  .mon-spike {
+    padding-block: var(--spacing-500, 1.5rem) var(--spacing-800, 4rem);
+  }
+  .mon-spike__intro {
+    margin: var(--spacing-300, 0.75rem) 0 var(--spacing-500, 1.5rem);
+    max-width: 72ch;
+    color: var(--color-content-default-secondary, #656565);
+  }
+  /* 12-column panel grid. span-6 pairs share a row; everything stacks below 768 px. */
+  .mon-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--spacing-400, 1rem);
+  }
+  .mon-grid > .span-12 {
+    grid-column: span 12;
+  }
+  .mon-grid > .span-6 {
+    grid-column: span 6;
+  }
+  @media (max-width: 767px) {
+    .mon-grid > .span-6 {
+      grid-column: span 12;
+    }
+    .mon-spike .esa-container {
+      padding-inline: var(--spacing-400, 1rem);
+    }
+  }
+</style>
+
+<script>
+  // Embed contract: when framed in the LT Info Dashboard card, post the document
+  // height to the parent whenever it changes.
+  const framed = window.self !== window.top;
+  if (framed) {
+    let last = 0;
+    const post = (): void => {
+      const height = document.documentElement.scrollHeight;
+      if (height === last) return;
+      last = height;
+      window.parent.postMessage({ type: 'ltinfo-embed:height', height }, '*');
+    };
+    new ResizeObserver(post).observe(document.body);
+    window.addEventListener('load', post);
+    post();
+  }
+</script>

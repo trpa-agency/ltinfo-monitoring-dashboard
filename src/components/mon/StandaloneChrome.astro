@@ -1,0 +1,250 @@
+---
+// StandaloneChrome: the LT Info shell around a program dashboard, shown only
+// when the page is opened on its own. Framed in the Dashboard card on
+// monitoring.laketahoeinfo.org every element marked data-standalone is hidden
+// (src/lib/embed.ts), and the slotted <main> is all that remains.
+//
+// Composition, top to bottom:
+//   esa-app-bar (header)  the LT Info site bar: brand lockup plus two links
+//   mon-hero              the navy band: esa-breadcrumbs, h1, esa-badge
+//   .sidebar primitive    side nav (esa-card of sibling programs) beside <slot />
+//   mon-footer            the host credit and copyright
+import EsaAppBar from '@esa/ecology/esa-app-bar.astro';
+import EsaButton from '@esa/ecology/esa-button.astro';
+import EsaBreadcrumbs from '@esa/ecology/esa-breadcrumbs.astro';
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaContainer from '@esa/ecology/esa-container.astro';
+import { withBase } from '../../lib/base.ts';
+import { programHref, siblings, type Category, type Program } from '../../lib/programs.ts';
+import '@esa/tokens/typography.css';
+import '@esa/tokens/layouts.css';
+
+interface Props {
+  program: Program;
+  category: Category;
+}
+const { program, category } = Astro.props;
+
+const homeHref = withBase('/');
+// The spoke has no All programs or About page yet. Both point at the spoke home
+// until one exists; the reference site routes them to index.html#/all and #/about.
+const allProgramsHref = withBase('/');
+const aboutHref = withBase('/#about');
+
+// The category has no landing page of its own yet, so its crumb is text.
+const crumbs = [
+  { label: 'Monitoring Programs', href: homeHref },
+  { label: category.name },
+  { label: program.name },
+];
+const programs = siblings(category);
+const year = new Date().getFullYear();
+---
+<!-- mon-lego-checked: esa-app-bar, esa-button, esa-breadcrumbs, esa-badge, esa-card, and esa-container are the legos in use. No esa-* fits the hero band (a page header on a host colored band is LT Info chrome, not a design system role; esa-page-header has no banner tone), the sibling nav (esa-sidebar-nav is a 280 px app rail that takes items only as a JS property and renders into shadow DOM, so the current program could not be prerendered with aria-current), or the footer (esa-app-bar is a single horizontal row and the host footer is a centered stack of two lines). mon-hero, mon-sidenav, and mon-footer in this file are their reusable home. -->
+<div class="mon-chrome" data-standalone>
+  <EsaAppBar as="header" tone="brand-strong" class="mon-appbar">
+    <div class="mon-bar repel" data-gap="md">
+      <a class="mon-brand" href={homeHref}>
+        <span class="mon-brand__site typography-label-md">Lake Tahoe Info</span>
+        <span class="mon-brand__divider" aria-hidden="true"></span>
+        <span class="mon-brand__name typography-label-md-strong">Monitoring Dashboard</span>
+      </a>
+      <nav class="mon-bar__links cluster" data-gap="xs" aria-label="Site">
+        <EsaButton variant="chrome" href={allProgramsHref}>All programs</EsaButton>
+        <EsaButton variant="chrome" href={aboutHref}>About</EsaButton>
+      </nav>
+    </div>
+  </EsaAppBar>
+
+  <section class="mon-hero" aria-labelledby="mon-program-title">
+    <EsaContainer maxWidth="1200px">
+      <div class="mon-hero__inner stack" data-gap="sm">
+        <div class="mon-hero__crumbs">
+          <EsaBreadcrumbs items={crumbs} size="sm" />
+        </div>
+        <div class="mon-hero__title-row cluster" data-gap="sm">
+          <h1 id="mon-program-title" class="mon-hero__title typography-heading-lg">{program.name}</h1>
+          <span class="mon-cat" style={`--mon-cat: ${category.themeColor}`}>
+            <EsaBadge value={category.name} size="md" />
+          </span>
+        </div>
+      </div>
+    </EsaContainer>
+  </section>
+</div>
+
+<EsaContainer maxWidth="1200px">
+  <div class="mon-layout sidebar">
+    <aside class="mon-sidenav mon-cat" data-standalone style={`--mon-cat: ${category.themeColor}`}>
+      <EsaCard title={category.name} padding="none">
+        <nav aria-label={`${category.name} programs`}>
+          <ul class="mon-sidenav__list">
+            {programs.map((p) => (
+              <li>
+                <a
+                  class="mon-sidenav__link typography-label-md"
+                  href={programHref(p, category)}
+                  aria-current={p.id === program.id ? 'page' : undefined}
+                >{p.name}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </EsaCard>
+    </aside>
+    <slot />
+  </div>
+</EsaContainer>
+
+<footer class="mon-footer" data-standalone>
+  <EsaContainer maxWidth="1200px">
+    <div class="mon-footer__inner stack" data-gap="xs">
+      <p class="mon-footer__credit typography-label-md-strong">
+        Implementation and Hosting by <a href="https://esassoc.com/services/technology/">Environmental Science Associates</a>
+      </p>
+      <p class="mon-footer__copyright typography-meta">
+        Copyright (C) {year} <a href="https://trpa.gov">Tahoe Regional Planning Agency</a>
+      </p>
+    </div>
+  </EsaContainer>
+</footer>
+
+<style>
+  /* LT Info host chrome is navy (#2f3f56 on monitoring.laketahoeinfo.org). The
+     theme file is generated and pins no navy role, so the chrome wrapper
+     re-points the knockout surface role for its own subtree only: the app bar's
+     brand-strong tone reads that role, and the hero paints the same value. */
+  .mon-chrome {
+    --mon-host-navy: #2f3f56;
+    --color-background-default-knockout: var(--mon-host-navy, #2f3f56);
+  }
+
+  /* ---- app bar: one flexible child in the bar's main region, so brand and
+     links wrap below each other on a phone instead of pushing the bar wider ---- */
+  .mon-bar {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .mon-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-300, 12px);
+    color: inherit;
+    text-decoration: none;
+  }
+  .mon-brand__divider {
+    width: var(--border-width-default, 1px);
+    height: 1.25em;
+    background: currentColor;
+    opacity: 0.5;
+  }
+  .mon-bar__links {
+    min-width: 0;
+  }
+
+  /* ---- hero band ---- */
+  .mon-hero {
+    background: var(--mon-host-navy, #2f3f56);
+    color: var(--color-content-default-knockout, #fcfcfc);
+    padding-block: var(--spacing-500, 24px) var(--spacing-600, 32px);
+  }
+  /* The breadcrumbs read tier-3 hooks plus --color-content-default for the
+     current crumb; on navy all three need the knockout ink. Scoped to the crumb
+     wrapper so the badge beside the title keeps dark text on its light tint. */
+  .mon-hero__crumbs {
+    --breadcrumbs-link-color: color-mix(in srgb, var(--color-content-default-knockout, #fcfcfc) 78%, transparent);
+    --breadcrumbs-link-hover: var(--color-content-default-knockout, #fcfcfc);
+    --color-content-default: var(--color-content-default-knockout, #fcfcfc);
+    --color-border-default-strong: color-mix(in srgb, var(--color-content-default-knockout, #fcfcfc) 55%, transparent);
+  }
+  .mon-hero__title {
+    margin: 0;
+    color: inherit;
+    overflow-wrap: anywhere;
+  }
+
+  /* ---- category tint: a runtime value (--mon-cat, set inline from
+     programs.json) feeding the badge and side nav hooks ---- */
+  .mon-cat {
+    --badge-bg: color-mix(in srgb, var(--mon-cat, #789440) 28%, white);
+    --badge-text-color: var(--color-content-default, #333333);
+    --badge-border-color: var(--mon-cat, #789440);
+    --card-header-bg: color-mix(in srgb, var(--mon-cat, #789440) 16%, white);
+  }
+
+  /* ---- side nav beside the dashboard ---- */
+  .mon-layout {
+    --sidebar-width: 15rem;
+    --sidebar-content-min: 62%;
+    --gap: var(--spacing-500, 24px);
+    padding-block: var(--spacing-500, 24px) var(--spacing-800, 64px);
+  }
+  /* Framed, the card body supplies the breathing room; the page keeps none of
+     its own so the posted height is the dashboard and nothing else. */
+  :global(html.is-embed) .mon-layout {
+    padding-block: 0;
+  }
+  .mon-sidenav {
+    align-self: flex-start;
+    position: sticky;
+    top: var(--spacing-400, 16px);
+    min-width: 0;
+  }
+  .mon-sidenav__list {
+    list-style: none;
+    margin: 0;
+    padding: var(--spacing-150, 6px);
+  }
+  .mon-sidenav__link {
+    display: block;
+    padding: var(--spacing-200, 8px) var(--spacing-250, 10px);
+    border-radius: var(--radius-sm, 4px);
+    color: var(--color-content-default-secondary, #646464);
+    text-decoration: none;
+  }
+  .mon-sidenav__link:hover {
+    background: var(--color-background-default-hover, #ececec);
+    color: var(--color-content-default, #333333);
+  }
+  .mon-sidenav__link[aria-current='page'] {
+    background: color-mix(in srgb, var(--mon-cat, #789440) 14%, white);
+    color: var(--color-content-default, #333333);
+    font-weight: var(--typography-font-weight-semibold, 600);
+    box-shadow: inset var(--border-width-300, 3px) 0 0 0 var(--mon-cat, #789440);
+  }
+
+  /* ---- footer ---- */
+  .mon-footer {
+    border-top: var(--border-width-default, 1px) solid var(--color-border-default-subtle, #e0e0e0);
+    background: var(--color-background-elevation-raised, #ffffff);
+    padding-block: var(--spacing-500, 24px) var(--spacing-600, 32px);
+    color: var(--color-content-default-secondary, #646464);
+  }
+  .mon-footer__inner {
+    align-items: center;
+    text-align: center;
+  }
+  .mon-footer p {
+    margin: 0;
+  }
+  .mon-footer a {
+    color: var(--color-content-link, #337ab7);
+  }
+
+  /* ---- phone widths: the nav list becomes a wrapping row above the dashboard,
+     and the side nav stops sticking so it never covers the content ---- */
+  @media (max-width: 720px) {
+    .mon-sidenav {
+      position: static;
+    }
+    .mon-sidenav__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-100, 4px);
+    }
+    .mon-sidenav__link[aria-current='page'] {
+      box-shadow: inset 0 calc(-1 * var(--border-width-300, 3px)) 0 0 var(--mon-cat, #789440);
+    }
+  }
+</style>

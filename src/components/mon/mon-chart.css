@@ -1,0 +1,265 @@
+/* mon-lego-checked: no esa-* draws a native SVG chart (esa-chart wraps AG Charts on
+   canvas, which the v2 stack decision replaced with SVG written here); mon-chart and
+   mon-chart-panel are the reusable homes. Reads Ecology tokens only, each with a
+   literal fallback. Series colors come from the dataviz tokens through the
+   mon-chart__series--N classes; marks paint with currentColor. */
+
+mon-chart {
+  display: block;
+  position: relative;
+  min-width: 0;
+}
+mon-chart[hidden] {
+  display: none;
+}
+
+.mon-chart__frame {
+  width: 100%;
+  min-width: 0;
+}
+
+.mon-chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  font-family: inherit;
+}
+.mon-chart__svg text {
+  font-family: inherit;
+  font-size: 11px;
+  fill: var(--color-content-default-secondary, #656565);
+}
+
+.mon-chart__grid line {
+  stroke: var(--color-border-default-subtle, #e5e5e5);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.mon-chart__axis-line {
+  stroke: var(--color-border-default, #cecece);
+  stroke-width: 1;
+  shape-rendering: crispEdges;
+}
+.mon-chart__axis-title {
+  fill: var(--color-content-default, #333333);
+}
+
+/* Series identity: one class per palette slot, wrapping after 8. */
+.mon-chart__series--1 { color: var(--color-background-dataviz-categorical-1, #3e72b0); }
+.mon-chart__series--2 { color: var(--color-background-dataviz-categorical-2, #e49937); }
+.mon-chart__series--3 { color: var(--color-background-dataviz-categorical-3, #89bf40); }
+.mon-chart__series--4 { color: var(--color-background-dataviz-categorical-4, #5a9cb0); }
+.mon-chart__series--5 { color: var(--color-background-dataviz-categorical-5, #be4c4c); }
+.mon-chart__series--6 { color: var(--color-background-dataviz-categorical-6, #646820); }
+.mon-chart__series--7 { color: var(--color-background-dataviz-categorical-7, #89cad7); }
+.mon-chart__series--8 { color: var(--color-background-dataviz-categorical-8, #2c5f72); }
+
+.mon-chart__line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.mon-chart__marker {
+  fill: currentColor;
+  stroke: var(--color-background-elevation-raised, #ffffff);
+  stroke-width: 1;
+}
+/* Hatched bars keep their fill="url(#pattern)" attribute; the pattern paints in the series color. */
+.mon-chart__bar:not(.mon-chart__bar--hatch) {
+  fill: currentColor;
+}
+.mon-chart__bar--hatch {
+  stroke: currentColor;
+  stroke-width: 1;
+}
+.mon-chart__hatch-fill {
+  fill: currentColor;
+}
+.mon-chart__hatch-line {
+  stroke: var(--color-background-elevation-raised, #ffffff);
+  stroke-width: 2.5;
+  stroke-opacity: 0.75;
+}
+
+.mon-chart__threshold line {
+  stroke: var(--color-content-default-secondary, #656565);
+  stroke-width: 1.5;
+  stroke-dasharray: 6 4;
+}
+.mon-chart__threshold-label {
+  fill: var(--color-content-default-secondary, #656565);
+}
+
+/* Hit groups tile the plot: one per x position, hover and keyboard target. */
+.mon-chart__hit {
+  outline: none;
+  cursor: crosshair;
+}
+.mon-chart__hit rect {
+  fill: transparent;
+  pointer-events: all;
+}
+.mon-chart__hit--active rect,
+.mon-chart__hit:focus-visible rect {
+  fill: var(--color-background-overlay-hover, rgba(0, 0, 0, 0.05));
+}
+.mon-chart__hit:focus-visible rect {
+  stroke: var(--color-border-default-focus, #789440);
+  stroke-width: var(--border-width-focus, 2px);
+}
+
+.mon-chart__tooltip {
+  position: absolute;
+  z-index: 2;
+  pointer-events: none;
+  max-width: 280px;
+  padding: var(--spacing-200, 0.5rem) var(--spacing-300, 0.75rem);
+  background: var(--color-background-elevation-floating, #ffffff);
+  color: var(--color-content-default, #333333);
+  border: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
+  border-radius: var(--radius-sm, 0.25rem);
+  box-shadow: var(--shadow-200, 0 2px 8px rgba(0, 0, 0, 0.12));
+  font-size: var(--typography-body-xs-font-size, 0.75rem);
+  line-height: 1.4;
+}
+.mon-chart__tooltip[hidden] {
+  display: none;
+}
+.mon-chart__tooltip-title {
+  font-weight: var(--typography-font-weight-semibold, 600);
+  margin-bottom: var(--spacing-100, 0.25rem);
+}
+.mon-chart__tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-200, 0.5rem);
+  white-space: nowrap;
+}
+.mon-chart__tooltip-name {
+  flex: 1 1 auto;
+  color: var(--color-content-default-secondary, #656565);
+}
+.mon-chart__tooltip-value {
+  font-variant-numeric: tabular-nums;
+}
+.mon-chart__dot {
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-xs, 2px);
+  background: currentColor;
+}
+
+.mon-chart__legend {
+  list-style: none;
+  margin: var(--spacing-300, 0.75rem) 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-100, 0.25rem) var(--spacing-400, 1rem);
+  font-size: var(--typography-body-xs-font-size, 0.75rem);
+  color: var(--color-content-default-secondary, #656565);
+}
+.mon-chart__legend[hidden] {
+  display: none;
+}
+.mon-chart__legend li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-150, 0.375rem);
+  min-height: 24px;
+}
+.mon-chart__swatch {
+  flex: none;
+  width: 22px;
+  height: 12px;
+  overflow: visible;
+}
+
+/* Panel: card header with title, sub, and tools; table view; source line. */
+mon-chart-panel {
+  display: block;
+  min-width: 0;
+}
+mon-chart-panel [hidden] {
+  display: none;
+}
+.mon-chart-panel__head {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-300, 0.75rem);
+}
+.mon-chart-panel__titles {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+.mon-chart-panel__title {
+  margin: 0;
+  color: var(--color-content-default, #333333);
+}
+.mon-chart-panel__sub {
+  margin: var(--spacing-050, 0.125rem) 0 0;
+  color: var(--color-content-default-secondary, #656565);
+}
+.mon-chart-panel__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--spacing-200, 0.5rem);
+}
+.mon-chart-panel__pick {
+  min-width: 200px;
+  max-width: 100%;
+}
+.mon-chart-panel__loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-600, 2rem);
+}
+.mon-chart-panel__table {
+  overflow: auto;
+  max-height: 420px;
+  border: var(--border-width-default, 1px) solid var(--color-border-default-subtle, #e5e5e5);
+  border-radius: var(--radius-sm, 0.25rem);
+}
+.mon-chart-panel__grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--typography-body-sm-font-size, 0.875rem);
+  color: var(--color-content-default, #333333);
+}
+.mon-chart-panel__grid th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  text-align: left;
+  font-weight: var(--typography-font-weight-semibold, 600);
+  background: var(--color-background-default, #f7f7f7);
+  border-bottom: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
+  padding: var(--spacing-200, 0.5rem) var(--spacing-300, 0.75rem);
+  white-space: nowrap;
+}
+.mon-chart-panel__grid td {
+  padding: var(--spacing-150, 0.375rem) var(--spacing-300, 0.75rem);
+  border-bottom: var(--border-width-default, 1px) solid var(--color-border-default-subtle, #e5e5e5);
+  vertical-align: top;
+}
+.mon-chart-panel__grid .mon-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+.mon-chart-panel__source {
+  margin: var(--spacing-300, 0.75rem) 0 0;
+  color: var(--color-content-default-secondary, #656565);
+}
+.mon-chart-panel__source a {
+  color: var(--color-content-link, #337ab7);
+  text-decoration: underline;
+}

@@ -1,0 +1,233 @@
+---
+// Spike 4: the LT Info theme applied to Ecology legos, inside a mock of the host's
+// Dashboard card. A QA page: it exists to compare the re-skinned components against
+// https://monitoring.laketahoeinfo.org/monitoring-programs/39. Everything inside the
+// mock is an Ecology lego; the only spoke component is the host chrome around it.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HostCardMock from '../../components/mon/HostCardMock.astro';
+import EsaStat from '@esa/ecology/esa-stat.astro';
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaButton from '@esa/ecology/esa-button.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import EsaPill from '@esa/ecology/esa-pill.astro';
+import EsaAlertBox from '@esa/ecology/esa-alert-box.astro';
+
+// Invented sample figures. Nothing here is program data.
+const stats = [
+  { label: 'Monitoring sites', value: '42', sub: 'Surveyed in 2026' },
+  { label: 'Years of record', value: '18', sub: '2008 to 2026' },
+  { label: 'Measurements', value: '1,245', sub: 'Across all sites' },
+  { label: 'Latest survey', value: '2026', sub: 'Field season ended Sep. 30' },
+];
+---
+<BaseLayout title="Theme spike">
+  <main class="theme-spike">
+    <h1 class="theme-spike__title">Theme spike</h1>
+    <!-- The note sits in a white card so its link is #337ab7 on #ffffff (4.56:1, AA);
+         on the #f7f7f7 page it would measure 4.25:1. Embed copy with links follows the
+         same rule: links live on cards, not on the card-body gray. -->
+    <div class="theme-spike__intro">
+      <EsaCard padding="compact">
+        <p class="theme-spike__note">
+          This page exists to compare the LT Info theme against
+          <a href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">monitoring.laketahoeinfo.org/monitoring-programs/39</a>.
+          The green card is a static mock of the host's Dashboard card; everything inside it is an Ecology component wearing the theme.
+        </p>
+      </EsaCard>
+    </div>
+
+    <HostCardMock>
+      <div class="embed">
+        <section class="embed__stats" aria-label="Program summary">
+          {stats.map((s) => (
+            <EsaCard padding="compact">
+              <EsaStat value={s.value} label={s.label} sub={s.sub} />
+            </EsaCard>
+          ))}
+        </section>
+
+        <section class="embed__panels" aria-label="Panels">
+          <EsaCard title="Stand density">
+            <div class="embed__controls">
+              <esa-button-toggle id="view-toggle" label="View" value="chart" size="sm"></esa-button-toggle>
+              <EsaButton variant="primary" appearance="outline" size="sm" icon="download">CSV</EsaButton>
+              <div class="embed__select">
+                <esa-select id="site-select" label="Site" placeholder="All sites" size="sm"></esa-select>
+              </div>
+            </div>
+            <p>Mean trees per acre by survey year, with one line per site group. The chart and its table carry the same values.</p>
+            <p class="embed__state" data-view-state>Showing the chart view for all sites.</p>
+          </EsaCard>
+
+          <EsaCard title="Sites">
+            <p>
+              The program tracks <EsaBadge value="42" variant="primary" /> sites across the subalpine zone.
+              Each site is tagged with its forest type, for example <EsaPill label="Whitebark pine" variant="primary" removable={false} />.
+            </p>
+            <p>Sites are revisited on a five-year rotation, so about one fifth of the network is surveyed each summer.</p>
+            <EsaButton variant="primary" size="sm" href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">View all sites</EsaButton>
+          </EsaCard>
+        </section>
+
+        <EsaCard title="Measurements">
+          <EsaEmptyState
+            title="No measurements loaded yet."
+            description="This section will show the program's measurement charts once the map service returns data."
+          />
+        </EsaCard>
+
+        <p class="embed__text">
+          Subalpine conifer monitoring tracks the health of high-elevation forests around the Basin. Read the
+          <a href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">program page on LT Info</a> for the full description, partners, and documents.
+        </p>
+
+        <EsaAlertBox variant="danger" title="Data could not be loaded">
+          The TRPA map service did not respond. Reload the page to try again.
+        </EsaAlertBox>
+      </div>
+    </HostCardMock>
+  </main>
+</BaseLayout>
+
+<script>
+  // The two Lit legos. Their option lists are arrays, so they are set as properties
+  // here rather than as attributes in the markup.
+  import '@esa/ecology/esa-button-toggle';
+  import '@esa/ecology/esa-select';
+
+  type Option = { label: string; value: string };
+  type OptionHost = HTMLElement & { options: Option[]; value: string | string[] };
+
+  const toggle = document.getElementById('view-toggle') as OptionHost | null;
+  const select = document.getElementById('site-select') as OptionHost | null;
+  const state = document.querySelector<HTMLElement>('[data-view-state]');
+
+  const SITES: Option[] = [
+    { label: 'All sites', value: 'all' },
+    { label: 'Desolation Wilderness', value: 'desolation' },
+    { label: 'Mount Rose', value: 'mount-rose' },
+  ];
+
+  let view = 'chart';
+  let site = 'all';
+
+  const describe = (): void => {
+    if (!state) return;
+    const siteLabel = SITES.find((s) => s.value === site)?.label ?? 'all sites';
+    state.textContent = `Showing the ${view} view for ${siteLabel.toLowerCase()}.`;
+  };
+
+  if (toggle) {
+    toggle.options = [
+      { label: 'Chart', value: 'chart' },
+      { label: 'Table', value: 'table' },
+    ];
+    toggle.addEventListener('change', (event) => {
+      view = String((event as CustomEvent<{ value: string }>).detail.value);
+      describe();
+    });
+  }
+
+  if (select) {
+    select.options = SITES;
+    select.value = site;
+    select.addEventListener('change', (event) => {
+      site = String((event as CustomEvent<{ value: string }>).detail.value);
+      describe();
+    });
+  }
+</script>
+
+<style>
+  .theme-spike {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: var(--spacing-500, 1.5rem) var(--spacing-400, 1rem) var(--spacing-800, 4rem);
+  }
+
+  .theme-spike__title {
+    margin: 0 0 var(--spacing-200, 0.5rem);
+    font-family: var(--typography-font-family-display, var(--typography-font-family-sans, 'Lexend Deca', sans-serif));
+    font-size: var(--typography-title-sm-strong-font-size, 1.0625rem);
+    font-weight: var(--typography-font-weight-semibold, 600);
+    color: var(--color-content-default, #333333);
+  }
+
+  .theme-spike__intro {
+    margin: 0 0 var(--spacing-400, 1rem);
+  }
+
+  .theme-spike__note {
+    margin: 0;
+    font-size: var(--typography-body-sm-font-size, 0.875rem);
+    line-height: var(--typography-body-sm-line-height, 1.6);
+    color: var(--color-content-default-secondary, #656565);
+    overflow-wrap: anywhere;
+  }
+
+  /* The embed body: a grid of white cards on the card-body gray, spaced on the
+     spacing scale. Panels sit side by side above 760 px and stack below it. */
+  .embed {
+    display: grid;
+    gap: var(--spacing-400, 1rem);
+  }
+
+  .embed__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--spacing-400, 1rem);
+  }
+
+  .embed__panels {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--spacing-400, 1rem);
+    align-items: start;
+  }
+
+  .embed__controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--spacing-300, 0.75rem);
+    margin-bottom: var(--spacing-400, 1rem);
+  }
+
+  .embed__select {
+    flex: 1 1 180px;
+    min-width: 0;
+  }
+
+  .embed p {
+    margin: 0 0 var(--spacing-300, 0.75rem);
+  }
+
+  .embed p:last-child {
+    margin-bottom: 0;
+  }
+
+  .embed__state {
+    color: var(--color-content-default-secondary, #656565);
+    font-size: var(--typography-body-sm-font-size, 0.875rem);
+  }
+
+  .embed__text {
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .embed__stats {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .embed__panels {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .embed__stats {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+</style>

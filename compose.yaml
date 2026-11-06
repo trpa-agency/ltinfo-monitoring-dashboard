@@ -1,0 +1,61 @@
+# LT Info Monitoring Dashboard v2: container workflow for the Astro spoke.
+# Full notes in docs/docker.md.
+#
+# Every service builds from the Dockerfile in this folder and targets one of
+# its stages. The hub (esassoc/ecology at the commit in ecology.ref) is cloned
+# inside the image at /work/ecology, beside the spoke at
+# /work/ltinfo-monitoring-spoke, so the file:../ecology/packages/* links in
+# package.json resolve without any folder arrangement on the host.
+#
+#   docker compose up web            dev server with hot reload, http://localhost:4331/
+#   docker compose up preview        production build behind nginx, http://localhost:8080/
+#   docker compose run --rm doctor   the hub's environment check, run inside the image
+
+name: ltinfo-monitoring-dashboard
+
+services:
+  web:
+    build:
+      context: .
+      target: dev
+    ports:
+      # The host dev server (npm run dev on bare Node) already listens on 4330,
+      # so the container's 4330 is published on 4331 and both can run at once.
+      - "4331:4330"
+    volumes:
+      # Live source from the host. node_modules is masked by a named volume so
+      # the Linux install baked into the image is used, never the Windows one.
+      # Docker fills the empty volume from the image on first start.
+      - .:/work/ltinfo-monitoring-spoke
+      - spoke_node_modules:/work/ltinfo-monitoring-spoke/node_modules
+    environment:
+      # Windows bind mounts do not forward change events; poll once a second.
+      # The dev stage sets the same defaults; these keep them visible here.
+      CHOKIDAR_USEPOLLING: "1"
+      CHOKIDAR_INTERVAL: "1000"
+    # tini as PID 1, so Ctrl+C and compose down stop the dev server at once.
+    init: true
+
+  preview:
+    build:
+      context: .
+      target: preview
+    ports:
+      - "8080:80"
+
+  doctor:
+    # Runs the hub's doctor against this checkout, inside the image. Three
+    # checks fail there by design: git identity, the gh CLI, and the Claude
+    # plugin are not set up in a container. The ones that matter here are node,
+    # git, hub sibling, hub tokens built, and spoke dependencies installed.
+    build:
+      context: .
+      target: deps
+    command: ["node", "../ecology/scripts/doctor.mjs"]
+    volumes:
+      - .:/work/ltinfo-monitoring-spoke
+      - spoke_node_modules:/work/ltinfo-monitoring-spoke/node_modules
+    profiles: ["tools"]
+
+volumes:
+  spoke_node_modules:

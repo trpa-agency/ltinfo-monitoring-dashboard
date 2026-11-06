@@ -1,0 +1,74 @@
+---
+// mon-lego-checked: esa-card frames the panel and esa-button-toggle, esa-select,
+// esa-button, esa-empty-state, and esa-loading-spinner fill it; no esa-* composes a
+// chart with a table view and a CSV download, so mon-chart-panel (wired in
+// mon-chart-panel.ts) is the reusable home.
+//
+// ChartPanel: the measurement panel contract for one programs.json measure.
+// Renders the card at build time; the mon-chart-panel element loads the data
+// from the TRPA map service and drives the chart, pick, table, CSV, and states.
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaButton from '@esa/ecology/esa-button.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import EsaLoadingSpinner from '@esa/ecology/esa-loading-spinner.astro';
+import '@esa/tokens/typography.css';
+import type { Measure, MeasureSpan } from '../../lib/measures';
+import { ERROR_STATE, emptyStateText } from '../../lib/measures';
+import { layerUrl } from '../../lib/map-service';
+
+interface Props {
+  /** A measure config as documented in templates/README.md of the reference repo. */
+  measure: Measure;
+  /** Program name, used in the CSV file name. */
+  program: string;
+  /** Grid span; the page decides pairs with panelSpans(). */
+  span?: MeasureSpan;
+  /** Element id, also the prefix for the title id. */
+  id: string;
+}
+const { measure, program, span = 'span-12', id } = Astro.props;
+const empty = emptyStateText(measure);
+---
+<mon-chart-panel
+  class:list={['mon-chart-panel', span]}
+  id={id}
+  data-measure={JSON.stringify(measure)}
+  data-program={program}
+  data-state="loading"
+>
+  <EsaCard padding="compact">
+    <div slot="header" class="mon-chart-panel__head">
+      <div class="mon-chart-panel__titles">
+        <h3 class="mon-chart-panel__title typography-title-sm-strong" id={`${id}-title`}>{measure.title}</h3>
+        {measure.sub && <p class="mon-chart-panel__sub typography-body-sm">{measure.sub}</p>}
+      </div>
+      <div class="mon-chart-panel__tools" data-tools hidden>
+        {measure.pick && (
+          <span class="mon-chart-panel__pick" data-pick-wrap hidden>
+            <esa-select size="sm" label={measure.pickLabel || 'Show'} data-pick></esa-select>
+          </span>
+        )}
+        <esa-button-toggle size="sm" label="View" data-view></esa-button-toggle>
+        <EsaButton size="sm" variant="secondary" appearance="outline" icon="download" data-csv>CSV</EsaButton>
+      </div>
+    </div>
+    <div class="mon-chart-panel__loading" data-loading>
+      <EsaLoadingSpinner size="sm" label={`Loading ${measure.title}`} />
+    </div>
+    <mon-chart hidden></mon-chart>
+    <div class="mon-chart-panel__table" data-table hidden tabindex="0"></div>
+    <div data-empty hidden>
+      <EsaEmptyState title={empty.title} description={empty.description} size="sm" />
+    </div>
+    <div data-error hidden>
+      <EsaEmptyState title={ERROR_STATE.title} description={ERROR_STATE.description} size="sm" />
+    </div>
+    <p class="mon-chart-panel__source typography-meta">
+      Source: <a href={layerUrl(measure.layer)} target="_blank" rel="noopener">TRPA LTInfo_Monitoring map service, layer {measure.layer}</a>.
+    </p>
+  </EsaCard>
+</mon-chart-panel>
+
+<script>
+  import './mon-chart-panel.ts';
+</script>

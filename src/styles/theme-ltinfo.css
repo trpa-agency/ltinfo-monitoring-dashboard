@@ -1,0 +1,149 @@
+/*
+ * ltinfo theme — GENERATED from a recipe by scripts/make-theme.mjs.
+ *
+ * Do not hand-edit: the next regeneration overwrites it. To change a value,
+ * change the recipe. To keep a value the generator would not choose, add it to
+ * the recipe's "pinned" map — pins are applied last and survive regeneration.
+ *
+ * Brand seed #789440 (curve: Radix lime), neutral pure (Radix gray),
+ * corners flat, 33 pinned value(s).
+ *
+ * The brand hex sits EXACTLY on step 9 of the spoke ramp below; every other step
+ * is interpolated along the reference curve. Verify with:
+ *   node ../ecology/scripts/check-contrast.mjs src/styles/theme-ltinfo.css
+ *   node ../ecology/scripts/check-contrast.mjs src/styles/theme-ltinfo.css --scheme dark
+ *
+ * ⚠ 3 CONTRAST ISSUE(S) THE GENERATOR COULD NOT RESOLVE:
+ *   [dark] --color-border-default-focus — no step of the brand ramp reaches 3:1 as a focus ring against this theme's surfaces (best would be 1.08:1), so the ring falls back to the neutral (step 12) and is NOT brand-coloured in this scheme. SC 1.4.11. To get the brand back, the brand needs a step that can be seen as a hairline.
+ *   [dark] --color-content-link — step 12 still misses 4.5:1 on the raised surface (worst surface 1.15:1)
+ *   [dark] --color-content-default on --color-background-brand-subtle — body text on the brand tint is 1.48:1
+ */
+
+[data-theme="ltinfo"] {
+  --ltinfo-neutral-1:                         var(--color-gray-1);
+  --ltinfo-neutral-2:                         var(--color-gray-2);
+  --ltinfo-neutral-3:                         var(--color-gray-3);
+  --ltinfo-neutral-4:                         var(--color-gray-4);
+  --ltinfo-neutral-5:                         var(--color-gray-5);
+  --ltinfo-neutral-6:                         var(--color-gray-6);
+  --ltinfo-neutral-7:                         var(--color-gray-7);
+  --ltinfo-neutral-8:                         var(--color-gray-8);
+  --ltinfo-neutral-9:                         var(--color-gray-9);
+  --ltinfo-neutral-10:                        var(--color-gray-10);
+  --ltinfo-neutral-11:                        var(--color-gray-11);
+  --ltinfo-neutral-12:                        var(--color-gray-12);
+  --ltinfo-brand-1:                           #fcfdfb;
+  --ltinfo-brand-2:                           #eff1ec;
+  --ltinfo-brand-3:                           #d4d9c4;
+  --ltinfo-brand-4:                           #b4bc9c;
+  --ltinfo-brand-5:                           #8d9870;
+  --ltinfo-brand-6:                           #5f6b40;
+  --ltinfo-brand-7:                           #273501;
+  --ltinfo-brand-8:                           #000100;
+  --ltinfo-brand-9:                           #789440;
+  --ltinfo-brand-10:                          #729034;
+  --ltinfo-brand-11:                          #4a5d2e;
+  --ltinfo-brand-12:                          #393f28;
+  --color-background-default:                 #f7f7f7;
+  --color-background-elevation-raised:        #ffffff;
+  --color-background-elevation-floating:      var(--ltinfo-neutral-1);
+  --color-background-elevation-sunken:        var(--ltinfo-neutral-3);
+  --color-background-default-hover:           var(--ltinfo-neutral-4);
+  --color-background-disabled:                var(--ltinfo-neutral-3);
+  --color-content-default:                    #333333;
+  --color-content-default-secondary:          #656565;
+  --color-content-default-tertiary:           var(--ltinfo-neutral-11);
+  --color-content-disabled:                   var(--ltinfo-neutral-9);
+  --color-border-default:                     #dcdcdc;
+  --color-border-default-subtle:              #efefef;
+  --color-border-default-strong:              var(--ltinfo-neutral-8);
+  --color-border-disabled:                    var(--ltinfo-neutral-6);
+  --color-background-default-knockout:        #2f3f56;
+  --color-background-default-knockout-hover:  var(--ltinfo-neutral-11);
+  --color-content-default-knockout:           var(--ltinfo-neutral-1);
+  --color-border-default-knockout:            var(--color-gray-dark-7);
+  --color-border-default-focus:               var(--ltinfo-brand-9);
+  --color-background-brand:                   var(--ltinfo-brand-9);
+  --color-background-brand-hover:             #616049;
+  --color-background-brand-active:            #616049;
+  --color-background-brand-subtle:            var(--ltinfo-brand-1);
+  --color-background-brand-muted:             var(--ltinfo-brand-3);
+  --color-background-brand-muted-hover:       var(--ltinfo-brand-4);
+  --color-content-brand:                      var(--ltinfo-brand-11);
+  --color-content-link:                       #337ab7;
+  --color-content-link-hover:                 #23527c;
+  --color-border-brand:                       var(--ltinfo-brand-6);
+  --color-content-on-brand:                   var(--ltinfo-neutral-12);
+  --color-content-on-brand-muted:             var(--ltinfo-brand-12);
+  --color-background-accent:                  #e49937;
+  --color-background-accent-hover:            #d18b36;
+  --color-content-on-accent:                  #433126;
+  --color-background-ai:                      #a18072;
+  --color-background-ai-hover:                #957468;
+  --color-content-on-ai:                      var(--ltinfo-neutral-12);
+  --color-background-ai-subtle:               #fdfcfc;
+  --color-content-ai:                         #7d5e54;
+  --color-background-utility-info:            #366092;
+  --color-background-utility-info-hover:      #233451;
+  --color-content-on-utility-info:            var(--ltinfo-neutral-1);
+  --color-background-utility-info-subtle:     #fcfdfe;
+  --color-background-utility-info-muted:      #e8f0f6;
+  --color-content-utility-info:               #366092;
+  --color-border-utility-info:                #b1c9de;
+  --color-background-utility-success:         #056f03;
+  --color-background-utility-success-hover:   #1e3d1e;
+  --color-content-on-utility-success:         var(--ltinfo-neutral-1);
+  --color-background-utility-success-subtle:  #fbfefa;
+  --color-background-utility-success-muted:   #e5f4e3;
+  --color-content-utility-success:            #056f03;
+  --color-border-utility-success:             #a4d29f;
+  --color-background-utility-warning:         #e69527;
+  --color-background-utility-warning-hover:   #d38729;
+  --color-content-on-utility-warning:         #443125;
+  --color-background-utility-warning-subtle:  #fffdfb;
+  --color-background-utility-warning-muted:   #fef1e2;
+  --color-content-utility-warning:            #443125;
+  --color-border-utility-warning:             #fdd7a7;
+  --color-background-utility-danger:          #ad3a38;
+  --color-background-utility-danger-hover:    #5b2328;
+  --color-content-on-utility-danger:          var(--ltinfo-neutral-1);
+  --color-background-utility-danger-subtle:   #fefcfc;
+  --color-background-utility-danger-muted:    #f9eaeb;
+  --color-content-utility-danger:             #ad3a38;
+  --color-border-utility-danger:              #ecbbbb;
+  --radius-xs:                                0;
+  --radius-sm:                                var(--radius-050);
+  --radius-md:                                var(--radius-100);
+  --radius-lg:                                var(--radius-200);
+  --radius-chip:                              var(--radius-050);
+  --typography-font-family-sans:              'Lexend Deca', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --card-border-color:                        #efefef;
+  --typography-body-md-font-size:             1rem;
+  --typography-body-md-line-height:           1.4;
+  --typography-font-weight-regular:           400;
+  --typography-font-weight-medium:            500;
+  --typography-font-weight-semibold:          600;
+  --typography-font-weight-bold:              700;
+  --color-background-dataviz-categorical-1:   #3e72b0;
+  --color-background-dataviz-categorical-2:   #c97f0d;
+  --color-background-dataviz-categorical-3:   #6b9e11;
+  --color-background-dataviz-categorical-4:   #5698ac;
+  --color-background-dataviz-categorical-5:   #be4c4c;
+  --color-background-dataviz-categorical-6:   #646820;
+  --color-background-dataviz-categorical-7:   #3a8291;
+  --color-background-dataviz-categorical-8:   #2c5f72;
+  --color-background-dataviz-sequential-1:    #7bbbc8;
+  --color-background-dataviz-sequential-2:    #6dabb9;
+  --color-background-dataviz-sequential-3:    #609bab;
+  --color-background-dataviz-sequential-4:    #528c9c;
+  --color-background-dataviz-sequential-5:    #457c8e;
+  --color-background-dataviz-sequential-6:    #396e80;
+  --color-background-dataviz-sequential-7:    #2c5f72;
+  --color-background-dataviz-diverging-1:     #0d74ce;
+  --color-background-dataviz-diverging-2:     #0090ff;
+  --color-background-dataviz-diverging-3:     #8ec8f6;
+  --color-background-dataviz-diverging-4:     #f0f0f0;
+  --color-background-dataviz-diverging-5:     #f4a9aa;
+  --color-background-dataviz-diverging-6:     #e5484d;
+  --color-background-dataviz-diverging-7:     #ce2c31;
+}

@@ -1,0 +1,105 @@
+# Build the spoke and deploy it to GitHub Pages.
+#
+# Sibling layout. The spoke depends on the ESA Ecology hub through
+# file:../ecology/packages/* links in package.json, so the hub must be checked
+# out beside the spoke, at the commit pinned in ecology.ref, with its tokens
+# built before the spoke installs. The workspace ends up as:
+#
+#   $GITHUB_WORKSPACE/
+#     ltinfo-monitoring-dashboard/   this repo
+#     ecology/                       esassoc/ecology at the commit in ecology.ref
+#
+# The same layout the Dockerfile builds at /work and the one ONBOARDING.md asks
+# for on a laptop. CI does not need Docker; it runs the same npm steps directly.
+#
+# Repo setting: Settings > Pages > Source must be "GitHub Actions" for the
+# deploy job to publish. The nightly run refreshes build-time data from the
+# LT Info API even when nothing was pushed.
+
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  schedule:
+    # 11:00 UTC is 3 am Pacific standard time (4 am during daylight time).
+    - cron: "0 11 * * *"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deploy at a time. Runs queue instead of cancelling, so a push during a
+# deploy still ships.
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the spoke
+        uses: actions/checkout@v7
+        with:
+          path: ltinfo-monitoring-dashboard
+
+      - name: Read the pinned hub commit from ecology.ref
+        id: hub
+        run: echo "ref=$(tr -d '[:space:]' < ltinfo-monitoring-dashboard/ecology.ref)" >> "$GITHUB_OUTPUT"
+
+      - name: Check out the hub beside the spoke
+        uses: actions/checkout@v7
+        with:
+          repository: esassoc/ecology
+          ref: ${{ steps.hub.outputs.ref }}
+          path: ecology
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          # One source of truth for the Node major: the spoke's .nvmrc (22).
+          node-version-file: ltinfo-monitoring-dashboard/.nvmrc
+          cache: npm
+          # The cache key hashes both lockfiles, so a bump in either repo
+          # invalidates it.
+          cache-dependency-path: |
+            ecology/package-lock.json
+            ltinfo-monitoring-dashboard/package-lock.json
+
+      - name: Install the hub and build its tokens
+        working-directory: ecology
+        run: |
+          npm ci
+          npm run build:tokens
+
+      - name: Install the spoke
+        # No NODE_ENV=production here: astro.config.mjs imports @esa/design-layer,
+        # a devDependency, and npm ci would omit devDependencies.
+        working-directory: ltinfo-monitoring-dashboard
+        run: npm ci
+
+      - name: Build the spoke
+        working-directory: ltinfo-monitoring-dashboard
+        env:
+          # astro.config.mjs switches base to the Pages subpath on production.
+          NODE_ENV: production
+        run: npm run build
+
+      - name: Upload the Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: ltinfo-monitoring-dashboard/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

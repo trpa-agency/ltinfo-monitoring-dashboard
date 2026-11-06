@@ -1,0 +1,364 @@
+---
+// Spike 3: Leaflet maps from map service GeoJSON, with a synced site list.
+//
+// Two program maps on the LT Info page background in a 980 px container, the width of the
+// Dashboard card on monitoring.laketahoeinfo.org:
+//   (a) Tahoe Yellow Cress sites: layer 9 collapsed to one point per site, with the 2024 lake
+//       level polygon (layer 117) under it.
+//   (b) SEZ assessment units: layer 106 colored by overall rating, one evaluation year at a time.
+// Configs mirror the sitesLayer, overlays, and mapLayer keys in programs.json at the repo root.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EsaContainer from '@esa/ecology/esa-container.astro';
+import MapPanel from '../../components/mon/MapPanel.astro';
+import { SERVICE } from '../../lib/sites.ts';
+---
+<BaseLayout title="Spike 3: Leaflet maps">
+  <main class="spike-map">
+    <EsaContainer maxWidth="980px">
+      <div class="spike-map__stack">
+        <header class="spike-map__head">
+          <p class="typography-eyebrow-sm spike-map__eyebrow">Phase 0 spike 3</p>
+          <h1 class="typography-heading-md spike-map__title">Leaflet maps from map service GeoJSON</h1>
+          <p class="typography-body-sm spike-map__lede">
+            Two program maps read GeoJSON from the TRPA LTInfo_Monitoring map service. Each has a legend, a Home
+            button, a synced list with a filter, popups built from the configured fields, and a CSV download. The
+            mouse wheel scrolls the page, not the map.
+          </p>
+        </header>
+
+        <MapPanel
+          id="tyc"
+          title="Tahoe Yellow Cress sites"
+          unit="site"
+          tall
+          source={{ href: `${SERVICE}/9`, label: 'LTInfo_Monitoring layer 9, Tahoe Yellowcress (STATUS = Surveyed)' }}
+          emptyTitle="No sites loaded yet"
+          emptyDescription="This section will show each Tahoe yellow cress survey site on a map with the list beside it."
+        />
+
+        <MapPanel
+          id="sez"
+          title="SEZ assessment units"
+          unit="assessment unit"
+          source={{ href: `${SERVICE}/106`, label: 'LTInfo_Monitoring layer 106, SEZ Assessment Unit' }}
+          emptyTitle="No assessment units loaded yet"
+          emptyDescription="This section will show the SEZ assessment units colored by overall rating for one evaluation year."
+        >
+          <esa-select slot="tools" label="Evaluation year" size="sm" data-mon-pick></esa-select>
+        </MapPanel>
+      </div>
+    </EsaContainer>
+  </main>
+</BaseLayout>
+
+<style is:global>
+  /* The embed contract: the page background is the LT Info Dashboard card body color, not white. */
+  html[data-theme='ltinfo'] body {
+    background: var(--color-background-default, #f7f7f7);
+  }
+  /* No chrome when framed in the LT Info Dashboard card. */
+  html[data-framed] .spike-map__head {
+    display: none;
+  }
+</style>
+
+<style>
+  .spike-map {
+    min-height: 100vh;
+    padding-block: var(--spacing-500, 1.5rem);
+    background: var(--color-background-default, #f7f7f7);
+  }
+  .spike-map__stack {
+    display: grid;
+    gap: var(--spacing-500, 1.5rem);
+    min-width: 0;
+  }
+  .spike-map__head {
+    display: grid;
+    gap: var(--spacing-100, 0.25rem);
+  }
+  .spike-map__eyebrow {
+    margin: 0;
+    color: var(--color-content-brand, #4a5d2e);
+  }
+  .spike-map__title {
+    margin: 0;
+    color: var(--color-content-default, #333333);
+  }
+  .spike-map__lede {
+    margin: 0;
+    max-width: 70ch;
+    color: var(--color-content-default-secondary, #646464);
+  }
+</style>
+
+<script>
+  import '../../components/mon/mon-map.ts';
+  import '../../components/mon/mon-site-list.ts';
+  import '@esa/ecology/esa-select';
+  import type { MonMap } from '../../components/mon/mon-map.ts';
+  import type { MonSiteList } from '../../components/mon/mon-site-list.ts';
+  import {
+    areaGroups,
+    areaListItems,
+    areaQueryParams,
+    areasCsv,
+    areasLayerSpec,
+    collapseSites,
+    fetchAttributes,
+    fetchGeoJson,
+    overlayQueryParams,
+    overlaySpec,
+    pickChoices,
+    pickStatsParams,
+    siteGroups,
+    siteListItems,
+    siteStatus,
+    sitesCsv,
+    sitesLayerSpec,
+    sitesQueryParams,
+    slugify,
+    statusColors,
+    type Feature,
+    type MapLayerConfig,
+    type OverlayConfig,
+    type OverlaySpec,
+    type SitesLayerConfig,
+  } from '../../lib/sites.ts';
+
+  type PanelState = 'loading' | 'ready' | 'empty' | 'error';
+  type PickSelect = HTMLElement & { options: { label: string; value: string }[]; value: string | string[] };
+
+  /* ---------- Embed contract: no chrome when framed, post the height to the parent ---------- */
+
+  if (window.self !== window.top) document.documentElement.setAttribute('data-framed', '');
+
+  function postHeight(): void {
+    try {
+      window.parent.postMessage({ type: 'ltinfo-embed:height', height: document.documentElement.scrollHeight }, '*');
+    } catch {
+      // A detached or cross-origin parent that refuses the message is not an error for the page.
+    }
+  }
+  let heightQueued = false;
+  function queueHeight(): void {
+    if (heightQueued) return;
+    heightQueued = true;
+    requestAnimationFrame(() => {
+      heightQueued = false;
+      postHeight();
+    });
+  }
+  new ResizeObserver(queueHeight).observe(document.body);
+  window.addEventListener('load', queueHeight);
+
+  const http = (url: string) => fetch(url);
+
+  function download(fileName: string, text: string): void {
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(new Blob([text], { type: 'text/csv;charset=utf-8' }));
+    link.download = fileName;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  }
+
+  /* ---------- One panel: the map, the list, the states, and the CSV button ---------- */
+
+  interface Panel {
+    root: HTMLElement;
+    map: MonMap;
+    list: MonSiteList;
+    setState(state: PanelState): void;
+    onCsv(handler: () => void): void;
+  }
+
+  function panel(id: string): Panel | null {
+    const root = document.getElementById(id);
+    const map = root?.querySelector<MonMap>('mon-map');
+    const list = root?.querySelector<MonSiteList>('mon-site-list');
+    if (!root || !map || !list) return null;
+    const states = root.querySelectorAll<HTMLElement>('[data-mon-state]');
+    const csv = root.querySelector<HTMLButtonElement>('[data-mon-csv]');
+    let csvHandler: (() => void) | null = null;
+    map.addEventListener('featureselect', (event) => {
+      list.select((event as CustomEvent<{ key: string }>).detail.key, { scroll: true });
+    });
+    list.addEventListener('siteselect', (event) => {
+      map.focus((event as CustomEvent<{ key: string }>).detail.key);
+    });
+    csv?.addEventListener('click', () => csvHandler?.());
+    return {
+      root,
+      map,
+      list,
+      setState(state) {
+        states.forEach((el) => {
+          el.hidden = el.dataset.monState !== state;
+        });
+        root.setAttribute('aria-busy', state === 'loading' ? 'true' : 'false');
+        queueHeight();
+      },
+      onCsv(handler) {
+        csvHandler = handler;
+      },
+    };
+  }
+
+  /* ---------- (a) Tahoe Yellow Cress sites with the 2024 lake level under them ---------- */
+
+  const TYC_PROGRAM = 'Tahoe Yellow Cress Monitoring';
+  /** Vegetation Preservation, the program's category color in programs.json. */
+  const TYC_COLOR = '#415414';
+  const TYC_SITES: SitesLayerConfig = {
+    layer: 9,
+    name: 'SITE_NAME',
+    year: 'YEAR_OF_COUNT',
+    where: "STATUS = 'Surveyed'",
+    unit: 'site',
+  };
+  const TYC_OVERLAYS: OverlayConfig[] = [
+    {
+      layer: 117,
+      title: 'Lake level in 2024',
+      name: 'Year',
+      geometry: 'fill',
+      color: 'var(--color-background-dataviz-categorical-1, #3e72b0)',
+      where: 'Year = 2024',
+      fields: [{ field: 'Level_', label: 'Lake level (ft)' }],
+    },
+  ];
+
+  async function loadYellowCress(p: Panel): Promise<void> {
+    p.setState('loading');
+    p.list.message = 'Loading sites';
+    try {
+      const [features, overlayResults] = await Promise.all([
+        fetchGeoJson(http, TYC_SITES.layer, sitesQueryParams(TYC_SITES)),
+        Promise.allSettled(
+          TYC_OVERLAYS.map((o) => fetchGeoJson(http, o.layer, overlayQueryParams(o)).then((f) => overlaySpec(o, f, TYC_PROGRAM))),
+        ),
+      ]);
+      const sites = collapseSites(features, TYC_SITES);
+      if (!sites.length) {
+        p.list.setItems([], []);
+        p.setState('empty');
+        return;
+      }
+      const overlays: OverlaySpec[] = [];
+      overlayResults.forEach((result, i) => {
+        if (result.status === 'fulfilled') overlays.push(result.value);
+        else console.warn(`Overlay layer ${TYC_OVERLAYS[i].layer} did not load: ${String(result.reason)}`);
+      });
+      const colors = statusColors(sites.map(siteStatus), TYC_COLOR);
+      p.map.layers = { program: sitesLayerSpec(TYC_SITES, sites, colors, TYC_PROGRAM), overlays };
+      p.list.setItems(siteListItems(sites, colors), siteGroups(sites));
+      p.onCsv(() => download(`${slugify(TYC_PROGRAM)}-sites.csv`, sitesCsv(sites)));
+      p.setState('ready');
+    } catch (error) {
+      console.warn(`Sites layer ${TYC_SITES.layer} did not load: ${String(error)}`);
+      p.list.message = 'Sites could not be loaded. Reload the page to try again.';
+      p.setState('error');
+    }
+  }
+
+  /* ---------- (b) SEZ assessment units colored by rating, one evaluation year at a time ---------- */
+
+  const SEZ_PROGRAM = 'SEZ Basin-wide Monitoring and Assessment Plan';
+  /** Soil Conservation, the program's category color in programs.json. */
+  const SEZ_COLOR = '#9A5710';
+  const SEZ: MapLayerConfig = {
+    layer: 106,
+    title: 'SEZ assessment units',
+    unit: 'assessment unit',
+    unitPlural: 'Assessment units',
+    name: 'Assessment_Unit_Name',
+    colorBy: 'Final_Rating',
+    colorByLabel: 'Overall rating',
+    colors: { A: '#188c16', B: '#89bf40', C: '#e69527', D: '#be4c4c', 'Not Assessed': '#989898' },
+    labels: { A: 'Rating A', B: 'Rating B', C: 'Rating C', D: 'Rating D' },
+    // Threshold_Year is a string field: areaWhere quotes its values, which the service requires.
+    pick: 'Threshold_Year',
+    pickLabel: 'Evaluation year',
+    meta: [{ field: 'SEZ_Type' }, { field: 'Acres', suffix: ' acres' }],
+    fields: [
+      { field: 'Final_Rating', label: 'Overall rating' },
+      { field: 'Final_Percent', label: 'Score (%)' },
+      { field: 'SEZ_Type', label: 'SEZ type' },
+      { field: 'Acres', label: 'Acres' },
+      { field: 'Ownership_Primary', label: 'Primary owner' },
+    ],
+  };
+
+  async function loadSez(p: Panel, select: PickSelect | null): Promise<void> {
+    p.setState('loading');
+    p.list.message = 'Loading assessment units';
+    let choices: (string | number)[] = [];
+    try {
+      choices = pickChoices(await fetchAttributes(http, SEZ.layer, pickStatsParams(SEZ)), SEZ.pick as string);
+    } catch (error) {
+      console.warn(`Map layer ${SEZ.layer} pick values did not load: ${String(error)}`);
+    }
+    let picked: string | number | null = choices[0] ?? null;
+    let features: Feature[] = [];
+
+    const load = async () => {
+      const current = picked;
+      p.setState('loading');
+      p.list.message = 'Loading assessment units';
+      try {
+        const loaded = await fetchGeoJson(http, SEZ.layer, areaQueryParams(SEZ, current));
+        if (current !== picked) return; // the year changed while this request was in flight
+        features = loaded;
+        if (!loaded.length) {
+          p.list.setItems([], []);
+          p.setState('empty');
+          return;
+        }
+        p.map.layers = { program: areasLayerSpec(SEZ, loaded, SEZ_COLOR, SEZ_PROGRAM), overlays: [] };
+        p.list.setItems(areaListItems(SEZ, loaded, SEZ_COLOR), areaGroups(SEZ));
+        p.setState('ready');
+      } catch (error) {
+        if (current !== picked) return;
+        console.warn(`Map layer ${SEZ.layer} did not load: ${String(error)}`);
+        p.list.message = 'Assessment units could not be loaded. Reload the page to try again.';
+        p.setState('error');
+      }
+    };
+
+    if (select) {
+      if (choices.length > 1) {
+        select.options = choices.map((v) => ({ label: String(v), value: String(v) }));
+        select.value = String(picked);
+        select.addEventListener('change', (event) => {
+          const value = (event as CustomEvent<{ value: string | string[] }>).detail?.value;
+          const next = Array.isArray(value) ? value[0] : value;
+          if (!next || next === String(picked)) return;
+          picked = next;
+          void load();
+        });
+      } else {
+        select.hidden = true;
+      }
+    }
+    p.onCsv(() => {
+      const file = areasCsv(SEZ, features, picked, SEZ_PROGRAM);
+      download(file.fileName, file.text);
+    });
+    await load();
+  }
+
+  /* ---------- Boot ---------- */
+
+  async function main(): Promise<void> {
+    await Promise.all([customElements.whenDefined('mon-map'), customElements.whenDefined('mon-site-list')]);
+    const tyc = panel('tyc');
+    const sez = panel('sez');
+    const select = sez?.root.querySelector<PickSelect>('[data-mon-pick]') ?? null;
+    await Promise.all([tyc ? loadYellowCress(tyc) : Promise.resolve(), sez ? loadSez(sez, select) : Promise.resolve()]);
+    queueHeight();
+  }
+
+  void main();
+</script>

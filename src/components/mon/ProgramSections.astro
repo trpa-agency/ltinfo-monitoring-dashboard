@@ -1,0 +1,120 @@
+---
+// ProgramSections: the five dashboard sections of a program page on a
+// 12-column grid, each an esa-card with an explicit empty state until a later
+// spike fills it. The ORDER and the spans come from CSS keyed off
+// main[data-template] (charts, map, or context), so the ?template= override in
+// src/lib/embed.ts reorders the page by setting one attribute, with no
+// re-render. The markup order below is the charts order.
+import EsaCard from '@esa/ecology/esa-card.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+
+interface Section {
+  /** Stable key, also the data-section value the CSS keys off. */
+  key: 'measurements' | 'sites' | 'sites-per-year' | 'partners' | 'about';
+  title: string;
+  /** Contract wording: "No {measurement} loaded yet." */
+  empty: string;
+  /** Contract wording: "This section will show {what}." */
+  will: string;
+}
+
+const SECTIONS: Section[] = [
+  {
+    key: 'measurements',
+    title: 'Measurements',
+    empty: 'No measurements loaded yet.',
+    will: 'This section will show measurement charts from the TRPA map service, each with a table view and a CSV download.',
+  },
+  {
+    key: 'sites',
+    title: 'Sites',
+    empty: 'No sites loaded yet.',
+    will: 'This section will show a map of the monitoring sites with the same sites listed beside it.',
+  },
+  {
+    key: 'sites-per-year',
+    title: 'Sites monitored each year',
+    empty: 'No site records loaded yet.',
+    will: 'This section will show how many sites were monitored in each year of the record.',
+  },
+  {
+    key: 'partners',
+    title: 'Partners, indicators, and documents',
+    empty: 'No partners, indicators, or documents loaded yet.',
+    will: 'This section will show the partner organizations, linked threshold indicators, and documents from Lake Tahoe Info.',
+  },
+  {
+    key: 'about',
+    title: 'About the program',
+    empty: 'No program description loaded yet.',
+    will: 'This section will show the monitoring approach and program description from Lake Tahoe Info.',
+  },
+];
+---
+<!-- mon-lego-checked: esa-card and esa-empty-state are the legos in use. No esa-* owns a 12-column dashboard grid with template-driven section order (the layouts.css .grid primitive is auto-fit and cannot span or order), so mon-sections here is the reusable home for it. -->
+<div class="mon-sections">
+  {SECTIONS.map((section) => (
+    <section class="mon-section" data-section={section.key} aria-label={section.title}>
+      <EsaCard title={section.title}>
+        <div class="mon-section__body">
+          <EsaEmptyState title={section.empty} description={section.will} size="sm" />
+        </div>
+      </EsaCard>
+    </section>
+  ))}
+</div>
+
+<style>
+  .mon-sections {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--spacing-400, 16px);
+  }
+  .mon-section {
+    grid-column: span 12;
+    min-width: 0;
+    /* Default order is the markup order (charts). The per-template blocks below
+       move sections; a section with no rule keeps its markup position. */
+    order: 0;
+    --mon-section-min: 200px;
+  }
+  /* The card fills the grid cell so paired sections line up. */
+  .mon-section > :global(.esa-card) {
+    height: 100%;
+  }
+  .mon-section__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: var(--mon-section-min, 200px);
+  }
+
+  /* ---- charts (default): measurements, sites, sites per year, partners, about ---- */
+  .mon-section[data-section='measurements'] { order: 1; --mon-section-min: 280px; }
+  .mon-section[data-section='sites'] { order: 2; --mon-section-min: 360px; }
+  .mon-section[data-section='sites-per-year'] { order: 3; grid-column: span 6; --mon-section-min: 240px; }
+  .mon-section[data-section='partners'] { order: 4; grid-column: span 6; --mon-section-min: 240px; }
+  .mon-section[data-section='about'] { order: 5; }
+
+  /* ---- map: sites (tall), measurements, sites per year, about, partners ---- */
+  :global(main[data-template='map']) .mon-section[data-section='sites'] { order: 1; --mon-section-min: 560px; }
+  :global(main[data-template='map']) .mon-section[data-section='measurements'] { order: 2; }
+  :global(main[data-template='map']) .mon-section[data-section='sites-per-year'] { order: 3; grid-column: span 6; }
+  :global(main[data-template='map']) .mon-section[data-section='about'] { order: 4; grid-column: span 6; }
+  :global(main[data-template='map']) .mon-section[data-section='partners'] { order: 5; grid-column: span 12; }
+
+  /* ---- context: about, partners, measurements, sites, sites per year ---- */
+  :global(main[data-template='context']) .mon-section[data-section='about'] { order: 1; grid-column: span 7; --mon-section-min: 280px; }
+  :global(main[data-template='context']) .mon-section[data-section='partners'] { order: 2; grid-column: span 5; --mon-section-min: 280px; }
+  :global(main[data-template='context']) .mon-section[data-section='measurements'] { order: 3; }
+  :global(main[data-template='context']) .mon-section[data-section='sites'] { order: 4; }
+  :global(main[data-template='context']) .mon-section[data-section='sites-per-year'] { order: 5; grid-column: span 12; }
+
+  /* ---- one column on a phone and inside the 980 px Dashboard card at phone widths ---- */
+  @media (max-width: 720px) {
+    .mon-section,
+    :global(main[data-template]) .mon-section {
+      grid-column: span 12;
+    }
+  }
+</style>

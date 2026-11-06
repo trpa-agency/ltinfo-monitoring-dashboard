@@ -1,0 +1,121 @@
+---
+// Monitoring Dashboard base layout. Wires the hub tokens plus the Monitoring Dashboard
+// theme, loads the brand's font, and sets data-theme="ltinfo" so every inherited esa-*
+// component re-skins to the LT Info host look.
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import '@esa/tokens/tokens.css';
+import '@esa/tokens/component-tokens.css';
+import '@esa/tokens/typography.css';
+import '@esa/tokens/layouts.css';
+// The page-level focus ring. Light DOM only: the esa-* web components paint
+// their own from the same tokens. Without this a spoke's own <a>/<button> fall
+// back to the browser default, which differs per engine and is user-editable.
+import '@esa/tokens/focus.css';
+import '@esa/tokens/a11y.css';
+import '../styles/theme-ltinfo.css';
+// Runtime handoff inspector. Self-gating at runtime: dormant unless the current route
+// has a bundle at public/handoff/<slug>/ (generated via `npx handoff`).
+import HandoffInspector from '@esa/handoff/HandoffInspector.astro';
+
+// MOUNTED ONLY WHEN THE ROUTE HAS A BUNDLE. The inspector's own gate is a fetch of
+// <base>/handoff/<slug>/manifest.json that goes quiet on a 404, but the browser still
+// logs that 404 as a console error on every route without a bundle, and the embed
+// contract (and the host's QA checklist) is "no console errors on load". So the same
+// slug rule the probe uses (route minus base and .html, slashes to hyphens, "index" for
+// the root) is applied here at build time, and the component renders only when the
+// manifest exists on disk. Nothing else about the inspector changes: drop a bundle in
+// public/handoff/<slug>/ and the pill appears on that page.
+const base = import.meta.env.BASE_URL;
+const pathname = Astro.url.pathname;
+const route = pathname.startsWith(base) ? pathname.slice(base.length) : pathname;
+const handoffSlug = route.replace(/\.html$/, '').replace(/^\/+|\/+$/g, '').replace(/\//g, '-') || 'index';
+const hasHandoffBundle = existsSync(path.join(process.cwd(), 'public', 'handoff', handoffSlug, 'manifest.json'));
+
+// ACCESSIBILITY ASSURANCE (optional). If this project has a conformance obligation
+// (Section 508, EN 301 549, a procurement clause), add data-a11y-assurance="wcag-aa" to
+// the <html> tag below. It composes with data-theme; the brand does not change:
+//
+//   <html lang="en" data-theme="ltinfo" data-a11y-assurance="wcag-aa">
+//
+// It ships inside @esa/tokens and is inert until set, so there is nothing to import.
+//
+// YOUR THEME CARRIES ITS OWN, and that is the half that actually moves your brand. A
+// theme written by `npm run theme:make` emits its own [data-a11y-assurance="wcag-aa"] block
+// alongside the brand block, scoped so it outranks both. Grep theme-ltinfo.css
+// for `data-a11y-assurance` to see exactly what the attribute changes for this project. It
+// is usually short, because a generated theme is already AA in both schemes.
+//
+// IT CHANGES COLOUR AND NOTHING ELSE. Solid fills that carry text move to a
+// contrast-safe step. Your components do not change: not their size, not their type,
+// not one pixel of layout. Verified across all 91 pages of the hub's own site. So
+// size="xs" still renders at xs, and your size ramp keeps all four distinct steps.
+//
+// Anything that WOULD require a component to change is reported instead, and names
+// the compliant option to use:
+//
+//   npm run a11y:sizes
+//
+// THE HUB'S HALF CANNOT REACH YOUR BRAND, and do not expect it to. `[data-theme]` and
+// a bare `[data-a11y-assurance]` have equal specificity and theme-ltinfo.css loads
+// later, so every role your theme re-points wins over the hub's profile. The hub's
+// values point at ITS brand ramp (grass), which would be wrong here anyway. That is why
+// the block in your own theme file exists. Verify rather than assume:
+//
+//   node ../ecology/scripts/check-contrast.mjs src/styles/theme-ltinfo.css
+//   node ../ecology/scripts/check-contrast.mjs src/styles/theme-ltinfo.css --assurance wcag-aa
+//
+// Those two runs are this theme's gate and both pass 66 of 66 pairs. The hub's
+// check-themes.mjs also grades a dark column; this theme is light only (the LT Info host
+// has no dark mode, see the recipe's "schemes" key), so that column reports ERROR by
+// design and check-themes.mjs cannot be this project's `npm test` until the hub skips
+// schemes a recipe does not declare.
+//
+// DO NOT HAND-DECLARE THESE NAMES in a block of your own. Regenerating the theme is the
+// channel; a hand-written override at the same specificity loses to whichever loads last.
+//
+// Setting the attribute is a statement about DEFAULTS, not a conformance certificate.
+// See packages/tokens/src/assurance.css for what a profile cannot fix.
+
+interface Props {
+  title?: string;
+}
+const { title = 'Monitoring Dashboard' } = Astro.props;
+---
+<!doctype html>
+<html lang="en" data-theme="ltinfo">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- The four weights the host self-hosts (Regular, Medium, SemiBold, Bold). The theme
+         pins no light weight, so nothing asks for a 300 face this link does not load. -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;500;600;700&display=swap" />
+    <title>{title}</title>
+    <style is:global>
+      *, *::before, *::after { box-sizing: border-box; }
+      /* The page is the LT Info Dashboard card body (#f7f7f7), not a white sheet:
+         cards sit on it in --color-background-elevation-raised (#ffffff). Base type
+         reads the body-md composite so bare text matches the host's 16 px / 1.4. */
+      body {
+        margin: 0;
+        font-family: var(--typography-font-family-sans, 'Lexend Deca', system-ui, sans-serif);
+        font-size: var(--typography-body-md-font-size, 1rem);
+        font-weight: var(--typography-font-weight-regular, 400);
+        line-height: var(--typography-body-md-line-height, 1.4);
+        color: var(--color-content-default, #333333);
+        background: var(--color-background-default, #f7f7f7);
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--color-content-link, #337ab7); text-decoration: none; }
+      a:hover { color: var(--color-content-link-hover, #23527c); text-decoration: underline; }
+      img { display: block; max-width: 100%; }
+      button { font-family: inherit; cursor: pointer; background: none; border: 0; }
+    </style>
+  </head>
+  <body>
+    <slot />
+    {hasHandoffBundle && <HandoffInspector />}
+  </body>
+</html>

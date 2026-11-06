@@ -1,0 +1,97 @@
+---
+// HostCardMock: a faithful static mock of the Dashboard card on an LT Info monitoring
+// program page (monitoring.laketahoeinfo.org/monitoring-programs/<id>). Spikes and QA
+// pages wrap an embed body in it to see the embed the way the host frames it. It is
+// never shipped inside an embed: the real host draws this card around the iframe.
+//
+// Values are read from the host's own stylesheet (styles-*.css on
+// monitoring.laketahoeinfo.org, Nov. 5, 2026) and its Angular template, where the card is
+// <div class="card"><div class="card-header flex"><span class="card-title">Dashboard</span>
+// <span class="card-header-actions">...</span></div><div class="card-body">...</div></div>:
+//   .card          border 1px solid var(--card-border-color) (#efefef), radius .25rem, no
+//                  background of its own (the page shows through at the rounded corners)
+//   .card-header   padding .5rem .75rem, background var(--card-header-bg-color), border-bottom
+//                  1px solid var(--card-header-border-color), white, 700, uppercase; .flex lays
+//                  the title and the Fullscreen control out as a row. The stylesheet defaults
+//                  both variables to #969eac; the Monitoring Dashboard sets them at runtime,
+//                  and the live program page computes #789440 for the header and #dddddd for
+//                  the border-bottom (read with getComputedStyle on Nov. 5, 2026)
+//   .card-title    font-size var(--type-size-300) = clamp(.87rem, .74rem + .62vw, 1.13rem),
+//                  700, no margin; so about 18 px at 980 px and wider, 13.9 px at 375 px
+//   .card-body     padding var(--spacing-500) var(--spacing-600) = 1.5rem 2rem, background
+//                  var(--card-body-bg-color) (#f7f7f7)
+//   body           Lexend Deca, 16 px, line-height 1.4; card text #333333
+// The Fullscreen control in the header is omitted: it is the host's behavior, not chrome
+// the embed has to fit.
+//
+// mon-lego-checked: no esa-* fits because this is HOST chrome (the host's card), not an
+// Ecology surface. It reproduces the host's literal hex values and pixel sizes on purpose,
+// so it reads none of the Ecology tokens that a theme could move; HostCardMock is the
+// reusable home for that chrome.
+interface Props {
+  /** The card title as the host renders it: uppercase, white, 700, host type-size-300. */
+  title?: string;
+}
+const { title = 'Dashboard' } = Astro.props;
+---
+<!-- mon-lego-checked: host chrome, not an Ecology component. Literal LT Info hex values are intentional; see the frontmatter note. -->
+<section class="mon-host-card">
+  <header class="mon-host-card__header">
+    <h2 class="mon-host-card__title">{title}</h2>
+  </header>
+  <div class="mon-host-card__body">
+    <slot />
+  </div>
+</section>
+
+<style>
+  /* Host chrome. Every value below is read from monitoring.laketahoeinfo.org's stylesheet
+     and is a literal by design: this block must not follow the spoke theme, or the mock
+     stops being a reference to compare the theme against. */
+  .mon-host-card {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 980px;
+    min-width: 0;
+    margin: 0 auto;
+    font-family: 'Lexend Deca', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #333333;
+    background: transparent;
+    border: 1px solid #efefef;
+    border-radius: 0.25rem;
+    overflow: hidden;
+  }
+
+  /* .card-header.flex on the host. */
+  .mon-host-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    background: #789440;
+    border-bottom: 1px solid #dddddd;
+    color: #ffffff;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  /* .card-title on the host: --type-size-300, 700, no margin. */
+  .mon-host-card__title {
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: clamp(0.87rem, 0.74rem + 0.62vw, 1.13rem);
+    font-weight: 700;
+    line-height: inherit;
+  }
+
+  /* .card-body on the host: --spacing-500 --spacing-600. */
+  .mon-host-card__body {
+    min-width: 0;
+    background: #f7f7f7;
+    padding: 1.5rem 2rem;
+  }
+</style>

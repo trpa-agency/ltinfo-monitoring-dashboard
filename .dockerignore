@@ -1,0 +1,9 @@
+# Build context excludes. The dev service bind-mounts the source anyway, and the
+# build stage copies the context, so keep installs, caches, and docs out of it.
+node_modules
+dist
+.astro
+.git
+.claude
+docs
+*.log
