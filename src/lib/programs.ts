@@ -11,97 +11,43 @@
  */
 import programsJson from '../../programs.json' with { type: 'json' };
 import { withBase } from './base.ts';
+import type { Measure as MeasureConfig, SitesPerYearConfig } from './measures.ts';
+import type { MapLayerConfig, OverlayConfig, SitesLayerConfig } from './sites.ts';
 
 /** The three page layouts. The order of the dashboard sections follows it. */
 export type Template = 'charts' | 'map' | 'context';
 export const TEMPLATES: readonly Template[] = ['charts', 'map', 'context'];
 export const DEFAULT_TEMPLATE: Template = 'charts';
 
+/*
+ * The per-program config shapes are owned by the runtime modules that read them
+ * (measures.ts for charts and the sites-per-year count, sites.ts for the map),
+ * and re-exported here under the programs.json key names so the content model
+ * and the code that consumes it cannot drift apart. Type-only imports: nothing
+ * from those modules reaches the build-time bundle through this file.
+ */
+
 /** One measurement chart from the TRPA LTInfo_Monitoring map service. */
-export interface Measure {
-  title: string;
-  sub?: string;
-  layer: number;
-  where?: string;
-  x: string;
-  xLabel?: string;
-  xType?: 'category' | 'date' | 'month';
-  y: string | { field: string; name: string }[];
-  yName?: string;
-  yLabel?: string;
-  format?: string;
-  stat?: 'sum' | 'count' | 'avg';
-  seriesBy?: string;
-  seriesLabel?: string;
-  seriesNames?: Record<string, string>;
-  seriesPrefix?: string;
-  pick?: string;
-  pickLabel?: string;
-  pickDefault?: string;
-  type?: 'line' | 'bar' | 'stacked';
-  orientation?: 'h';
-  sort?: 'desc';
-  limit?: number;
-  standard?: { field?: string; value?: number; label?: string };
-  zero?: boolean;
-  span?: 'span-12' | 'span-6';
-  xNames?: Record<string, string>;
-  unpivot?: { prefix: string };
-}
+export type Measure = MeasureConfig;
 
 /** Site points drawn from a map service layer instead of LT Info sites. */
-export interface SitesLayer {
-  layer: number;
-  name: string;
-  code?: string;
-  year?: string;
-  status?: string;
-  active?: string;
-  where?: string;
-  unit?: string;
-}
+export type SitesLayer = SitesLayerConfig;
 
 /** Where to count distinct sites per year for the "Sites monitored each year" chart. */
-export interface SitesPerYear {
-  layer: number;
-  year: string;
-  site: string;
-  where?: string;
-  extract?: boolean;
-  unit?: string;
-}
+export type SitesPerYear = SitesPerYearConfig;
 
 /** A polygon or line layer mapped in place of sites (SEZ units, routes, segments). */
-export interface MapLayer {
-  layer: number;
-  title?: string;
-  unit?: string;
-  unitPlural?: string;
-  name?: string;
-  geometry?: 'line' | 'polygon';
-  list?: boolean;
-  countAsSites?: boolean;
-  colorBy?: string;
-  colorByLabel?: string;
-  colors?: Record<string, string>;
-  labels?: Record<string, string>;
-  pick?: string;
-  pickLabel?: string;
-  where?: string;
-  meta?: { field: string; suffix?: string }[];
-  fields?: { field: string; label: string }[];
-}
+export type MapLayer = MapLayerConfig;
 
 /** Reference layers drawn under a program's sites or areas. */
-export interface Overlay {
-  layer: number;
-  title: string;
-  name?: string;
-  geometry: 'point' | 'line' | 'fill';
-  color?: string;
-  where?: string;
-  fields?: { field: string; label: string }[];
-}
+export type Overlay = OverlayConfig;
+
+/**
+ * Top-level routes the spoke serves beside the program folders. A category
+ * folder that matched one of these would shadow it, so programPath() refuses it
+ * and tests/programs.test.ts checks every folder against the list.
+ */
+export const RESERVED_ROUTES: readonly string[] = ['spikes', 'design-system', 'patterns', 'index', 'host-harness', 'handoff'];
 
 export interface Program {
   /** LT Info monitoring program id, or 9000 plus the main layer when ltinfo is false. */
@@ -143,6 +89,9 @@ export interface ProgramEntry {
   category: Category;
 }
 
+// programs-schema.ts validates this file; the program route calls assertProgramsFile()
+// once per build (the schema module imports TEMPLATES from here, so the call cannot
+// live at this module's top level without a cycle).
 const data = programsJson as unknown as ProgramsFile;
 
 /** The ten categories, in programs.json order. */
@@ -168,13 +117,18 @@ export function programSlug(program: Program): string {
 }
 
 /**
- * The program page's path under the site base, as "spikes/<folder>/<file>".
+ * The program page's path under the site base, as "<folder>/<file>", the same
+ * address the live site serves (the LT Info DashboardUrl pattern is
+ * https://trpa-agency.github.io/ltinfo-monitoring-dashboard/<folder>/<file>).
  * Pass the category when it is already in hand; otherwise it is looked up.
  */
 export function programPath(program: Program, category?: Category): string {
   const owner = category ?? categoryOf(program);
   if (!owner) throw new Error(`Program ${program.id} (${program.name}) is not in any category`);
-  return `spikes/${owner.folder}/${program.file}`;
+  if (RESERVED_ROUTES.includes(owner.folder)) {
+    throw new Error(`Category folder "${owner.folder}" collides with a top-level route`);
+  }
+  return `${owner.folder}/${program.file}`;
 }
 
 /** The program page's .html URL under the configured base. */

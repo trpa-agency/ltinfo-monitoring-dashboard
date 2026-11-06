@@ -1,0 +1,255 @@
+{
+  "light": {
+    "--ltinfo-brand-1": "var(--color-cyan-1)",
+    "--ltinfo-brand-2": "var(--color-cyan-2)",
+    "--ltinfo-brand-3": "var(--color-cyan-3)",
+    "--ltinfo-brand-4": "var(--color-cyan-4)",
+    "--ltinfo-brand-5": "var(--color-cyan-5)",
+    "--ltinfo-brand-6": "var(--color-cyan-6)",
+    "--ltinfo-brand-7": "var(--color-cyan-7)",
+    "--ltinfo-brand-8": "var(--color-cyan-8)",
+    "--ltinfo-brand-9": "var(--color-cyan-9)",
+    "--ltinfo-brand-10": "var(--color-cyan-10)",
+    "--ltinfo-brand-11": "var(--color-cyan-11)",
+    "--ltinfo-brand-12": "var(--color-cyan-12)"
+  },
+  "dark": {
+    "--ltinfo-brand-1": "var(--color-cyan-dark-1)",
+    "--ltinfo-brand-2": "var(--color-cyan-dark-2)",
+    "--ltinfo-brand-3": "var(--color-cyan-dark-3)",
+    "--ltinfo-brand-4": "var(--color-cyan-dark-4)",
+    "--ltinfo-brand-5": "var(--color-cyan-dark-5)",
+    "--ltinfo-brand-6": "var(--color-cyan-dark-6)",
+    "--ltinfo-brand-7": "var(--color-cyan-dark-7)",
+    "--ltinfo-brand-8": "var(--color-cyan-dark-8)",
+    "--ltinfo-brand-9": "var(--color-cyan-dark-9)",
+    "--ltinfo-brand-10": "var(--color-cyan-dark-10)",
+    "--ltinfo-brand-11": "var(--color-cyan-dark-11)",
+    "--ltinfo-brand-12": "var(--color-cyan-dark-12)"
+  },
+  "shared": {
+    "--radius-xs": "var(--radius-100)",
+    "--radius-sm": "var(--radius-200)",
+    "--radius-md": "var(--radius-400)",
+    "--radius-lg": "var(--radius-500)",
+    "--radius-chip": "var(--radius-pill)"
+  },
+  "notes": {
+    "page|corners": {
+      "who": "Page",
+      "where": {
+        "kind": "root",
+        "selector": ":root"
+      },
+      "field": "corners",
+      "what": "Corners",
+      "from": "Flat",
+      "to": "Round",
+      "fromToken": null,
+      "toToken": null,
+      "writes": [
+        {
+          "name": "--radius-xs",
+          "modes": [
+            "shared"
+          ]
+        },
+        {
+          "name": "--radius-sm",
+          "modes": [
+            "shared"
+          ]
+        },
+        {
+          "name": "--radius-md",
+          "modes": [
+            "shared"
+          ]
+        },
+        {
+          "name": "--radius-lg",
+          "modes": [
+            "shared"
+          ]
+        },
+        {
+          "name": "--radius-chip",
+          "modes": [
+            "shared"
+          ]
+        }
+      ],
+      "seed": {
+        "name": "seeds.corners",
+        "value": "round",
+        "exists": true
+      },
+      "at": "2026-11-06T07:51:54.295Z"
+    },
+    "page|brand": {
+      "who": "Page",
+      "where": {
+        "kind": "root",
+        "selector": ":root"
+      },
+      "field": "brand",
+      "what": "Brand",
+      "from": "Current",
+      "to": "Cyan",
+      "fromToken": null,
+      "toToken": "--color-cyan-9",
+      "writes": [
+        {
+          "name": "--ltinfo-brand-1",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-1",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-2",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-2",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-3",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-3",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-4",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-4",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-5",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-5",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-6",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-6",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-7",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-7",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-8",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-8",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-9",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-9",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-10",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-10",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-11",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-11",
+          "modes": [
+            "dark"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-12",
+          "modes": [
+            "light"
+          ]
+        },
+        {
+          "name": "--ltinfo-brand-12",
+          "modes": [
+            "dark"
+          ]
+        }
+      ],
+      "seed": {
+        "name": "seeds.brand",
+        "value": "#00a2c7",
+        "exists": true
+      },
+      "at": "2026-11-06T07:51:59.481Z"
+    }
+  }
+}

@@ -34,7 +34,7 @@
 .mon-map .leaflet-bar {
   border: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
   border-radius: var(--radius-sm, 0.25rem);
-  box-shadow: var(--shadow-100, 0 1px 3px rgba(0, 0, 0, 0.12));
+  box-shadow: var(--elevation-2, 0 1px 3px rgba(0, 0, 0, 0.12));
 }
 
 .mon-map .leaflet-bar a,
@@ -55,6 +55,12 @@
 .mon-map .leaflet-bar a:hover,
 .mon-map .mon-map__home-button:hover {
   background: var(--color-background-default-hover, #e8e8e8);
+}
+
+/* Leaflet sets its own monospace font on the zoom glyphs; the embed contract wants
+   Lexend Deca on every text element, so the glyphs inherit the container's sans. */
+.mon-map .leaflet-control-zoom a {
+  font-family: inherit;
 }
 
 .mon-map__home-button {
@@ -82,7 +88,7 @@
 .mon-map .leaflet-control-layers {
   border: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
   border-radius: var(--radius-sm, 0.25rem);
-  box-shadow: var(--shadow-100, 0 1px 3px rgba(0, 0, 0, 0.12));
+  box-shadow: var(--elevation-2, 0 1px 3px rgba(0, 0, 0, 0.12));
   background: var(--color-background-elevation-raised, #ffffff);
   color: var(--color-content-default, #333333);
 }
@@ -110,7 +116,7 @@
   border: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
   border-radius: var(--radius-sm, 0.25rem);
   background: var(--color-background-elevation-raised, #ffffff);
-  box-shadow: var(--shadow-100, 0 1px 3px rgba(0, 0, 0, 0.12));
+  box-shadow: var(--elevation-2, 0 1px 3px rgba(0, 0, 0, 0.12));
   color: var(--color-content-default, #333333);
 }
 
@@ -171,9 +177,10 @@
 
 .mon-map .leaflet-popup-content-wrapper {
   border-radius: var(--radius-md, 0.5rem);
-  box-shadow: var(--shadow-300, 0 6px 20px rgba(0, 0, 0, 0.16));
+  box-shadow: var(--elevation-4, 0 6px 20px rgba(0, 0, 0, 0.16));
   background: var(--color-background-elevation-raised, #ffffff);
   color: var(--color-content-default, #333333);
+  font-family: var(--typography-font-family-sans, 'Lexend Deca', system-ui, sans-serif);
 }
 
 .mon-map .leaflet-popup-tip {
@@ -187,8 +194,10 @@
   line-height: 1.4;
 }
 
+/* Leaflet gives the close button its own Tahoma font shorthand; inherit the sans instead. */
 .mon-map .leaflet-container a.leaflet-popup-close-button {
   color: var(--color-content-default-secondary, #646464);
+  font-family: inherit;
 }
 
 .mon-popup__title {

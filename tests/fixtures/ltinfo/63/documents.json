@@ -1,0 +1,35 @@
+[
+  {
+    "MonitoringProgramDocumentID": 35,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 13758,
+    "FileResourceGUID": "c1c73ce5-e100-4c24-a8ca-2423db3b023f",
+    "DisplayName": "TRPA Stream Monitoring Plan",
+    "UploadDate": "2018-04-10",
+    "DocumentDescription": "This plan outlines why bioassessment was chosen as the indicator for stream health, sampling design, protocols used, etc.",
+    "OriginalFileName": "DraftFinal_SteamMonitoringPlan_04012010",
+    "FileExtension": ".pdf"
+  },
+  {
+    "MonitoringProgramDocumentID": 36,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 13786,
+    "FileResourceGUID": "d8816021-dfb5-43d9-9f35-764a26495484",
+    "DisplayName": "California Stream Condition Index manual",
+    "UploadDate": "2018-04-10",
+    "DocumentDescription": "This document outlines what the California Stream Condition Index is and how it scores stream health.",
+    "OriginalFileName": "csci_tech_memo",
+    "FileExtension": ".pdf"
+  },
+  {
+    "MonitoringProgramDocumentID": 37,
+    "MonitoringProgramID": 63,
+    "FileResourceInfoID": 13788,
+    "FileResourceGUID": "939ceb23-5d0e-43db-b032-723877c37534",
+    "DisplayName": "Surface Water Ambient Monitoring Program - Bioassessment protocol",
+    "UploadDate": "2018-04-10",
+    "DocumentDescription": "This document describes the protocol TRPA uses for collecting physical stream habitat data and macroinvertebrates.",
+    "OriginalFileName": "combined_sop_2016",
+    "FileExtension": ".pdf"
+  }
+]

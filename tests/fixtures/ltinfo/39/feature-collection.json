@@ -1,0 +1,1045 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.951346,
+          38.97500528
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 113,
+        "MonitoringSiteName": "4-H Camp/City Pump House",
+        "CanonicalName": "4-H Camp/City Pump House",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0689548,
+          38.94355854
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 707,
+        "MonitoringSiteName": "Baldwin Bch Enclosures",
+        "CanonicalName": "Baldwin Bch Enclosures",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0665461,
+          38.94260631
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 130,
+        "MonitoringSiteName": "Baldwin Beach",
+        "CanonicalName": "Baldwin Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9684588,
+          38.94705577
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 118,
+        "MonitoringSiteName": "Bijou (Timber Cove Lodge)",
+        "CanonicalName": "Bijou (Timber Cove Lodge)",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1584337,
+          39.10825993
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 91,
+        "MonitoringSiteName": "Blackwood North",
+        "CanonicalName": "Blackwood North",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1588656,
+          39.10580656
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 90,
+        "MonitoringSiteName": "Blackwood South",
+        "CanonicalName": "Blackwood South",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9694734,
+          39.24584163
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 98,
+        "MonitoringSiteName": "Burnt Cedar Beach",
+        "CanonicalName": "Burnt Cedar Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0750499,
+          38.94773557
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 132,
+        "MonitoringSiteName": "Cascade Creek",
+        "CanonicalName": "Cascade Creek",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9487285,
+          39.04313709
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 106,
+        "MonitoringSiteName": "Cave Rock",
+        "CanonicalName": "Cave Rock",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.160455,
+          39.0898876
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 88,
+        "MonitoringSiteName": "Cherry St/Tahoe Swiss Village",
+        "CanonicalName": "Cherry St/Tahoe Swiss Village",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9330901,
+          39.1646216
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 101,
+        "MonitoringSiteName": "Chimney Rock",
+        "CanonicalName": "Chimney Rock",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.007144,
+          39.22273611
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 97,
+        "MonitoringSiteName": "Crystal Point",
+        "CanonicalName": "Crystal Point",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0775635,
+          38.95259115
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 133,
+        "MonitoringSiteName": "CTC Cascade Creek",
+        "CanonicalName": "CTC Cascade Creek",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0997097,
+          38.99993029
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 79,
+        "MonitoringSiteName": "DL Bliss State Park",
+        "CanonicalName": "DL Bliss State Park",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1098921,
+          39.1819045
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 95,
+        "MonitoringSiteName": "Dollar Point",
+        "CanonicalName": "Dollar Point",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1050752,
+          38.95152467
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 76,
+        "MonitoringSiteName": "Eagle Creek/Avalanche",
+        "CanonicalName": "Eagle Creek/Avalanche",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0799947,
+          38.96077212
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 75,
+        "MonitoringSiteName": "Eagle Point",
+        "CanonicalName": "Eagle Point",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.072797,
+          38.945551
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 943,
+        "MonitoringSiteName": "Ebright Enclosure",
+        "CanonicalName": "Ebright Enclosure",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9500619,
+          38.96896994
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 114,
+        "MonitoringSiteName": "Edgewood",
+        "CanonicalName": "Edgewood",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9739943,
+          38.94570305
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 119,
+        "MonitoringSiteName": "El Dorado Beach",
+        "CanonicalName": "El Dorado Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9568465,
+          38.98586159
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 111,
+        "MonitoringSiteName": "Elk Point",
+        "CanonicalName": "Elk Point",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0962119,
+          38.96006603
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 77,
+        "MonitoringSiteName": "Emerald Bay Boat Camp",
+        "CanonicalName": "Emerald Bay Boat Camp",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1033935,
+          38.9491909
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 945,
+        "MonitoringSiteName": "Emerald Bay SE",
+        "CanonicalName": "Emerald Bay SE",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0857494,
+          38.96688206
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 78,
+        "MonitoringSiteName": "Emerald Point",
+        "CanonicalName": "Emerald Point",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.943167,
+          39.09413342
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 104,
+        "MonitoringSiteName": "Glenbrook",
+        "CanonicalName": "Glenbrook",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9304141,
+          39.2219602
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 99,
+        "MonitoringSiteName": "Hidden Beach",
+        "CanonicalName": "Hidden Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0369215,
+          38.93816395
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 126,
+        "MonitoringSiteName": "Jameson",
+        "CanonicalName": "Jameson",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1580115,
+          39.11384871
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 92,
+        "MonitoringSiteName": "Kaspian Campground",
+        "CanonicalName": "Kaspian Campground",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0284408,
+          39.23541556
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 96,
+        "MonitoringSiteName": "Kings Beach",
+        "CanonicalName": "Kings Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0485355,
+          38.94037444
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 127,
+        "MonitoringSiteName": "Kiva Beach/Valhalla",
+        "CanonicalName": "Kiva Beach/Valhalla",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0163217,
+          38.93671718
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 124,
+        "MonitoringSiteName": "Lighthouse",
+        "CanonicalName": "Lighthouse",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9445149,
+          39.06270103
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 105,
+        "MonitoringSiteName": "Logan Shoals/Vista",
+        "CanonicalName": "Logan Shoals/Vista",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9556917,
+          38.99569257
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 109,
+        "MonitoringSiteName": "Marla Bay",
+        "CanonicalName": "Marla Bay",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.14087,
+          39.07324966
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 86,
+        "MonitoringSiteName": "McKinney Creek",
+        "CanonicalName": "McKinney Creek",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1491619,
+          39.07555999
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 87,
+        "MonitoringSiteName": "McKinney North/Shores",
+        "CanonicalName": "McKinney North/Shores",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.121494,
+          39.03753135
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 82,
+        "MonitoringSiteName": "Meeks Bay",
+        "CanonicalName": "Meeks Bay",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1218126,
+          39.03681481
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 705,
+        "MonitoringSiteName": "Meeks Bay Enclosures",
+        "CanonicalName": "Meeks Bay Enclosures",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.116217,
+          39.03391871
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 81,
+        "MonitoringSiteName": "Meeks Bay Vista",
+        "CanonicalName": "Meeks Bay Vista",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9534605,
+          38.97939944
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 437,
+        "MonitoringSiteName": "Nevada Beach",
+        "CanonicalName": "Nevada Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9521234,
+          38.977104
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 944,
+        "MonitoringSiteName": "Nevada Beach Enclosure",
+        "CanonicalName": "Nevada Beach Enclosure",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0263511,
+          38.93709289
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 125,
+        "MonitoringSiteName": "Pope Beach",
+        "CanonicalName": "Pope Beach",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9847095,
+          38.94467299
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 120,
+        "MonitoringSiteName": "Regan/Al Tahoe",
+        "CanonicalName": "Regan/Al Tahoe",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9535521,
+          38.98978886
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 110,
+        "MonitoringSiteName": "Roundhill",
+        "CanonicalName": "Roundhill",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1131243,
+          39.01317978
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 80,
+        "MonitoringSiteName": "Rubicon Bay",
+        "CanonicalName": "Rubicon Bay",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9306954,
+          39.1976604
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 100,
+        "MonitoringSiteName": "Sand Harbor",
+        "CanonicalName": "Sand Harbor",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9360381,
+          39.14614921
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 102,
+        "MonitoringSiteName": "Secret Harbor",
+        "CanonicalName": "Secret Harbor",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.071013,
+          38.944762
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 942,
+        "MonitoringSiteName": "Ski Beach Enclosure",
+        "CanonicalName": "Ski Beach Enclosure",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9434175,
+          39.12973825
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 103,
+        "MonitoringSiteName": "Skunk Harbor",
+        "CanonicalName": "Skunk Harbor",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9514615,
+          39.02240931
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 107,
+        "MonitoringSiteName": "Skyland",
+        "CanonicalName": "Skyland",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9507166,
+          38.96053256
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 115,
+        "MonitoringSiteName": "South of Edgewood",
+        "CanonicalName": "South of Edgewood",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1129721,
+          39.04770756
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 84,
+        "MonitoringSiteName": "Sugar Pine Point State Park",
+        "CanonicalName": "Sugar Pine Point State Park",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1528961,
+          39.13948864
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 94,
+        "MonitoringSiteName": "Sunnyside",
+        "CanonicalName": "Sunnyside",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0095543,
+          38.93825403
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 123,
+        "MonitoringSiteName": "Tahoe Keys",
+        "CanonicalName": "Tahoe Keys",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9550724,
+          38.954879
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 116,
+        "MonitoringSiteName": "Tahoe Meadows",
+        "CanonicalName": "Tahoe Meadows",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1607638,
+          39.102998
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 89,
+        "MonitoringSiteName": "Tahoe Pines (Fleur Du Lac)",
+        "CanonicalName": "Tahoe Pines (Fleur Du Lac)",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1235937,
+          39.0664352
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 85,
+        "MonitoringSiteName": "Tahoma",
+        "CanonicalName": "Tahoma",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0712313,
+          38.94468516
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 438,
+        "MonitoringSiteName": "Tallac Creek",
+        "CanonicalName": "Tallac Creek",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.071002,
+          38.94454741
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 708,
+        "MonitoringSiteName": "Tallac Enclosure",
+        "CanonicalName": "Tallac Enclosure",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0587911,
+          38.94090232
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 128,
+        "MonitoringSiteName": "Taylor Creek",
+        "CanonicalName": "Taylor Creek",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0592478,
+          38.94049538
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 706,
+        "MonitoringSiteName": "Taylor Creek Enclosure",
+        "CanonicalName": "Taylor Creek Enclosure",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9627386,
+          38.94923397
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 117,
+        "MonitoringSiteName": "Timber Cove",
+        "CanonicalName": "Timber Cove",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.9980224,
+          38.94281246
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 121,
+        "MonitoringSiteName": "Upper Truckee East",
+        "CanonicalName": "Upper Truckee East",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.0043692,
+          38.941549
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 122,
+        "MonitoringSiteName": "Upper Truckee West",
+        "CanonicalName": "Upper Truckee West",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -120.1570503,
+          39.12889952
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 93,
+        "MonitoringSiteName": "Ward Creek",
+        "CanonicalName": "Ward Creek",
+        "LayerColor": "#a39039"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -119.950688,
+          39.01051688
+        ]
+      },
+      "properties": {
+        "MonitoringSiteID": 108,
+        "MonitoringSiteName": "Zephyr Cove",
+        "CanonicalName": "Zephyr Cove",
+        "LayerColor": "#a39039"
+      }
+    }
+  ]
+}

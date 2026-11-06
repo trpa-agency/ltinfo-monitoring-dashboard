@@ -2,7 +2,11 @@
    canvas, which the v2 stack decision replaced with SVG written here); mon-chart and
    mon-chart-panel are the reusable homes. Reads Ecology tokens only, each with a
    literal fallback. Series colors come from the dataviz tokens through the
-   mon-chart__series--N classes; marks paint with currentColor. */
+   mon-chart__series--N classes; marks paint with currentColor.
+   bcn-lego-checked: same justification, written as the literal the spoke-kit component-first
+   hook reads (check-component-first.mjs, line 44). The hook's tooltip rule matches
+   .mon-chart__tooltip; esa-tooltip is a hover label for one element, not a chart value
+   readout positioned by the SVG hit groups, and mon-chart.ts owns the class name. */
 
 mon-chart {
   display: block;
@@ -121,7 +125,8 @@ mon-chart[hidden] {
   color: var(--color-content-default, #333333);
   border: var(--border-width-default, 1px) solid var(--color-border-default, #cecece);
   border-radius: var(--radius-sm, 0.25rem);
-  box-shadow: var(--shadow-200, 0 2px 8px rgba(0, 0, 0, 0.12));
+  /* elevation-4 is the hub's rung for transient floating surfaces, tooltips included. */
+  box-shadow: var(--elevation-4, 0 4px 12px rgba(0, 0, 0, 0.12));
   font-size: var(--typography-body-xs-font-size, 0.75rem);
   line-height: 1.4;
 }

@@ -1,0 +1,95 @@
+---
+// mon-lego-checked: esa-badge carries the file type and esa-empty-state the
+// empty state. esa-file-list is an upload queue (progress, remove) and not a
+// reading list, so the document rows are custom.
+//
+// Documents: the files attached to a program from GET
+// /monitoring-programs/{id}/documents: name linking to the file resource, upload
+// date in TRPA style, file type, and description. Newest first. Fetches nothing.
+import EsaBadge from '@esa/ecology/esa-badge.astro';
+import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
+import '@esa/tokens/typography.css';
+import type { ProgramDocument } from '../../../lib/ltinfo-api';
+import { documentType, fileResourceUrl, formatDate } from '../../../lib/ltinfo-api';
+
+interface Props {
+  documents: ProgramDocument[] | null | undefined;
+  /** Section heading. Pass '' to render the list with no heading. */
+  heading?: string;
+}
+const { documents, heading = 'Documents' } = Astro.props;
+const rows = (documents ?? [])
+  .filter((d) => d && typeof d.FileResourceGUID === 'string' && d.FileResourceGUID)
+  .slice()
+  .sort((a, b) => (b.UploadDate ?? '').localeCompare(a.UploadDate ?? ''));
+---
+<div class="mon-documents">
+  {heading && <h3 class="mon-documents__heading typography-label-md-strong">{heading}</h3>}
+  {rows.length ? (
+    <ul class="mon-documents__list" aria-label={heading || 'Documents'}>
+      {rows.map((d) => {
+        const type = documentType(d);
+        const date = formatDate(d.UploadDate);
+        const name = (d.DisplayName ?? '').trim() || (d.OriginalFileName ?? '').trim() || 'Document';
+        const description = (d.DocumentDescription ?? '').trim();
+        return (
+          <li class="mon-documents__row">
+            <div class="mon-documents__title typography-body-md">
+              <a href={fileResourceUrl(d.FileResourceGUID)} target="_blank" rel="noopener">{name}</a>
+              {type && <EsaBadge value={type} size="xs" />}
+            </div>
+            {date && <p class="mon-documents__meta typography-meta">{date}</p>}
+            {description && <p class="mon-documents__description typography-body-sm">{description}</p>}
+          </li>
+        );
+      })}
+    </ul>
+  ) : (
+    <EsaEmptyState
+      size="sm"
+      title="No documents loaded yet."
+      description="This section will show the reports and documents attached to this program on Lake Tahoe Info."
+    />
+  )}
+</div>
+
+<style>
+  .mon-documents {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-200, 0.5rem);
+    color: var(--color-content-default, #333333);
+  }
+  .mon-documents__heading {
+    margin: 0;
+  }
+  .mon-documents__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-300, 0.75rem);
+  }
+  .mon-documents__title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--spacing-200, 0.5rem);
+  }
+  .mon-documents__title a {
+    color: var(--color-content-link, #337ab7);
+  }
+  .mon-documents__title a:hover {
+    color: var(--color-content-link-hover, #23527c);
+    text-decoration: underline;
+  }
+  .mon-documents__meta {
+    margin: var(--spacing-50, 0.125rem) 0 0;
+    color: var(--color-content-default-secondary, #656565);
+  }
+  .mon-documents__description {
+    margin: var(--spacing-100, 0.25rem) 0 0;
+    color: var(--color-content-default-secondary, #656565);
+  }
+</style>

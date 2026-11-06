@@ -1,0 +1,13 @@
+{
+  "recordedAt": "2026-11-06T07:17:18.579Z",
+  "api": "https://internalapi.laketahoeinfo.org",
+  "sizes": {
+    "record": 4219,
+    "partners": 4591,
+    "indicators": 226,
+    "documents": 678,
+    "images": 1467,
+    "sites": 46494,
+    "feature-collection": 23422
+  }
+}

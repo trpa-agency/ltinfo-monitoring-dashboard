@@ -14,7 +14,7 @@ One dependency outside this repo: Evelyn Malamut is leading an agency-wide re-ev
 
 Decisions that need an answer before Phase 1 are listed in Section 9. Each has a default so work can start without a meeting.
 
-Status, Nov. 5, 2026: Phase 0 is done. All five spikes passed in a scratch spoke, Spike 1 on bare Node because Docker Desktop is down on the TRPA machine. Section 11 has the results, three theme decisions for Mason, and the items Phase 1 must close before anything merges.
+Status, Nov. 5, 2026: Phases 0 and 1 are done. The spoke lives in this repo on the `v2` branch, every program page renders real charts, maps, and LT Info content, and the staging deploy is written. Section 11 has the Phase 0 results and Section 12 the Phase 1 status, with the four items that need Mason before the first push.
 
 ## 1. Where the repo is today
 
@@ -216,7 +216,7 @@ Effort is focused working days for one developer who knows the current template.
 
 Phase 0 ran Nov. 5, 2026. All five spikes passed, Spike 1 on bare Node with the container run deferred until Docker Desktop is repaired. Results, open decisions, and the items carried into Phase 1 are in Section 11.
 
-**Phase 1: scaffold (1 to 2 days).** The spoke scaffolded for real on a `v2` branch, `ecology.ref`, Dockerfile, compose, CI building to a staging path, `.claude/settings.json` with `spoke-kit@ecology` beside the TRPA skills, `programs.json` loader and schema, theme, `embed.ts`. Phase 0 produced most of these in the scratch spoke; Phase 1 moves them into the repo and closes the exit items in Section 11.
+**Phase 1: scaffold (1 to 2 days).** The spoke scaffolded for real on a `v2` branch, `ecology.ref`, Dockerfile, compose, CI building to a staging path, `.claude/settings.json` with `spoke-kit@ecology` beside the TRPA skills, `programs.json` loader and schema, theme, `embed.ts`. Done Nov. 5, 2026 on the `v2` branch; see Section 12. Phase 1 also composed the program pages and wired the LT Info content, which pulls most of Phase 2 and the page machinery of Phase 3 forward; what remains of Phase 2 is hardening (recorded service responses, the overlay hit area for long daily charts, the SEZ payload strategy).
 
 **Phase 2: core library (6 to 8 days).** `lib/` modules with the paging, statistics, unpivot, and date logic ported and tested against recorded service responses. Chart panel, map panel, and site list as Lit elements. KPI row, connections, empty and loading states as spoke components on Ecology primitives.
 
@@ -256,7 +256,7 @@ Defaults apply unless you say otherwise.
 2. **Hub location.** A sibling `../ecology` checkout pinned by `ecology.ref`, as the hub prescribes, with Docker and CI arranging the siblings; or a git submodule under the spoke with rewritten `file:` links. Default: sibling plus `ecology.ref`. It keeps the doctor, the spoke-kit hooks, and ESA's mental model intact.
 3. **Charts.** Native SVG written in the spoke. Decided Nov. 5, 2026, in place of `esa-chart` (AG Charts) and Plotly. Tables behind charts are plain HTML. The `trpa-dashboard-stack` and `trpa-monitoring-dashboard` skills get updated at Phase 5 to describe the v2 stack.
 4. **Maps.** Leaflet 1.9 reading GeoJSON from the map service. Decided Nov. 5, 2026, in place of the ArcGIS Maps SDK. Basemap tiles match the host (Esri World Topo, with Aerial as the second option).
-5. **LT Info content at build or live.** Program text, partners, indicators, documents, and images fetched at build with a nightly rebuild and a manual run; or fetched live on open as today. Default: at build. Pages render complete, open with no API dependency, and use Ecology's Astro components for that content. Map service data stays live either way.
+5. **LT Info content at build or live.** At build, with a nightly rebuild and a manual run. Decided Nov. 5, 2026 after the Phase 1 spike: anonymous access works from Node with no headers, all 34 LT Info program records answer 200, and a fetch failure falls back to a recorded fixture or the section's empty state without failing the build. Pages render complete and open with no API dependency. Map service data stays live.
 6. **Spoke design section.** Keep the scaffold's theme, catalog, and prototype pages under `/design`, or strip them. Default: keep. It is how ESA reviews a spoke and how the theme is documented, and it costs nothing in the deployed dashboard.
 7. **Deploy.** GitHub Actions Pages deploy from `main`, or the hub's `/ship` (a `gh-pages` branch push aimed at ESA's org). Default: Actions. Same output, TRPA's org, and the nightly rebuild needs a workflow anyway.
 8. **ESA involvement.** Tell ESA (through Jeanne, and Andy on the Ecology side) that TRPA is building a spoke, ask for license terms, a heads-up on breaking hub changes, and whether they want the LT Info theme recipe contributed back to the hub. Default: yes, before Phase 1. This also feeds the pending scoping request about TRPA-managed pages inside the dashboard framework, since a spoke is the form ESA's own next-generation screens are taking.
@@ -362,6 +362,35 @@ The critic's verdict was "not ready for Phase 1" on these grounds. None changes 
 ### Docker Desktop on the TRPA machine
 
 Docker Desktop 4.36.0 crashed on start with "running engine: waiting for the VM setup to be ready: context canceled," and WSL 2.3.26 now lists no distributions. `docker info` fails on the missing `dockerDesktopLinuxEngine` named pipe. The fix is a WSL update (`wsl --update`) and a Docker Desktop update or reinstall, which on this machine goes through DTS. Podman Desktop or Rancher Desktop would run the same Dockerfile and compose file if Docker Desktop licensing becomes a question. Nothing in Phases 1 and 2 needs the container; the host dev server and the production build both run on bare Node 22.
+
+## 12. Phase 1 status (Nov. 5, 2026)
+
+Phase 1 ran the same day as Phase 0, on the `v2` branch of this repo. The spoke moved from the scratch folder to the repo root in one commit; four parallel work streams then closed the Section 11 exit items, and the integration composed the program pages. Everything below is on `v2` and nothing is pushed.
+
+### What is true now
+
+- **Every program page is real.** `src/pages/[folder]/[program].astro` builds all 36 programs at their legacy `<folder>/<program>.html` paths. Each page has the four summary tiles computed from its data, a chart panel per `measures` entry, a Sites panel from `sitesLayer` or `mapLayer` (or from the LT Info feature collection when the program has neither), the sites-per-year chart from `sitesPerYear`, partners, indicators, and documents, and the monitoring approach and description, key photo, and the program's own dashboard frame when LT Info has one. Sections with nothing to show carry the contract empty state.
+- **LT Info content is fetched at build.** `src/lib/ltinfo-api.ts` fetches the record, partners, indicators, documents, images, sites, and feature collection once per build with a 15 second timeout, falls back to fixtures under `tests/fixtures/ltinfo/` (programs 41, 63, 39, 83, and 68) and then to the empty state, and logs one warning per failure. CMS rich text goes through an allowlist sanitizer in `src/lib/sanitize.ts`. One correction to the plan: the only program with a `Dashboard` object is 68 Socio-Economic, not 83.
+- **programs.json is validated at build.** `src/lib/programs-schema.ts` checks every key against `templates/README.md`, with unknown keys as errors; the route calls it once in `getStaticPaths`. The real file passes.
+- **One embed implementation.** The spike pages no longer carry inline height scripts; every page calls `initEmbed()`. Pages without a Sites panel do not load Leaflet (the map module loads on demand).
+- **Gates.** 135 tests pass under Node 22, `tsc --noEmit` is clean, the light-scheme contrast gate passes 66 of 66 pairs, and the doctor reports only the two user items below. CI runs test, typecheck, and contrast ahead of the build.
+- **Staging deploy.** `deploy.yml` triggers on pushes to `v2`, manual dispatch, and the nightly schedule. It builds with base `/ltinfo-monitoring-dashboard/v2/` and commits the output into `main` under `v2/` with a `.nojekyll` at the root, so the live site at the root is untouched, then checks all 36 legacy URLs and the 36 staging URLs with `scripts/check-urls.mjs`. Pages stays on the branch source until Phase 5.
+- **Verified in the browser.** Ozone, Regional Stormwater (LT Info sites, seven markers), Tahoe Yellow Cress, SEZ, Submerged Aquatic Vegetation, and Subalpine Conifer load with no console errors; the harness served from a second origin (127.0.0.1:4331 framing localhost:4330) received the height message and grew the frame from 2218 to 2270 px as charts arrived. The staging build served locally answered 200 for all 37 staging URLs with assets resolving under the `v2/` base.
+
+### Needs Mason before the first push
+
+1. **Push `v2`.** The workflow runs on the push. The nightly schedule fires only once a copy of `deploy.yml` is on `main` (GitHub runs schedules from the default branch); the build step checks out `v2` regardless, so that copy can land with the Phase 1 merge or as a one-file commit.
+2. **Branch protection.** If `main` is protected, add a `DEPLOY_TOKEN` repository secret (a fine-grained personal access token with contents read and write for this repo) so the publish job can commit `v2/` to `main`. Unprotected `main` needs nothing.
+3. **Hub tooling on each machine.** `gh auth login` and `gh auth setup-git`, then accept the Ecology plugin install prompt when Claude Code opens the repo (or `claude plugin marketplace add esassoc/ecology` and enable `spoke-kit@ecology`). Until the plugin is installed none of ESA's spoke hooks run. The hooks were simulated against every source file: the remaining trips are the hub's hard-coded `bcn-lego-checked:` escape (hub issue 6; the one chart file that trips it carries the literal with a note), and page-level layout CSS in the hub's own design-system scaffold pages.
+4. **Decision 8.** Tell ESA, through Jeanne and Andy, that TRPA is building a spoke, and ask for license terms and a heads-up on breaking hub changes. The hub issues in Section 11 are ready to file.
+
+### Still open
+
+- Docker: the container run waits on DTS repairing WSL 2 and Docker Desktop (Section 11 item 9). Nothing in the build needs it.
+- The first real-host test: after the staging publish, ask the LT Info admin to point one test program's `DashboardUrl` at `https://trpa-agency.github.io/ltinfo-monitoring-dashboard/v2/<folder>/<program>.html`.
+- Decisions 9 to 11 (chart palette, toggle style, knockout text) stand at their defaults.
+- Data items for TRPA GIS in Section 11 (ozone units and duplicates, the 8-hour threshold value, the SEZ payload).
+- `README.md` and `EDITING-PROGRAM-PAGES.md` still describe the Python flow; they change at Phase 5. [docs/how-it-works.md](how-it-works.md) is the short explanation of the v2 setup in the meantime.
 
 ## Sources
 

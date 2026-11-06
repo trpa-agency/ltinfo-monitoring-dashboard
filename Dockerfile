@@ -73,7 +73,10 @@ CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0", "--port", "4330"]
 # ---- build: production build ------------------------------------------------
 FROM deps AS build
 COPY . .
-# astro.config.mjs switches base to the Pages subpath when NODE_ENV is production.
+# astro.config.mjs uses the Pages root subpath (/ltinfo-monitoring-dashboard/)
+# when NODE_ENV is production and SITE_BASE is unset. That is the Phase 5
+# production shape, which nginx/default.conf mirrors; the staging workflow
+# builds with SITE_BASE=/ltinfo-monitoring-dashboard/v2/ instead.
 RUN NODE_ENV=production npm run build
 
 # ---- preview: serve dist/ at the Pages subpath ------------------------------

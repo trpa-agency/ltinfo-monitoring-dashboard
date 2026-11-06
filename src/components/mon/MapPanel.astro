@@ -28,6 +28,8 @@ interface Props {
   emptyTitle?: string;
   emptyDescription?: string;
   csvLabel?: string;
+  /** false drops the list (areas with no names worth listing); the map fills the panel. */
+  list?: boolean;
 }
 
 const {
@@ -39,9 +41,16 @@ const {
   emptyTitle = 'No sites loaded yet',
   emptyDescription = 'This section will show the monitoring sites on a map with a list beside it.',
   csvLabel = 'Download CSV',
+  list = true,
 } = Astro.props;
 ---
-<section class:list={['mon-map-panel', { 'mon-map-panel--tall': tall }]} id={id} data-mon-panel aria-busy="true" aria-label={title}>
+<section
+  class:list={['mon-map-panel', { 'mon-map-panel--tall': tall, 'mon-map-panel--no-list': !list }]}
+  id={id}
+  data-mon-panel
+  aria-busy="true"
+  aria-label={title}
+>
   <EsaCard title={title} padding="compact">
     <div slot="actions" class="mon-map-panel__tools">
       <slot name="tools" />
@@ -64,9 +73,11 @@ const {
           />
         </div>
       </div>
-      <mon-site-list unit={unit}>
-        <template data-mon-badge><EsaBadge value="Not mapped" size="xs" /></template>
-      </mon-site-list>
+      {list && (
+        <mon-site-list unit={unit}>
+          <template data-mon-badge><EsaBadge value="Not mapped" size="xs" /></template>
+        </mon-site-list>
+      )}
     </div>
     {source && (
       <p slot="footer" class="mon-map-panel__source">
@@ -110,6 +121,9 @@ const {
     grid-template-columns: minmax(0, 1fr) 300px;
     gap: var(--spacing-400, 1rem);
     align-items: stretch;
+  }
+  .mon-map-panel--no-list .mon-map-panel__split {
+    grid-template-columns: minmax(0, 1fr);
   }
   .mon-map-panel__map {
     position: relative;

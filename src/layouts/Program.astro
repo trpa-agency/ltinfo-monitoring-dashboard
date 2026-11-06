@@ -8,29 +8,34 @@
 // ProgramSections, ordered by the template (charts, map, or context). The page
 // passes the template from programs.json; ?template= in the URL overrides it
 // at runtime by setting data-template on <main>.
+//
+// The tiles start as summaryTiles() computes them before any data (the loading
+// mark when a source exists, "n/a" with the reason when none does) and the
+// script at the bottom updates them from the panels' events as rows arrive.
 import BaseLayout from './BaseLayout.astro';
 import StandaloneChrome from '../components/mon/StandaloneChrome.astro';
 import ProgramSections from '../components/mon/ProgramSections.astro';
 import EsaCard from '@esa/ecology/esa-card.astro';
 import EsaStat from '@esa/ecology/esa-stat.astro';
 import { DEFAULT_TEMPLATE, type Category, type Program, type Template } from '../lib/programs.ts';
+import { initialTileState, summaryTiles, type GeoJsonSitesConfig } from '../lib/sites.ts';
+import type { ProgramContent } from '../lib/ltinfo-api.ts';
 import '@esa/tokens/layouts.css';
 
 interface Props {
   program: Program;
   category: Category;
   template?: Template;
+  /** LT Info sites hook, forwarded to ProgramSections; see its Props. */
+  geojson?: GeoJsonSitesConfig;
+  /** Build-time LT Info content (record, partners, indicators, documents, images), forwarded to ProgramSections. */
+  content?: ProgramContent;
 }
-const { program, category, template = DEFAULT_TEMPLATE } = Astro.props;
+const { program, category, template = DEFAULT_TEMPLATE, geojson, content } = Astro.props;
 
-// Placeholder tiles. The reference template's first four KPIs, with "n/a" until
-// a later spike loads sites and dated records.
-const STATS = [
-  { label: 'Total sites', value: 'n/a', sub: 'Not loaded yet' },
-  { label: 'Active sites', value: 'n/a', sub: 'Not loaded yet' },
-  { label: 'Record began', value: 'n/a', sub: 'First year in the data' },
-  { label: 'Latest data', value: 'n/a', sub: 'Most recent year in the data' },
-];
+const hasSiteSource = !!(program.sitesLayer || program.mapLayer || geojson);
+const chartCount = (program.measures?.length ?? 0) + (program.sitesPerYear ? 1 : 0);
+const tiles = summaryTiles(initialTileState(hasSiteSource, chartCount));
 ---
 <BaseLayout title={`${program.name} | Monitoring Dashboard`}>
   <!-- Runs as the body parses, before any chrome paints, so a framed page never
@@ -44,15 +49,24 @@ const STATS = [
 
   <div class="mon-page">
     <StandaloneChrome program={program} category={category}>
-      <main id="main" class="mon-main stack" data-gap="md" data-template={template} data-program-id={program.id}>
+      <main
+        id="main"
+        class="mon-main stack"
+        data-gap="md"
+        data-template={template}
+        data-program-id={program.id}
+        data-site-source={hasSiteSource ? 'true' : 'false'}
+      >
         <div class="mon-stats grid" data-gap="md" aria-label="Program summary">
-          {STATS.map((stat) => (
+          {tiles.map((tile) => (
             <EsaCard padding="compact">
-              <EsaStat value={stat.value} label={stat.label} sub={stat.sub} />
+              <div class="mon-stat" data-tile={tile.key}>
+                <EsaStat value={tile.value} label={tile.label} sub={tile.sub} />
+              </div>
             </EsaCard>
           ))}
         </div>
-        <ProgramSections />
+        <ProgramSections program={program} category={category} template={template} geojson={geojson} content={content} />
         <slot />
       </main>
     </StandaloneChrome>
@@ -113,10 +127,77 @@ const STATS = [
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
+    .mon-stat {
+      min-width: 0;
+    }
   </style>
 
   <script>
     import { initEmbed } from '../lib/embed.ts';
+    import { initialTileState, recordYears, summaryTiles, type SitesSummary, type Tile } from '../lib/sites.ts';
+    import type { PanelData } from '../components/mon/mon-chart-panel.ts';
+    import type { MonChartPanel } from '../components/mon/mon-chart-panel.ts';
+    import type { MonSitesPanel } from '../components/mon/mon-sites-panel.ts';
+
     initEmbed();
+
+    // The four tiles follow the panels. Each panel posts its rows and its final
+    // state as bubbling events; the state here is folded into summaryTiles() on
+    // every event. Panels that settled before this script ran (the bundle order
+    // is not guaranteed) are read back through their data and summary properties.
+    const main = document.getElementById('main');
+    if (main) {
+      const chartPanels = [...main.querySelectorAll<MonChartPanel>('mon-chart-panel')];
+      const sitesPanel = main.querySelector<MonSitesPanel>('mon-sites-panel');
+      const state = initialTileState(main.dataset.siteSource === 'true', chartPanels.length);
+      const years = new Set<number>();
+
+      // esa-stat is an Astro lego with no runtime API, so its value and sub text
+      // are set by class. The wrapper carries data-tile; the lego's class names
+      // are the public markup of @esa/ecology/esa-stat.astro.
+      const render = (): void => {
+        state.years = [...years];
+        for (const tile of summaryTiles(state) as Tile[]) {
+          const el = main.querySelector<HTMLElement>(`[data-tile="${tile.key}"]`);
+          const value = el?.querySelector<HTMLElement>('.esa-stat__value');
+          const sub = el?.querySelector<HTMLElement>('.esa-stat__sub');
+          if (value) value.textContent = tile.value;
+          if (sub) sub.textContent = tile.sub;
+        }
+      };
+
+      const noteChart = (data: PanelData): void => {
+        // Month axes carry no year; dates and years do, as do text spans like 2016-2019.
+        if (data.measure.xType === 'month') return;
+        for (const y of recordYears(data.rows.map((r) => r[data.measure.x]))) years.add(y);
+      };
+      const noteSites = (summary: SitesSummary): void => {
+        state.sites = summary;
+        state.sitesState = summary.total ? 'ready' : 'empty';
+        for (const y of summary.years) years.add(y);
+      };
+
+      main.addEventListener('mon-chart-panel:data', (event) => noteChart((event as CustomEvent<PanelData>).detail));
+      main.addEventListener('mon-chart-panel:settled', () => {
+        state.chartsPending = chartPanels.filter((p) => p.dataset.state === 'loading').length;
+        render();
+      });
+      main.addEventListener('mon-sites:loaded', (event) => {
+        noteSites((event as CustomEvent<SitesSummary>).detail);
+        render();
+      });
+      main.addEventListener('mon-sites:settled', (event) => {
+        const detail = (event as CustomEvent<{ state: 'ready' | 'empty' | 'error' }>).detail;
+        if (detail.state === 'error') state.sitesState = 'error';
+        render();
+      });
+
+      // Anything already settled.
+      for (const panel of chartPanels) if (panel.data) noteChart(panel.data);
+      state.chartsPending = chartPanels.filter((p) => p.dataset.state === 'loading').length;
+      if (sitesPanel?.summary) noteSites(sitesPanel.summary);
+      else if (sitesPanel?.dataset.state === 'error') state.sitesState = 'error';
+      render();
+    }
   </script>
 </BaseLayout>

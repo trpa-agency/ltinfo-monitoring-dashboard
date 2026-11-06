@@ -1,5 +1,7 @@
-/* mon-lego-checked: no esa-* draws a native SVG chart (esa-chart wraps AG Charts on
-   canvas, which the v2 stack decision replaced); mon-chart is the reusable home. */
+/* mon-lego-checked (bcn-lego-checked: is the literal the hub's component-first hook
+   reads; see docs/v2-framework-plan.md hub issue 6): no esa-* draws a native SVG chart
+   (esa-chart wraps AG Charts on canvas, which the v2 stack decision replaced); mon-chart is
+   the reusable home. */
 
 /*
  * <mon-chart>: a plain custom element that renders a ChartSpec as native SVG

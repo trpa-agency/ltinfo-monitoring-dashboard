@@ -12,7 +12,7 @@ import EsaButton from '@esa/ecology/esa-button.astro';
 import EsaEmptyState from '@esa/ecology/esa-empty-state.astro';
 import EsaLoadingSpinner from '@esa/ecology/esa-loading-spinner.astro';
 import '@esa/tokens/typography.css';
-import type { Measure, MeasureSpan } from '../../lib/measures';
+import type { Measure, MeasureSpan, PanelSource } from '../../lib/measures';
 import { ERROR_STATE, emptyStateText } from '../../lib/measures';
 import { layerUrl } from '../../lib/map-service';
 
@@ -25,14 +25,19 @@ interface Props {
   span?: MeasureSpan;
   /** Element id, also the prefix for the title id. */
   id: string;
+  /** Where the rows come from when not from the measure's own query (the sites-per-year count). */
+  source?: PanelSource;
+  /** Empty-state copy; derived from the measure when omitted. */
+  empty?: { title: string; description: string };
 }
-const { measure, program, span = 'span-12', id } = Astro.props;
-const empty = emptyStateText(measure);
+const { measure, program, span = 'span-12', id, source, empty: emptyProp } = Astro.props;
+const empty = emptyProp ?? emptyStateText(measure);
 ---
 <mon-chart-panel
   class:list={['mon-chart-panel', span]}
   id={id}
   data-measure={JSON.stringify(measure)}
+  data-source={source ? JSON.stringify(source) : undefined}
   data-program={program}
   data-state="loading"
 >

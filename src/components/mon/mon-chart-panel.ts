@@ -10,13 +10,22 @@
  * the measure in data-measure, fills the pick select, draws the chart, builds
  * the table view on demand, downloads a CSV from the same rows and columns,
  * and shows the empty or error state with the tools hidden.
+ *
+ * Rows come from queryMeasure unless data-source names another query (the
+ * sites-per-year count); see queryPanelRows in src/lib/measures.ts.
+ *
+ * Events (bubbling), for the page's summary tiles:
+ *   mon-chart-panel:data     detail { measure, rows }, once the rows have loaded
+ *   mon-chart-panel:settled  detail { state: 'ready' | 'empty' | 'error' }
+ * A listener attached late reads the same values from the `data` and
+ * dataset.state properties.
  */
 
 import '@esa/ecology/esa-select';
 import '@esa/ecology/esa-button-toggle';
 import './mon-chart.ts';
 import type { MonChart } from './mon-chart.ts';
-import type { Measure, MeasureColumn } from '../../lib/measures.ts';
+import type { Measure, MeasureColumn, PanelSource } from '../../lib/measures.ts';
 import {
   defaultPick,
   fmtValue,
@@ -25,7 +34,7 @@ import {
   measureView,
   pickChoices,
   pickedRows,
-  queryMeasure,
+  queryPanelRows,
 } from '../../lib/measures.ts';
 import type { Attributes } from '../../lib/map-service.ts';
 import { csvFileName, toCsv } from '../../lib/csv.ts';
@@ -74,8 +83,20 @@ function downloadText(text: string, name: string, type: string): void {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
+export interface PanelData {
+  measure: Measure;
+  /** Every row loaded, before the pick filter. */
+  rows: Attributes[];
+}
+
 export class MonChartPanel extends HTMLElement {
   private started = false;
+  private data_: PanelData | null = null;
+
+  /** The measure and every loaded row, or null until the rows arrive. */
+  get data(): PanelData | null {
+    return this.data_;
+  }
 
   connectedCallback(): void {
     if (this.started) return;
@@ -85,6 +106,11 @@ export class MonChartPanel extends HTMLElement {
 
   private q<T extends Element>(selector: string): T | null {
     return this.querySelector<T>(selector);
+  }
+
+  private settle(state: 'ready' | 'empty' | 'error'): void {
+    this.dataset.state = state;
+    this.dispatchEvent(new CustomEvent('mon-chart-panel:settled', { bubbles: true, detail: { state } }));
   }
 
   /** Shows the empty or error state and hides the tools, per the embed contract. */
@@ -97,15 +123,17 @@ export class MonChartPanel extends HTMLElement {
     if (tools) tools.hidden = true;
     if (chart) chart.hidden = true;
     if (state) state.hidden = false;
-    this.dataset.state = kind;
+    this.settle(kind);
   }
 
   private async start(): Promise<void> {
     let measure: Measure;
+    let source: PanelSource | null = null;
     try {
       measure = JSON.parse(this.dataset.measure || '') as Measure;
+      if (this.dataset.source) source = JSON.parse(this.dataset.source) as PanelSource;
     } catch {
-      console.warn('mon-chart-panel: data-measure is not valid JSON');
+      console.warn('mon-chart-panel: data-measure or data-source is not valid JSON');
       this.showState('error');
       return;
     }
@@ -132,12 +160,14 @@ export class MonChartPanel extends HTMLElement {
 
     let all: Attributes[];
     try {
-      all = await queryMeasure(measure);
+      all = await queryPanelRows(measure, source);
     } catch (err) {
       console.warn(`${measure.title}: ${err instanceof Error ? err.message : String(err)}`);
       this.showState('error');
       return;
     }
+    this.data_ = { measure, rows: all };
+    this.dispatchEvent(new CustomEvent<PanelData>('mon-chart-panel:data', { bubbles: true, detail: this.data_ }));
     if (!all.length) {
       this.showState('empty');
       return;
@@ -195,8 +225,8 @@ export class MonChartPanel extends HTMLElement {
     if (loading) loading.hidden = true;
     chart.hidden = false;
     if (tools) tools.hidden = false;
-    this.dataset.state = 'ready';
     this.dataset.rows = String(rows.length);
+    this.settle('ready');
   }
 }
 

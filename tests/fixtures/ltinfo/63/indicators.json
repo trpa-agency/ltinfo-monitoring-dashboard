@@ -1,0 +1,14 @@
+[
+  {
+    "IndicatorID": 87,
+    "IndicatorDisplayName": "Miles of Stream Habitat in Excellent Stream Condition"
+  },
+  {
+    "IndicatorID": 89,
+    "IndicatorDisplayName": "Miles of Stream Habitat in Marginal Condition"
+  },
+  {
+    "IndicatorID": 250,
+    "IndicatorDisplayName": "Stream Habitat Condition"
+  }
+]

@@ -3,6 +3,8 @@
 // Dashboard card. A QA page: it exists to compare the re-skinned components against
 // https://monitoring.laketahoeinfo.org/monitoring-programs/39. Everything inside the
 // mock is an Ecology lego; the only spoke component is the host chrome around it.
+// Layout is the hub's primitives (stack, grid, cluster) and type roles; the page's own
+// CSS sets only widths, knobs, and spacing.
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import HostCardMock from '../../components/mon/HostCardMock.astro';
 import EsaStat from '@esa/ecology/esa-stat.astro';
@@ -21,25 +23,34 @@ const stats = [
   { label: 'Latest survey', value: '2026', sub: 'Field season ended Sep. 30' },
 ];
 ---
+<!-- manifest:
+  layout: stack(md)
+  sections:
+    - page title    -> typography-heading-md
+    - compare note  -> esa-card
+    - host card     -> mon-host-card-mock
+    - summary stats -> esa-stat
+    - panels        -> esa-card
+    - measurements  -> esa-empty-state
+    - load error    -> esa-alert-box
+-->
 <BaseLayout title="Theme spike">
-  <main class="theme-spike">
-    <h1 class="theme-spike__title">Theme spike</h1>
+  <main class="theme-spike stack" data-gap="md">
+    <h1 class="theme-spike__title typography-heading-md">Theme spike</h1>
     <!-- The note sits in a white card so its link is #337ab7 on #ffffff (4.56:1, AA);
          on the #f7f7f7 page it would measure 4.25:1. Embed copy with links follows the
          same rule: links live on cards, not on the card-body gray. -->
-    <div class="theme-spike__intro">
-      <EsaCard padding="compact">
-        <p class="theme-spike__note">
-          This page exists to compare the LT Info theme against
-          <a href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">monitoring.laketahoeinfo.org/monitoring-programs/39</a>.
-          The green card is a static mock of the host's Dashboard card; everything inside it is an Ecology component wearing the theme.
-        </p>
-      </EsaCard>
-    </div>
+    <EsaCard padding="compact">
+      <p class="theme-spike__note typography-body-sm">
+        This page exists to compare the LT Info theme against
+        <a href="https://monitoring.laketahoeinfo.org/monitoring-programs/39">monitoring.laketahoeinfo.org/monitoring-programs/39</a>.
+        The green card is a static mock of the host's Dashboard card; everything inside it is an Ecology component wearing the theme.
+      </p>
+    </EsaCard>
 
     <HostCardMock>
-      <div class="embed">
-        <section class="embed__stats" aria-label="Program summary">
+      <div class="embed stack" data-gap="md">
+        <section class="embed__stats grid" data-gap="md" aria-label="Program summary">
           {stats.map((s) => (
             <EsaCard padding="compact">
               <EsaStat value={s.value} label={s.label} sub={s.sub} />
@@ -47,9 +58,9 @@ const stats = [
           ))}
         </section>
 
-        <section class="embed__panels" aria-label="Panels">
+        <section class="embed__panels grid" data-gap="md" aria-label="Panels">
           <EsaCard title="Stand density">
-            <div class="embed__controls">
+            <div class="embed__controls cluster" data-gap="sm" data-align="end">
               <esa-button-toggle id="view-toggle" label="View" value="chart" size="sm"></esa-button-toggle>
               <EsaButton variant="primary" appearance="outline" size="sm" icon="download">CSV</EsaButton>
               <div class="embed__select">
@@ -57,7 +68,7 @@ const stats = [
               </div>
             </div>
             <p>Mean trees per acre by survey year, with one line per site group. The chart and its table carry the same values.</p>
-            <p class="embed__state" data-view-state>Showing the chart view for all sites.</p>
+            <p class="embed__state typography-body-sm" data-view-state>Showing the chart view for all sites.</p>
           </EsaCard>
 
           <EsaCard title="Sites">
@@ -140,6 +151,7 @@ const stats = [
 </script>
 
 <style>
+  /* Page width and padding only. Rhythm comes from the stack primitive on <main>. */
   .theme-spike {
     max-width: 980px;
     margin: 0 auto;
@@ -147,50 +159,30 @@ const stats = [
   }
 
   .theme-spike__title {
-    margin: 0 0 var(--spacing-200, 0.5rem);
-    font-family: var(--typography-font-family-display, var(--typography-font-family-sans, 'Lexend Deca', sans-serif));
-    font-size: var(--typography-title-sm-strong-font-size, 1.0625rem);
-    font-weight: var(--typography-font-weight-semibold, 600);
+    margin: 0;
     color: var(--color-content-default, #333333);
-  }
-
-  .theme-spike__intro {
-    margin: 0 0 var(--spacing-400, 1rem);
   }
 
   .theme-spike__note {
     margin: 0;
-    font-size: var(--typography-body-sm-font-size, 0.875rem);
-    line-height: var(--typography-body-sm-line-height, 1.6);
     color: var(--color-content-default-secondary, #656565);
     overflow-wrap: anywhere;
   }
 
-  /* The embed body: a grid of white cards on the card-body gray, spaced on the
-     spacing scale. Panels sit side by side above 760 px and stack below it. */
-  .embed {
-    display: grid;
-    gap: var(--spacing-400, 1rem);
-  }
-
+  /* The embed body: white cards on the card-body gray, spaced on the spacing scale.
+     Both grids are the hub's .grid primitive; --grid-min sets how many columns fit.
+     Stats run four across at the 980 px card width and drop to one on a phone;
+     panels sit side by side above about 700 px and stack below it. */
   .embed__stats {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--spacing-400, 1rem);
+    --grid-min: 11rem;
   }
 
   .embed__panels {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--spacing-400, 1rem);
+    --grid-min: 20rem;
     align-items: start;
   }
 
   .embed__controls {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: flex-end;
-    gap: var(--spacing-300, 0.75rem);
     margin-bottom: var(--spacing-400, 1rem);
   }
 
@@ -209,25 +201,9 @@ const stats = [
 
   .embed__state {
     color: var(--color-content-default-secondary, #656565);
-    font-size: var(--typography-body-sm-font-size, 0.875rem);
   }
 
   .embed__text {
     margin: 0;
-  }
-
-  @media (max-width: 760px) {
-    .embed__stats {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .embed__panels {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  @media (max-width: 480px) {
-    .embed__stats {
-      grid-template-columns: minmax(0, 1fr);
-    }
   }
 </style>

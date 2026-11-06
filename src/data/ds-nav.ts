@@ -1,7 +1,7 @@
 // Single source of truth for the design-system sidebar + breadcrumbs.
 // Types come from @esa/docs so this data is structurally compatible with DocsShell.
 //
-// The `foundations` group below is GENERIC — every spoke documents the same five
+// The `foundations` group below is GENERIC: every spoke documents the same five
 // token-driven foundation pages, so keep it as-is. `componentGroups` is the
 // per-spoke catalog: /spoke-init populates it by mirroring the source app's
 // catalog (e.g. an Angular ui-catalog) or by curating the esa-* components this
@@ -25,7 +25,7 @@ const c = (label: string, name: string): NavItem => ({
   href: `/design-system/components/${name}`,
 });
 
-// SCAFFOLD — one example group with the one example component page that ships
+// SCAFFOLD: one example group with the one example component page that ships
 // with the template (esa-button). /spoke-init replaces this whole array with the
 // spoke's real catalog: one NavGroup per section, each item mapping a display
 // label to an @esa/ecology esa-* slug. Add a matching page under

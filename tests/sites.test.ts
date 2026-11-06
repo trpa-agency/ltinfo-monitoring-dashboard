@@ -6,24 +6,37 @@ import {
   INACTIVE_COLOR,
   SERIES_COLORS,
   SITES_CSV_COLUMNS,
+  TILE_LOADING,
+  TILE_NA,
   areaGroups,
   areaListItems,
   areaWhere,
   areasCsv,
+  areasSummary,
   buildWhere,
   collapseSites,
   countLine,
   fetchGeoJson,
+  initialTileState,
   orderStatuses,
   pickChoices,
   queryUrl,
+  recordYears,
   siteListItems,
   siteStatus,
   sitesCsv,
+  sitesPanelSource,
+  sitesPanelTitle,
+  sitesPanelUnit,
+  sitesQueryParams,
+  sitesSourceKind,
+  sitesSummary,
   statusColors,
+  summaryTiles,
   type Feature,
   type MapLayerConfig,
   type SitesLayerConfig,
+  type SitesPanelConfig,
 } from '../src/lib/sites.ts';
 
 const point = (lon: number, lat: number, properties: Record<string, unknown>, id?: number): Feature => ({
@@ -246,4 +259,149 @@ test('fetchGeoJson stops after one page when the service does not report a limit
   assert.equal(n, 1);
   const failing = async () => ({ json: async () => ({ error: { code: 400, message: 'Unable to complete operation.' } }) });
   await assert.rejects(() => fetchGeoJson(failing, 106, { where: 'Threshold_Year = 2023' }), /Unable to complete operation/);
+});
+
+/* ---------- One feature per site with first and last fields (LT Info GeoJSON) ---------- */
+
+test('collapseSites reads the span from first and last fields and queries them', () => {
+  const cfg: SitesLayerConfig = { layer: 0, name: 'MonitoringSiteName', active: 'Active', first: 'FirstObservationDate', last: 'LastObservationDate' };
+  const sites = collapseSites(
+    [
+      point(-120.1, 39.1, { MonitoringSiteName: 'Ward Creek', Active: true, FirstObservationDate: '1988-05-01T00:00:00', LastObservationDate: '2025-09-30T00:00:00' }),
+      point(-120.0, 39.0, { MonitoringSiteName: 'Trout Creek', Active: false, FirstObservationDate: Date.UTC(2001, 0, 15), LastObservationDate: null }),
+    ],
+    cfg,
+  );
+  assert.deepEqual(
+    sites.map((s) => [s.name, s.first, s.last, s.span, s.active]),
+    [
+      ['Trout Creek', '2001', '2001', '2001', false],
+      ['Ward Creek', '1988', '2025', '1988 to 2025', true],
+    ],
+  );
+  const params = sitesQueryParams(cfg);
+  assert.equal(params.outFields, 'MonitoringSiteName,FirstObservationDate,LastObservationDate,Active');
+  assert.equal(params.orderByFields, undefined);
+});
+
+/* ---------- The sites panel config ---------- */
+
+const TYC_PANEL: SitesPanelConfig = {
+  program: 'Tahoe Yellow Cress Monitoring',
+  color: '#415414',
+  sitesLayer: TYC,
+  overlays: [{ layer: 117, title: 'Lake level in 2024', geometry: 'fill', where: 'Year = 2024' }],
+};
+const SEZ_LAYER: MapLayerConfig = {
+  layer: 106,
+  title: 'SEZ assessment units',
+  unit: 'assessment unit',
+  unitPlural: 'Assessment units',
+  name: 'Assessment_Unit_Name',
+  colorBy: 'Final_Rating',
+  colors: { A: '#188c16' },
+  pick: 'Threshold_Year',
+};
+const SEZ_PANEL: SitesPanelConfig = { program: 'SEZ', color: '#9A5710', mapLayer: SEZ_LAYER };
+const LTINFO_PANEL: SitesPanelConfig = {
+  program: 'Osprey',
+  color: '#000000',
+  geojson: { url: 'https://internalapi.laketahoeinfo.org/monitoring-programs/5/sites-as-feature-collection', name: 'MonitoringSiteName', active: 'Active' },
+};
+
+test('sitesSourceKind prefers the area layer, then the sites layer, then GeoJSON', () => {
+  assert.equal(sitesSourceKind(SEZ_PANEL), 'areas');
+  assert.equal(sitesSourceKind({ ...SEZ_PANEL, sitesLayer: TYC }), 'areas');
+  assert.equal(sitesSourceKind(TYC_PANEL), 'sites');
+  assert.equal(sitesSourceKind(LTINFO_PANEL), 'geojson');
+  assert.equal(sitesSourceKind({ program: 'x', color: '#000000' }), 'none');
+});
+
+test('sitesPanelUnit, sitesPanelTitle, and sitesPanelSource read the config', () => {
+  assert.equal(sitesPanelUnit(TYC_PANEL), 'site');
+  assert.equal(sitesPanelUnit(SEZ_PANEL), 'assessment unit');
+  assert.equal(sitesPanelUnit({ ...TYC_PANEL, sitesLayer: { ...TYC, unit: 'station' } }), 'station');
+  assert.equal(sitesPanelTitle(TYC_PANEL), 'Monitoring sites');
+  assert.equal(sitesPanelTitle(SEZ_PANEL), 'SEZ assessment units');
+  assert.deepEqual(sitesPanelSource(TYC_PANEL, 'https://s/MapServer'), {
+    href: 'https://s/MapServer/9',
+    label: 'TRPA LTInfo_Monitoring map service, layer 9 (sites)',
+  });
+  assert.deepEqual(sitesPanelSource(SEZ_PANEL, 'https://s/MapServer'), {
+    href: 'https://s/MapServer/106',
+    label: 'TRPA LTInfo_Monitoring map service, layer 106 (SEZ assessment units)',
+  });
+  assert.equal(sitesPanelSource(LTINFO_PANEL)?.href, LTINFO_PANEL.geojson?.url);
+  assert.equal(sitesPanelSource({ program: 'x', color: '#000000' }), undefined);
+});
+
+/* ---------- Record years and the summary tiles ---------- */
+
+test('recordYears finds years in numbers, epoch milliseconds, and text, unique and sorted', () => {
+  assert.deepEqual(recordYears([2019, '2016-2019', '2024-05-01', Date.UTC(2020, 6, 4), 2019, 'May', 1850, 7, null]), [2016, 2019, 2020, 2024]);
+  assert.deepEqual(recordYears([]), []);
+});
+
+test('sitesSummary and areasSummary count the rows, the mapped ones, the active ones, and the years', () => {
+  const cfg: SitesPanelConfig = { program: 'Ozone', color: '#9CC3EA', sitesLayer: { layer: 16, name: 'name', code: 'id', active: 'Active_2023', unit: 'station' } };
+  const sites = collapseSites(
+    [
+      point(-120, 39, { name: 'Tahoe City', id: 1, Active_2023: 1 }),
+      point(-120, 39.1, { name: 'South Lake Tahoe', id: 2, Active_2023: 0 }),
+      { type: 'Feature', geometry: null, properties: { name: 'Incline', id: 3, Active_2023: 1 } },
+    ],
+    cfg.sitesLayer!,
+  );
+  assert.deepEqual(sitesSummary(cfg, sites), { kind: 'sites', unit: 'station', unitPlural: 'stations', total: 3, mapped: 2, active: 2, picked: null, years: [] });
+  const tyc = collapseSites([point(-119.95, 39.0, { SITE_NAME: 'Nevada Beach', YEAR_OF_COUNT: 2025 }), point(-119.95, 39.0, { SITE_NAME: 'Nevada Beach', YEAR_OF_COUNT: 2001 })], TYC);
+  const tycSummary = sitesSummary(TYC_PANEL, tyc);
+  assert.equal(tycSummary.active, null, 'no active flag in the layer');
+  assert.deepEqual(tycSummary.years, [2001, 2025]);
+  const areas = areasSummary(SEZ_PANEL, [point(-120, 39, { Assessment_Unit_Name: 'A' }, 1), { type: 'Feature', geometry: null, properties: {} }], '2023');
+  assert.deepEqual(areas, { kind: 'areas', unit: 'assessment unit', unitPlural: 'Assessment units', total: 2, mapped: 1, active: null, picked: '2023', years: [2023] });
+});
+
+test('summaryTiles says why a tile is n/a, marks loading, then shows the numbers', () => {
+  const labels = (tiles: ReturnType<typeof summaryTiles>) => tiles.map((t) => t.label);
+  // No site source and no charts: every tile is n/a with a reason.
+  const bare = summaryTiles(initialTileState(false, 0));
+  assert.deepEqual(labels(bare), ['Total sites', 'Active sites', 'Record began', 'Latest data']);
+  assert.deepEqual(bare.map((t) => t.value), [TILE_NA, TILE_NA, TILE_NA, TILE_NA]);
+  assert.deepEqual(bare.map((t) => t.sub), ['No site source yet', 'No site source yet', 'No dated records', 'No dated records']);
+
+  // A source and two charts, before anything arrives.
+  const loading = initialTileState(true, 2);
+  assert.deepEqual(summaryTiles(loading).map((t) => t.value), [TILE_LOADING, TILE_LOADING, TILE_LOADING, TILE_LOADING]);
+
+  // Sites landed with an active flag; one chart still loading.
+  const state = { ...loading, sitesState: 'ready' as const, chartsPending: 1, years: [2018, 2024, 2024] };
+  state.sites = { kind: 'sites', unit: 'station', unitPlural: 'stations', total: 1234, mapped: 1230, active: 7, picked: null, years: [] };
+  const ready = summaryTiles(state);
+  assert.deepEqual(ready.map((t) => [t.value, t.sub]), [
+    ['1,234', '1,230 mapped'],
+    ['7', 'Marked active in the source'],
+    ['2018', 'First year in the data'],
+    ['2024', 'Most recent year in the data'],
+  ]);
+
+  // Sites without an active flag.
+  const noFlag = summaryTiles({ ...state, sites: { ...state.sites, active: null } });
+  assert.deepEqual([noFlag[1].value, noFlag[1].sub], [TILE_NA, 'No active flag in the source']);
+
+  // Areas for a picked year.
+  const areas = summaryTiles({ ...state, sites: { kind: 'areas', unit: 'assessment unit', unitPlural: 'Assessment units', total: 42, mapped: 42, active: null, picked: '2023', years: [2023] } });
+  assert.deepEqual(areas.slice(0, 2).map((t) => [t.value, t.sub]), [
+    ['42', 'Assessment units, 2023'],
+    [TILE_NA, 'Not tracked for assessment units'],
+  ]);
+
+  // Everything settled with no dated rows anywhere.
+  const undated = summaryTiles({ ...state, chartsPending: 0, years: [] });
+  assert.deepEqual([undated[2].value, undated[2].sub, undated[3].value], [TILE_NA, 'No dated records', TILE_NA]);
+
+  // The source failed, or returned no rows.
+  const failed = summaryTiles({ ...state, sitesState: 'error', sites: null });
+  assert.deepEqual([failed[0].value, failed[0].sub], [TILE_NA, 'Sites could not be loaded']);
+  const none = summaryTiles({ ...state, sitesState: 'empty', sites: { ...state.sites, total: 0 } });
+  assert.deepEqual([none[0].value, none[0].sub, none[1].sub], [TILE_NA, 'No fixed sites', 'No fixed sites']);
 });

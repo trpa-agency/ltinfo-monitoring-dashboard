@@ -62,17 +62,20 @@ test('queryFeatures stops when exceededTransferLimit is false on a full page', a
 });
 
 test('queryFeatures defaults where to 1=1 and outFields to *', async () => {
-  let seen: URLSearchParams | null = null;
+  // Collected in an array: an assignment inside the callback does not widen a
+  // `let` for the control-flow analysis below, which narrowed it to never.
+  const calls: URLSearchParams[] = [];
   const fakeFetch: FetchLike = async (url) => {
-    seen = new URL(url).searchParams;
+    calls.push(new URL(url).searchParams);
     return jsonResponse({ features: [] });
   };
   const rows = await queryFeatures(83, {}, { fetch: fakeFetch });
   assert.equal(rows.length, 0);
-  assert.ok(seen);
-  assert.equal(seen!.get('where'), '1=1');
-  assert.equal(seen!.get('outFields'), '*');
-  assert.equal(seen!.get('resultRecordCount'), '2000');
+  assert.equal(calls.length, 1);
+  const seen = calls[0];
+  assert.equal(seen.get('where'), '1=1');
+  assert.equal(seen.get('outFields'), '*');
+  assert.equal(seen.get('resultRecordCount'), '2000');
 });
 
 test('queryFeatures throws on an ArcGIS error payload and on HTTP errors', async () => {

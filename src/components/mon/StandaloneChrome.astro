@@ -111,14 +111,10 @@ const year = new Date().getFullYear();
 </footer>
 
 <style>
-  /* LT Info host chrome is navy (#2f3f56 on monitoring.laketahoeinfo.org). The
-     theme file is generated and pins no navy role, so the chrome wrapper
-     re-points the knockout surface role for its own subtree only: the app bar's
-     brand-strong tone reads that role, and the hero paints the same value. */
-  .mon-chrome {
-    --mon-host-navy: #2f3f56;
-    --color-background-default-knockout: var(--mon-host-navy, #2f3f56);
-  }
+  /* LT Info host chrome is navy. The theme recipe pins the knockout surface role
+     (--color-background-default-knockout) to the host's navy, so the app bar's
+     brand-strong tone reads it from the theme and the hero reads the same role
+     below. No literal lives here. */
 
   /* ---- app bar: one flexible child in the bar's main region, so brand and
      links wrap below each other on a phone instead of pushing the bar wider ---- */
@@ -145,7 +141,7 @@ const year = new Date().getFullYear();
 
   /* ---- hero band ---- */
   .mon-hero {
-    background: var(--mon-host-navy, #2f3f56);
+    background: var(--color-background-default-knockout, #2f3f56);
     color: var(--color-content-default-knockout, #fcfcfc);
     padding-block: var(--spacing-500, 24px) var(--spacing-600, 32px);
   }
@@ -174,6 +170,11 @@ const year = new Date().getFullYear();
   }
 
   /* ---- side nav beside the dashboard ---- */
+  /* --sidebar-width and --sidebar-content-min are the knobs of the .sidebar layout
+     primitive in @esa/tokens/layouts.css, which this element carries. They are not
+     the retired semantic token of the same name (migrations.json,
+     sidebar-width-to-sidenav-width): the hub says to keep a declaration on a
+     .sidebar element exactly as it is. */
   .mon-layout {
     --sidebar-width: 15rem;
     --sidebar-content-min: 62%;

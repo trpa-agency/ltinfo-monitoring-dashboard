@@ -1,0 +1,50 @@
+[
+  {
+    "MonitoringProgramPartnerID": 131,
+    "OrganizationID": 18,
+    "OrganizationName": "Tahoe Regional Planning Agency",
+    "OrganizationShortName": "TRPA",
+    "LogoFileResourceGuid": "cc60c8a7-4135-49e3-8bbe-ad0a8ee83f21",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 132,
+    "OrganizationID": 67,
+    "OrganizationName": "Desert Research Institute",
+    "OrganizationShortName": "DRI",
+    "LogoFileResourceGuid": "3c47600c-577e-493a-a36a-664b673bce1e",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 133,
+    "OrganizationID": 46,
+    "OrganizationName": "U.S. Environmental Protection Agency",
+    "OrganizationShortName": "USEPA",
+    "LogoFileResourceGuid": "701cd193-1de2-4545-963a-8dd291ed4f1e",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 134,
+    "OrganizationID": 82,
+    "OrganizationName": "California Air Resources Board",
+    "OrganizationShortName": "CARB",
+    "LogoFileResourceGuid": "6172a3b1-3ac6-4c17-8044-0a11452620c8",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 135,
+    "OrganizationID": 1148,
+    "OrganizationName": "Washoe County Air Quality Management Division",
+    "OrganizationShortName": "WCAQ",
+    "LogoFileResourceGuid": "aa0fcf15-f62d-4516-8835-1351cebad571",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 136,
+    "OrganizationID": 1149,
+    "OrganizationName": "Placer County Air Pollution Control District",
+    "OrganizationShortName": "PCAPCD",
+    "LogoFileResourceGuid": "682eb166-761c-48a1-ac87-4db8fa734f73",
+    "SortOrder": 0
+  }
+]

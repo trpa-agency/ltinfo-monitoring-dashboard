@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  SITES_PER_YEAR_X,
+  SITES_PER_YEAR_Y,
   defaultPick,
   emptyStateText,
   fmtValue,
@@ -14,9 +16,14 @@ import {
   pickChoices,
   pickedRows,
   queryMeasure,
+  queryPanelRows,
+  querySitesPerYear,
+  sitesPerYearMeasure,
+  sitesPerYearRows,
+  sitesPerYearYearKey,
   xDisplay,
 } from '../src/lib/measures.ts';
-import type { Measure } from '../src/lib/measures.ts';
+import type { Measure, SitesPerYearConfig } from '../src/lib/measures.ts';
 import type { FetchLike } from '../src/lib/map-service.ts';
 
 const ozone: Measure = {
@@ -297,4 +304,95 @@ test('queryMeasure: unpivot path reads every field and reshapes year columns', a
 test('queryMeasure surfaces a service error', async () => {
   const fakeFetch: FetchLike = async () => ({ ok: true, status: 200, json: async () => ({ error: { code: 400, message: 'Failed to execute query.' } }) });
   await assert.rejects(queryMeasure({ ...ozone, where: "Pollutnt = 'O3'" }, { fetch: fakeFetch }), /Failed to execute query/);
+});
+
+/* ---------- Sites monitored each year ---------- */
+
+const perYearOzone: SitesPerYearConfig = { layer: 46, year: 'Year', site: 'Site', where: "Pollutant = 'O3'", unit: 'station' };
+const perYearLtimp: SitesPerYearConfig = { layer: 99, year: 'SampleDatetime', site: 'SiteName', extract: true, unit: 'station' };
+
+test('sitesPerYearMeasure is a bar chart of the unit count by year with the contract wording', () => {
+  const m = sitesPerYearMeasure(perYearOzone);
+  assert.equal(m.title, 'Stations monitored each year');
+  assert.equal(m.sub, 'Number of stations with a record in each year.');
+  assert.equal(m.layer, 46);
+  assert.equal(m.type, 'bar');
+  assert.equal(m.x, SITES_PER_YEAR_X);
+  assert.equal(m.y, SITES_PER_YEAR_Y);
+  assert.equal(m.yLabel, 'Stations monitored');
+  assert.deepEqual(measureColumns(m).map((c) => c.headerName), ['Year', 'Stations monitored']);
+  assert.equal(sitesPerYearMeasure({ layer: 9, year: 'Y', site: 'S' }).title, 'Sites monitored each year');
+});
+
+test('sitesPerYearYearKey wraps a date field in EXTRACT when extract is set', () => {
+  assert.equal(sitesPerYearYearKey(perYearOzone), 'Year');
+  assert.equal(sitesPerYearYearKey(perYearLtimp), 'EXTRACT(YEAR FROM SampleDatetime)');
+});
+
+test('sitesPerYearRows counts distinct sites per year, sorted, reading Expr1 for an EXTRACT', () => {
+  const rows = sitesPerYearRows(perYearOzone, [
+    { Year: 2019, Site: 'A', n: 12 },
+    { Year: 2019, Site: 'B', n: 3 },
+    { Year: 2018, Site: 'A', n: 5 },
+    { Year: 2019, Site: '', n: 1 },
+    { Year: null, Site: 'C', n: 1 },
+  ]);
+  assert.deepEqual(rows, [
+    { year: 2018, count: 1 },
+    { year: 2019, count: 2 },
+  ]);
+  const extracted = sitesPerYearRows(perYearLtimp, [
+    { Expr1: 2021, SiteName: 'Ward Creek', n: 40 },
+    { Expr1: 2021, SiteName: 'Blackwood Creek', n: 38 },
+    { EXPR1: '2022', SiteName: 'Ward Creek', n: 41 },
+  ]);
+  assert.deepEqual(extracted, [
+    { year: 2021, count: 2 },
+    { year: 2022, count: 1 },
+  ]);
+  // Epoch milliseconds for a year field that is a date, without EXTRACT.
+  const epoch = sitesPerYearRows({ layer: 1, year: 'd', site: 's' }, [{ d: Date.UTC(2020, 5, 1), s: 'x' }]);
+  assert.deepEqual(epoch, [{ year: 2020, count: 1 }]);
+});
+
+test('querySitesPerYear sends one grouped count request and returns the per-year rows', async () => {
+  const calls: URLSearchParams[] = [];
+  const fakeFetch: FetchLike = async (url) => {
+    calls.push(new URL(url).searchParams);
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({
+        features: [
+          { attributes: { Expr1: 2021, SiteName: 'Ward Creek', n: 40 } },
+          { attributes: { Expr1: 2022, SiteName: 'Ward Creek', n: 41 } },
+          { attributes: { Expr1: 2022, SiteName: 'Blackwood Creek', n: 7 } },
+        ],
+      }),
+    };
+  };
+  const rows = await querySitesPerYear(perYearLtimp, { fetch: fakeFetch });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].get('groupByFieldsForStatistics'), 'EXTRACT(YEAR FROM SampleDatetime),SiteName');
+  assert.equal(calls[0].get('where'), '1=1');
+  const stats = JSON.parse(calls[0].get('outStatistics') ?? '[]');
+  assert.deepEqual(stats, [{ statisticType: 'count', onStatisticField: 'OBJECTID', outStatisticFieldName: 'n' }]);
+  assert.deepEqual(rows, [
+    { year: 2021, count: 1 },
+    { year: 2022, count: 2 },
+  ]);
+});
+
+test('queryPanelRows routes a sites-per-year source to its query and everything else to queryMeasure', async () => {
+  const urls: string[] = [];
+  const fakeFetch: FetchLike = async (url) => {
+    urls.push(url);
+    return { ok: true, status: 200, json: async () => ({ features: [] }) };
+  };
+  await queryPanelRows(sitesPerYearMeasure(perYearOzone), { kind: 'sites-per-year', config: perYearOzone }, { fetch: fakeFetch });
+  assert.match(urls[0], /\/46\/query\?/);
+  assert.match(urls[0], /groupByFieldsForStatistics=Year%2CSite/);
+  await queryPanelRows(ozone, null, { fetch: fakeFetch });
+  assert.match(urls[1], /\/46\/query\?/);
+  assert.match(urls[1], /outFields=/);
 });

@@ -4,6 +4,28 @@ node_modules
 dist
 .astro
 .git
+.github
+.vscode
 .claude
 docs
 *.log
+
+# The legacy site on main. Until Phase 5 the v2 branch carries the published
+# HTML dashboards beside the spoke, and none of it is an input to the Astro
+# build (which reads programs.json, src/, and public/), so keep it out of the
+# image. One entry per category folder in programs.json, plus the home page,
+# the templates, the Python scaffold, and the Markdown docs at the root.
+air-quality
+fisheries
+noise
+recreation
+scenic-resources
+soil-conservation
+transportation-and-sustainable-communities
+vegetation-preservation
+water-quality
+wildlife
+templates
+scripts/scaffold_programs.py
+index.html
+*.md

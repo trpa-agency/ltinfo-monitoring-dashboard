@@ -1,0 +1,24 @@
+[
+  {
+    "MonitoringProgramDocumentID": 84,
+    "MonitoringProgramID": 68,
+    "FileResourceInfoID": 37496,
+    "FileResourceGUID": "a20ca64a-0611-40bf-b162-34bc9a62256b",
+    "DisplayName": "Lake Tahoe Basin Census Trends Report 2020",
+    "UploadDate": "2023-10-19",
+    "DocumentDescription": "This report analyzes Bureau of the United States Census data from the 1990, 2000, 2010, and 2020 Censuses. This report was first published in 2023.",
+    "OriginalFileName": "Tahoe Basin Census Trend 2023_Final",
+    "FileExtension": ".pdf"
+  },
+  {
+    "MonitoringProgramDocumentID": 81,
+    "MonitoringProgramID": 68,
+    "FileResourceInfoID": 37474,
+    "FileResourceGUID": "60705810-f50a-4144-8917-38b219245391",
+    "DisplayName": "Lake Tahoe Basin Census Trends Report 2010",
+    "UploadDate": "2023-10-16",
+    "DocumentDescription": "This report analyzes Bureau of the United States Census data from the 1990, 2000, and 2010 Censuses. This report was published by the Tahoe Metropolitan Planning Organization and Tahoe Regional Planning Agency in August 2013.",
+    "OriginalFileName": "TRPA and TMPO - 2013 - Lake Tahoe Basin Census Trends Report 1990-2000-20",
+    "FileExtension": ".pdf"
+  }
+]

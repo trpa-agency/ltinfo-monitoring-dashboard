@@ -12,6 +12,7 @@ import type { Attributes, ServiceOptions } from './map-service.ts';
 import { normalizeDate, queryFeatures, queryStatistics, unpivot } from './map-service.ts';
 import type { AxisKind, ChartSpec, ChartType } from './svg-chart/types.ts';
 import { MONTHS, formatValue } from './svg-chart/format.ts';
+import { plural, yearOf } from './sites.ts';
 
 export { MONTHS };
 
@@ -286,4 +287,88 @@ export function emptyStateText(m: Measure): { title: string; description: string
 export function panelSpans(measures: Measure[]): MeasureSpan[] {
   const auto = measures.filter((x) => !x.span);
   return measures.map((m) => m.span || (auto.length % 2 === 1 && auto[auto.length - 1] === m ? 'span-12' : 'span-6'));
+}
+
+/* ---------- Sites monitored each year ---------- */
+
+/**
+ * A program's sitesPerYear in programs.json: the layer, year field, and site field to count
+ * distinct sites per year from. extract: true groups a date field by its year on the server.
+ */
+export interface SitesPerYearConfig {
+  layer: number | string;
+  year: string;
+  site: string;
+  where?: string;
+  extract?: boolean;
+  /** What is counted: "site" when omitted. */
+  unit?: string;
+}
+
+/** The row shape sitesPerYearRows returns, and the x and y fields of its measure. */
+export const SITES_PER_YEAR_X = 'year';
+export const SITES_PER_YEAR_Y = 'count';
+
+const capitalize = (s: string): string => (s ? s[0].toUpperCase() + s.slice(1) : s);
+
+/**
+ * The chart as a Measure, so mon-chart-panel draws it with the same toggle, table, CSV, and
+ * states as every measurement: a bar per year of the distinct site count. The rows come from
+ * querySitesPerYear instead of queryMeasure (ChartPanel passes the config as data-source).
+ */
+export function sitesPerYearMeasure(cfg: SitesPerYearConfig): Measure {
+  const units = plural(2, cfg.unit || 'site');
+  return {
+    title: `${capitalize(units)} monitored each year`,
+    sub: `Number of ${units} with a record in each year.`,
+    layer: cfg.layer,
+    x: SITES_PER_YEAR_X,
+    xLabel: 'Year',
+    y: SITES_PER_YEAR_Y,
+    yLabel: `${capitalize(units)} monitored`,
+    type: 'bar',
+  };
+}
+
+/** The group-by key the server returns the year under: the field, or Expr1 for an EXTRACT. */
+export function sitesPerYearYearKey(cfg: SitesPerYearConfig): string {
+  return cfg.extract ? `EXTRACT(YEAR FROM ${cfg.year})` : cfg.year;
+}
+
+/**
+ * Distinct sites per year from the grouped rows (one row per year and site). An EXTRACT
+ * comes back as Expr1 (or EXPR1) rather than under the field name; years may arrive as
+ * numbers, "2024" strings, dates, or epoch milliseconds. Sorted ascending by year.
+ */
+export function sitesPerYearRows(cfg: SitesPerYearConfig, rows: Attributes[]): Attributes[] {
+  const bySite = new Map<number, Set<string>>();
+  for (const r of rows) {
+    const raw = cfg.extract ? (r.Expr1 ?? r.EXPR1 ?? r[cfg.year]) : r[cfg.year];
+    const y = yearOf(raw);
+    const site = r[cfg.site];
+    if (!y || site == null || site === '') continue;
+    const set = bySite.get(y) ?? new Set<string>();
+    set.add(String(site));
+    bySite.set(y, set);
+  }
+  return [...bySite.keys()].sort((a, b) => a - b).map((y) => ({ [SITES_PER_YEAR_X]: y, [SITES_PER_YEAR_Y]: bySite.get(y)!.size }));
+}
+
+/** Sites monitored each year from the map service: one grouped statistics request, counted client side. */
+export async function querySitesPerYear(cfg: SitesPerYearConfig, opts: ServiceOptions = {}): Promise<Attributes[]> {
+  const rows = await queryStatistics(
+    cfg.layer,
+    { where: cfg.where, groupBy: [sitesPerYearYearKey(cfg), cfg.site], statisticType: 'count', onField: 'OBJECTID', outName: 'n' },
+    opts,
+  );
+  return sitesPerYearRows(cfg, rows);
+}
+
+/** What ChartPanel passes as data-source when a panel's rows come from somewhere other than queryMeasure. */
+export type PanelSource = { kind: 'sites-per-year'; config: SitesPerYearConfig };
+
+/** The rows for a panel: its source when it has one, else the measure query. */
+export function queryPanelRows(measure: Measure, source: PanelSource | null, opts: ServiceOptions = {}): Promise<Attributes[]> {
+  if (source?.kind === 'sites-per-year') return querySitesPerYear(source.config, opts);
+  return queryMeasure(measure, opts);
 }

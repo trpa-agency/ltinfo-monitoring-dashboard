@@ -6,10 +6,21 @@ import designLayer from '@esa/design-layer/astro';
 // (self-registering) and any island scripts a prototype adds.
 //
 // Publishes to GitHub Pages as a project site of the trpa-agency org, in the
-// same repo and base path as the dashboard it replaces, so production builds
-// need the subpath as `base`. Dev stays at root for clean local URLs:
+// same repo as the dashboard it replaces, so production builds need a subpath
+// as `base`. Which subpath depends on the phase:
+//
+//   SITE_BASE set          that path, verbatim. The staging workflow
+//                          (.github/workflows/deploy.yml) passes
+//                          /ltinfo-monitoring-dashboard/v2/ so the build lands
+//                          beside the legacy site instead of over it.
+//   NODE_ENV=production    /ltinfo-monitoring-dashboard/, the root of the Pages
+//                          site: the Docker preview stage and, from Phase 5,
+//                          the production deploy.
+//   otherwise              /, so dev has clean local URLs.
+//
 // withBase() (src/lib/base.ts) reads whichever base is active.
-const base = process.env.NODE_ENV === 'production' ? '/ltinfo-monitoring-dashboard/' : '/';
+const base =
+  process.env.SITE_BASE || (process.env.NODE_ENV === 'production' ? '/ltinfo-monitoring-dashboard/' : '/');
 
 export default defineConfig({
   site: 'https://trpa-agency.github.io',

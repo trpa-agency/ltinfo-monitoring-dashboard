@@ -2,7 +2,7 @@
  * Prefix a root-relative path with Astro's configured `base`.
  *
  * Use for anything Astro will not rewrite for us: `public/` asset references
- * (`<img src>`, CSS `url()`) and hand-written internal links and redirects.
+ * (img src attributes, CSS url() values) and hand-written internal links and redirects.
  * Assets imported through the build pipeline already get the base, so do not
  * wrap those.
  *

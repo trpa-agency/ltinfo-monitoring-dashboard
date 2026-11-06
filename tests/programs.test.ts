@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   DEFAULT_TEMPLATE,
+  RESERVED_ROUTES,
   TEMPLATES,
   allPrograms,
   categories,
@@ -11,6 +12,7 @@ import {
   programSlug,
   siblings,
   templateOf,
+  type Category,
   type Program,
 } from '../src/lib/programs.ts';
 
@@ -40,12 +42,14 @@ test('allPrograms pairs each program with the category that holds it', () => {
   }
 });
 
-test('programSlug and programPath build the ozone page address', () => {
+test('programSlug and programPath build the legacy ozone page address', () => {
   const ozone = allPrograms().find((e) => e.program.id === 41);
   assert.ok(ozone, 'ozone (41) is in programs.json');
-  assert.equal(programSlug(ozone.program), 'ozone');
-  assert.equal(programPath(ozone.program, ozone.category), 'spikes/air-quality/ozone.html');
-  assert.equal(programPath(ozone.program), 'spikes/air-quality/ozone.html', 'category is looked up when omitted');
+  const { program, category } = ozone as { program: Program; category: Category };
+  assert.equal(programSlug(program), 'ozone');
+  // The live DashboardUrl pattern: <folder>/<file> with no spikes/ prefix.
+  assert.equal(programPath(program, category), 'air-quality/ozone.html');
+  assert.equal(programPath(program), 'air-quality/ozone.html', 'category is looked up when omitted');
 });
 
 test('programPath throws for a program that is in no category', () => {
@@ -53,9 +57,20 @@ test('programPath throws for a program that is in no category', () => {
   assert.throws(() => programPath(stray), /not in any category/);
 });
 
+test('no category folder collides with a top-level route of the spoke', () => {
+  for (const folder of ['spikes', 'design-system', 'patterns', 'index']) assert.ok(RESERVED_ROUTES.includes(folder));
+  for (const category of categories()) {
+    assert.ok(!RESERVED_ROUTES.includes(category.folder), `${category.folder} is not a reserved route`);
+  }
+  const clash: Category = { thresholdCategoryId: 0, name: 'Clash', folder: 'spikes', themeColor: '#000000', programs: [] };
+  const program: Program = { id: -2, name: 'Clash', file: 'clash.html', featured: false };
+  assert.throws(() => programPath(program, clash), /collides with a top-level route/);
+});
+
 test('siblings returns the category programs in order, as a copy', () => {
-  const air = categories().find((c) => c.folder === 'air-quality');
-  assert.ok(air);
+  const found = categories().find((c) => c.folder === 'air-quality');
+  assert.ok(found);
+  const air = found as Category;
   const list = siblings(air);
   assert.deepEqual(list.map((p) => p.file), air.programs.map((p) => p.file));
   assert.notEqual(list, air.programs, 'a new array, so callers can sort without touching the data');

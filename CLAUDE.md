@@ -2,7 +2,7 @@
 
 Program dashboards for the Dashboard card of each program page on https://monitoring.laketahoeinfo.org/. The LT Info admin points each program's `DashboardUrl` at `https://trpa-agency.github.io/ltinfo-monitoring-dashboard/<category-folder>/<program>.html`.
 
-This branch (`v2`) rebuilds the site as an Astro spoke of ESA's Ecology design system. The plan, the Phase 0 results, and the open decisions are in [docs/v2-framework-plan.md](docs/v2-framework-plan.md). `main` still carries the generated HTML pages, the Python scaffold script, and the old templates; they stay live until Phase 5 cuts over, and they are not edited on this branch.
+This branch (`v2`) rebuilds the site as an Astro spoke of ESA's Ecology design system. The short explanation is [docs/how-it-works.md](docs/how-it-works.md); the plan, the Phase 0 and 1 results, and the open decisions are in [docs/v2-framework-plan.md](docs/v2-framework-plan.md). `main` still carries the generated HTML pages, the Python scaffold script, and the old templates; they stay live until Phase 5 cuts over, and they are not edited on this branch.
 
 ## Layout
 
@@ -12,10 +12,11 @@ This branch (`v2`) rebuilds the site as an Astro spoke of ESA's Ecology design s
 - `src/pages/spikes/`: the Phase 0 spike pages (theme, chart, map). Kept as living checks of the theme, the chart module, and the map module.
 - `src/pages/index.astro`, `design-system/`, `patterns/`: the spoke scaffold's design section, kept for ESA review until Phase 4 replaces the home page.
 - `src/layouts/`: `BaseLayout.astro` (tokens, theme, font) and `Program.astro` (the program page frame).
-- `src/components/mon/`: spoke components and Lit elements, all prefixed `mon-`.
-- `src/lib/`: TypeScript with no DOM dependencies where possible, tested under Node: `map-service`, `measures`, `sites`, `csv`, `svg-chart/`, `embed`, `programs`, `base`.
+- `src/components/mon/`: spoke components and Lit elements, all prefixed `mon-`. `ltinfo/` holds the build-time LT Info content components (about, partners, indicators, documents, key photo, dashboard frame).
+- `src/lib/`: TypeScript with no DOM dependencies where possible, tested under Node: `map-service`, `measures`, `sites`, `csv`, `svg-chart/`, `embed`, `programs`, `programs-schema` (validates programs.json at build), `ltinfo-api` (LT Info fetch at build with fixture fallback), `sanitize`, `base`.
 - `src/styles/theme-ltinfo.json` and `theme-ltinfo.css`: the LT Info theme recipe and the CSS generated from it.
-- `tests/`: Node test files, run with `npm test`.
+- `tests/`: Node test files, run with `npm test`. `tests/fixtures/ltinfo/` holds recorded LT Info responses; refresh them with `node scripts/record-ltinfo-fixtures.mjs 41 63 39 83 68`.
+- `scripts/check-urls.mjs`: checks every program URL after a publish (`npm run check:urls`); CI runs it for the staging and legacy sets.
 - `public/host-harness.html`: a stand-in for the LT Info Dashboard card, for checking the embed contract.
 - `Dockerfile`, `compose.yaml`, `nginx/`, `.github/workflows/deploy.yml`, `docs/docker.md`: container and CI setup.
 

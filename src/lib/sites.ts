@@ -185,19 +185,26 @@ export function slugify(value: string): string {
 
 /* ---------- Sites from a layer with one feature per site per year ---------- */
 
-/** A program's sitesLayer in programs.json (see templates/README.md in the reference repo). */
-export interface SitesLayerConfig {
-  layer: number;
+/** The property names collapseSites reads from each feature, shared by map service layers and LT Info GeoJSON. */
+export interface SiteFields {
   /** Site name field. */
   name: string;
   /** Optional site ID field; sites are keyed by it when present, else by name. */
   code?: string;
   /** Year field for layers with one feature per site per year. */
   year?: string;
+  /** Optional date or year fields for layers with one feature per site that carry its first and last observation. */
+  first?: string;
+  last?: string;
   /** Optional field to group and color sites by. */
   status?: string;
-  /** Optional 1/0 field marking active sites. */
+  /** Optional 1/0 (or true/false) field marking active sites. */
   active?: string;
+}
+
+/** A program's sitesLayer in programs.json (see templates/README.md in the reference repo). */
+export interface SitesLayerConfig extends SiteFields {
+  layer: number;
   where?: string;
   /** What a site is called: "site", "station", "counter". */
   unit?: string;
@@ -220,7 +227,7 @@ export interface Site {
 
 /** Query parameters for a sitesLayer: its fields, filter, and year order so later features win. */
 export function sitesQueryParams(cfg: SitesLayerConfig): QueryParams {
-  const fields = unique([cfg.name, cfg.code, cfg.year, cfg.status, cfg.active].filter(Boolean) as string[]);
+  const fields = unique([cfg.name, cfg.code, cfg.year, cfg.first, cfg.last, cfg.status, cfg.active].filter(Boolean) as string[]);
   return {
     where: cfg.where || '1=1',
     outFields: fields.join(','),
@@ -246,10 +253,12 @@ type SiteDraft = Site & { firstYear: number | null; lastYear: number | null };
 /**
  * One site per code (or name) from a layer with one feature per site per year: the latest
  * feature's name, location, and status, with the first and last year from the year field.
- * Sites with no geometry in any year are kept with null coordinates so the list can show them
- * as not mapped. Sorted by name.
+ * A layer with one feature per site instead carries the record span in its first and last
+ * fields (LT Info sites: FirstObservationDate and LastObservationDate). Sites with no geometry
+ * in any year are kept with null coordinates so the list can show them as not mapped. Sorted
+ * by name.
  */
-export function collapseSites(features: Feature[], cfg: SitesLayerConfig): Site[] {
+export function collapseSites(features: Feature[], cfg: SiteFields): Site[] {
   const yearField = cfg.year;
   const ordered = yearField
     ? [...features].sort(
@@ -283,9 +292,12 @@ export function collapseSites(features: Feature[], cfg: SitesLayerConfig): Site[
     if (latLon) [site.lat, site.lon] = latLon;
     if (cfg.status) site.status = text(a[cfg.status]) || null;
     if (cfg.active) site.active = a[cfg.active] == null ? null : !!a[cfg.active];
-    if (year) {
-      site.firstYear = site.firstYear == null ? year : Math.min(site.firstYear, year);
-      site.lastYear = site.lastYear == null ? year : Math.max(site.lastYear, year);
+    // The year field, and the first and last fields when the layer carries the span itself.
+    const seen = [year, cfg.first ? yearOf(a[cfg.first]) : null, cfg.last ? yearOf(a[cfg.last]) : null];
+    for (const y of seen) {
+      if (!y) continue;
+      site.firstYear = site.firstYear == null ? y : Math.min(site.firstYear, y);
+      site.lastYear = site.lastYear == null ? y : Math.max(site.lastYear, y);
     }
     byKey.set(key, site);
   }
@@ -432,10 +444,14 @@ export interface MapLayerConfig {
   pick?: string;
   pickLabel?: string;
   where?: string;
-  geometry?: 'fill' | 'line';
+  /** "line" for routes and segments; "fill" (programs.json also writes "polygon") otherwise. */
+  geometry?: 'fill' | 'line' | 'polygon';
   meta?: FieldLabel[];
   fields?: FieldLabel[];
+  /** false for areas with no names worth listing; the map fills the panel. */
   list?: boolean;
+  /** false to draw the areas on the home page map without counting them as mapped sites. */
+  countAsSites?: boolean;
 }
 
 export function areaWhere(cfg: MapLayerConfig, picked?: string | number | null): string {
@@ -805,4 +821,228 @@ export function areasCsv(
   const suffix = hasPick ? `-${slugify(String(picked))}` : '';
   const fileName = `${slugify(programName)}-${slugify(cfg.title || 'areas')}${suffix}.csv`;
   return { fileName, columns, text: csvText(columns, rows) };
+}
+
+/* ---------- The sites panel: one config for every site source ---------- */
+
+/**
+ * LT Info sites as GeoJSON (the hook for programs with neither sitesLayer nor mapLayer).
+ * The URL answers a FeatureCollection of points, one per site, whose properties carry the
+ * fields named here. The LT Info route is
+ * /monitoring-programs/{id}/sites-as-feature-collection and its properties are
+ * MonitoringSiteName, Active, FirstObservationDate, and LastObservationDate; pass them as
+ * name, active, first, and last. The URL itself comes from src/lib/ltinfo-api.ts.
+ */
+export interface GeoJsonSitesConfig extends SiteFields {
+  url: string;
+  /** Link for the source line when url is not linkable (a data: URL); the url itself when omitted. */
+  sourceHref?: string;
+  /** What a site is called: "site" when omitted. */
+  unit?: string;
+  /** Link for the source line; the URL itself when omitted. */
+  sourceLabel?: string;
+}
+
+/**
+ * What <mon-sites-panel> reads from its data-config attribute: the program's site source
+ * (exactly one of sitesLayer, mapLayer, or geojson is used, in that order of preference),
+ * the overlays drawn under it, and the program name and category color for popups, legends,
+ * and CSV file names. Mirrors the programs.json keys so a program entry maps onto it directly.
+ */
+export interface SitesPanelConfig {
+  program: string;
+  /** The category theme color from programs.json; sites with one status and areas without colorBy take it. */
+  color: string;
+  sitesLayer?: SitesLayerConfig;
+  mapLayer?: MapLayerConfig;
+  overlays?: OverlayConfig[];
+  geojson?: GeoJsonSitesConfig;
+}
+
+export type SitesSourceKind = 'sites' | 'areas' | 'geojson' | 'none';
+
+/** Which source the panel will load, in the order of preference the page template used. */
+export function sitesSourceKind(cfg: SitesPanelConfig): SitesSourceKind {
+  if (cfg.mapLayer) return 'areas';
+  if (cfg.sitesLayer) return 'sites';
+  if (cfg.geojson) return 'geojson';
+  return 'none';
+}
+
+/** What one row is called: the configured unit, else "site". */
+export function sitesPanelUnit(cfg: SitesPanelConfig): string {
+  return cfg.mapLayer?.unit || cfg.sitesLayer?.unit || cfg.geojson?.unit || 'site';
+}
+
+/** The card title: the area layer's title, else "Monitoring sites" in the panel's unit. */
+export function sitesPanelTitle(cfg: SitesPanelConfig): string {
+  if (cfg.mapLayer?.title) return cfg.mapLayer.title;
+  return `Monitoring ${plural(2, sitesPanelUnit(cfg))}`;
+}
+
+/** The source line under the map: the layer behind it, or the GeoJSON URL. */
+export function sitesPanelSource(cfg: SitesPanelConfig, service: string = SERVICE): { href: string; label: string } | undefined {
+  const layer = cfg.mapLayer?.layer ?? cfg.sitesLayer?.layer;
+  if (layer != null) {
+    const what = cfg.mapLayer?.title || `${plural(2, sitesPanelUnit(cfg))}`;
+    return { href: `${service}/${layer}`, label: `TRPA LTInfo_Monitoring map service, layer ${layer} (${what})` };
+  }
+  if (cfg.geojson) return { href: cfg.geojson.sourceHref || cfg.geojson.url, label: cfg.geojson.sourceLabel || 'Lake Tahoe Info monitoring sites (GeoJSON)' };
+  return undefined;
+}
+
+/* ---------- Record years and the summary tiles ---------- */
+
+/**
+ * The calendar years named in a list of values: whole numbers between 1900 and 2100, epoch
+ * milliseconds (UTC year), and every 19xx or 20xx run of digits in a string, so "2016-2019"
+ * yields both. Unique, ascending. Ported from noteYears in the reference template.
+ */
+export function recordYears(values: Iterable<unknown>): number[] {
+  const out = new Set<number>();
+  for (const v of values) {
+    if (typeof v === 'number' && Number.isFinite(v)) {
+      const y = v > 3000 ? new Date(v).getUTCFullYear() : Math.trunc(v);
+      if (y >= 1900 && y <= 2100) out.add(y);
+    } else if (typeof v === 'string') {
+      for (const m of v.matchAll(/\b(?:19|20)\d{2}\b/g)) out.add(Number(m[0]));
+    }
+  }
+  return [...out].sort((a, b) => a - b);
+}
+
+/** What the sites panel loaded, posted on the mon-sites:loaded event for the tiles. */
+export interface SitesSummary {
+  kind: 'sites' | 'areas';
+  unit: string;
+  unitPlural: string;
+  total: number;
+  /** Rows with a location. */
+  mapped: number;
+  /** Count of sites flagged active, or null when the source has no active flag. */
+  active: number | null;
+  /** The picked value (an evaluation year) when the layer has a pick, else null. */
+  picked: string | number | null;
+  /** First and last years across the rows, for the Record began and Latest data tiles. */
+  years: number[];
+}
+
+export function sitesSummary(cfg: SitesPanelConfig, sites: Site[]): SitesSummary {
+  const unit = sitesPanelUnit(cfg);
+  const hasActive = !!(cfg.sitesLayer?.active || cfg.geojson?.active);
+  return {
+    kind: 'sites',
+    unit,
+    unitPlural: plural(2, unit),
+    total: sites.length,
+    mapped: sites.filter((s) => s.lat != null && s.lon != null).length,
+    active: hasActive ? sites.filter((s) => s.active === true).length : null,
+    picked: null,
+    years: recordYears(sites.flatMap((s) => [s.first, s.last])),
+  };
+}
+
+export function areasSummary(cfg: SitesPanelConfig, features: Feature[], picked: string | number | null): SitesSummary {
+  const layer = cfg.mapLayer;
+  const unit = sitesPanelUnit(cfg);
+  return {
+    kind: 'areas',
+    unit,
+    unitPlural: layer?.unitPlural || plural(2, unit),
+    total: features.length,
+    mapped: features.filter((f) => !!f.geometry).length,
+    active: null,
+    picked: picked ?? null,
+    years: recordYears(picked == null ? [] : [picked]),
+  };
+}
+
+export type PanelState = 'loading' | 'ready' | 'empty' | 'error';
+
+export interface Tile {
+  key: 'total' | 'active' | 'first' | 'last';
+  label: string;
+  value: string;
+  sub: string;
+}
+
+/** Everything the four tiles are computed from, kept by the page script as data arrives. */
+export interface TileState {
+  /** The program has a sitesLayer, mapLayer, or geojson source. */
+  hasSiteSource: boolean;
+  /** The program has measures or a sitesPerYear chart, so dated records may arrive. */
+  hasDatedCharts: boolean;
+  sitesState: PanelState;
+  sites: SitesSummary | null;
+  /** Chart panels still loading. */
+  chartsPending: number;
+  /** Every year seen so far: chart x values, site spans, and the sites-per-year count. */
+  years: number[];
+}
+
+export const TILE_LOADING = '…';
+export const TILE_NA = 'n/a';
+
+/** The tile state a page starts with, before any data arrives. */
+export function initialTileState(hasSiteSource: boolean, chartCount: number): TileState {
+  return {
+    hasSiteSource,
+    hasDatedCharts: chartCount > 0,
+    sitesState: hasSiteSource ? 'loading' : 'empty',
+    sites: null,
+    chartsPending: chartCount,
+    years: [],
+  };
+}
+
+/**
+ * The four summary tiles. Each shows "n/a" with a sub line that says why when the page has no
+ * source for it, the loading mark while a source is in flight, and the number once it lands.
+ * Ported from the kpi() calls and noteYears() in the reference template.
+ */
+export function summaryTiles(state: TileState): Tile[] {
+  const { sites } = state;
+  const n = (v: number) => v.toLocaleString('en-US');
+
+  let total: Tile;
+  let active: Tile;
+  if (!state.hasSiteSource) {
+    total = { key: 'total', label: 'Total sites', value: TILE_NA, sub: 'No site source yet' };
+    active = { key: 'active', label: 'Active sites', value: TILE_NA, sub: 'No site source yet' };
+  } else if (state.sitesState === 'loading') {
+    total = { key: 'total', label: 'Total sites', value: TILE_LOADING, sub: 'Loading' };
+    active = { key: 'active', label: 'Active sites', value: TILE_LOADING, sub: 'Loading' };
+  } else if (state.sitesState === 'error') {
+    total = { key: 'total', label: 'Total sites', value: TILE_NA, sub: 'Sites could not be loaded' };
+    active = { key: 'active', label: 'Active sites', value: TILE_NA, sub: 'Sites could not be loaded' };
+  } else if (!sites || sites.total === 0) {
+    total = { key: 'total', label: 'Total sites', value: TILE_NA, sub: 'No fixed sites' };
+    active = { key: 'active', label: 'Active sites', value: TILE_NA, sub: 'No fixed sites' };
+  } else if (sites.kind === 'areas') {
+    const pickedText = sites.picked != null && sites.picked !== '' ? `, ${sites.picked}` : '';
+    total = { key: 'total', label: 'Total sites', value: n(sites.total), sub: `${sites.unitPlural}${pickedText}` };
+    active = { key: 'active', label: 'Active sites', value: TILE_NA, sub: `Not tracked for ${sites.unitPlural.toLowerCase()}` };
+  } else {
+    total = { key: 'total', label: 'Total sites', value: n(sites.total), sub: `${n(sites.mapped)} mapped` };
+    active =
+      sites.active == null
+        ? { key: 'active', label: 'Active sites', value: TILE_NA, sub: 'No active flag in the source' }
+        : { key: 'active', label: 'Active sites', value: n(sites.active), sub: 'Marked active in the source' };
+  }
+
+  const years = recordYears(state.years);
+  const waiting = state.chartsPending > 0 || (state.hasSiteSource && state.sitesState === 'loading');
+  let first: Tile;
+  let last: Tile;
+  if (years.length) {
+    first = { key: 'first', label: 'Record began', value: String(years[0]), sub: 'First year in the data' };
+    last = { key: 'last', label: 'Latest data', value: String(years[years.length - 1]), sub: 'Most recent year in the data' };
+  } else if (waiting && (state.hasDatedCharts || state.hasSiteSource)) {
+    first = { key: 'first', label: 'Record began', value: TILE_LOADING, sub: 'Loading' };
+    last = { key: 'last', label: 'Latest data', value: TILE_LOADING, sub: 'Loading' };
+  } else {
+    first = { key: 'first', label: 'Record began', value: TILE_NA, sub: 'No dated records' };
+    last = { key: 'last', label: 'Latest data', value: TILE_NA, sub: 'No dated records' };
+  }
+  return [total, active, first, last];
 }

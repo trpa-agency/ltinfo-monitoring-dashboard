@@ -1,0 +1,138 @@
+[
+  {
+    "MonitoringProgramPartnerID": 176,
+    "OrganizationID": 86,
+    "OrganizationName": "League to Save Lake Tahoe",
+    "OrganizationShortName": "League",
+    "LogoFileResourceGuid": "07b657c9-0e57-43bc-a57f-e8890d640436",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 177,
+    "OrganizationID": 62,
+    "OrganizationName": "Nevada Tahoe Resource Team – Nevada Division of Forestry",
+    "OrganizationShortName": "NDF",
+    "LogoFileResourceGuid": "5d9e7bdb-cf29-4263-98db-c7fdbe52fb44",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 178,
+    "OrganizationID": 12,
+    "OrganizationName": "Nevada Tahoe Resource Team – Nevada Division of State Parks",
+    "OrganizationShortName": "NV State Parks",
+    "LogoFileResourceGuid": "caf03969-258f-46d3-9dee-2c726da5213f",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 179,
+    "OrganizationID": 10,
+    "OrganizationName": "Nevada Tahoe Resource Team – Nevada Division of State Lands",
+    "OrganizationShortName": "NDSL",
+    "LogoFileResourceGuid": "bd6b55ed-3a1b-4f45-ae3c-513112424842",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 180,
+    "OrganizationID": 81,
+    "OrganizationName": "California State Lands Commission",
+    "OrganizationShortName": "California SLC",
+    "LogoFileResourceGuid": "ab0d2b39-173f-4de9-a9c2-92f66072f9a2",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 181,
+    "OrganizationID": 1098,
+    "OrganizationName": "California Department of Fish & Wildlife",
+    "OrganizationShortName": "CDFW",
+    "LogoFileResourceGuid": "ad673778-894f-43c1-b66f-d45030948855",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 182,
+    "OrganizationID": 3,
+    "OrganizationName": "California Tahoe Conservancy",
+    "OrganizationShortName": "CTC",
+    "LogoFileResourceGuid": "13952a5a-c8e8-44bf-9af1-47794305471e",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 183,
+    "OrganizationID": 21,
+    "OrganizationName": "U.S. Forest Service - Lake Tahoe Basin Management Unit",
+    "OrganizationShortName": "USFS - LTBMU",
+    "LogoFileResourceGuid": "31459e00-ab19-4205-acfb-e01f00f380ec",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 184,
+    "OrganizationID": 1,
+    "OrganizationName": "California Department of Parks and Recreation",
+    "OrganizationShortName": "CDPR",
+    "LogoFileResourceGuid": "6139f67c-fd85-4e54-9457-de6f2f8abac2",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 185,
+    "OrganizationID": 18,
+    "OrganizationName": "Tahoe Regional Planning Agency",
+    "OrganizationShortName": "TRPA",
+    "LogoFileResourceGuid": "cc60c8a7-4135-49e3-8bbe-ad0a8ee83f21",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 186,
+    "OrganizationID": 20,
+    "OrganizationName": "U.S. Fish and Wildlife Service",
+    "OrganizationShortName": "USFWS",
+    "LogoFileResourceGuid": "af873a24-d3f3-4f2f-a0f2-6b7c75b894a5",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 207,
+    "OrganizationID": 1152,
+    "OrganizationName": "Nevada Natural Heritage Program",
+    "OrganizationShortName": "NNHP",
+    "LogoFileResourceGuid": "67f63c8d-1e54-4ef4-9812-fe67c61c6d22",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 208,
+    "OrganizationID": 1144,
+    "OrganizationName": "Tahoe Lakefront Owners Association",
+    "OrganizationShortName": "TLOA",
+    "LogoFileResourceGuid": "73f5055e-08f4-485e-9c2e-b4b867009944",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 209,
+    "OrganizationID": 45,
+    "OrganizationName": "U.S. Bureau of Reclamation",
+    "OrganizationShortName": "USBOR",
+    "LogoFileResourceGuid": "83695173-8aa4-4c00-ba90-c7e38aba20ce",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 210,
+    "OrganizationID": 13,
+    "OrganizationName": "Nevada Tahoe Conservation District",
+    "OrganizationShortName": "NTCD",
+    "LogoFileResourceGuid": "a8ee52af-5d22-4187-b1df-c38835b54293",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 211,
+    "OrganizationID": 51,
+    "OrganizationName": "Tahoe Resource Conservation District",
+    "OrganizationShortName": "Tahoe RCD",
+    "LogoFileResourceGuid": "7829bf55-06ed-40cb-b92a-d09e244d368c",
+    "SortOrder": 0
+  },
+  {
+    "MonitoringProgramPartnerID": 258,
+    "OrganizationID": 1254,
+    "OrganizationName": "Bureau of Land Management - Southern Nevada Public Land Management Act",
+    "OrganizationShortName": "BLM- SNPLMA ",
+    "LogoFileResourceGuid": "9566719d-ce60-49ba-a789-fffe60d86f91",
+    "SortOrder": 16
+  }
+]

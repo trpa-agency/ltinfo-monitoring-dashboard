@@ -1,4 +1,24 @@
-# Build the spoke and deploy it to GitHub Pages.
+# Build the v2 spoke and publish it to the staging path of the GitHub Pages site.
+#
+# Staging flow (Phases 1 to 4). GitHub Pages for this repo serves the main
+# branch root at https://trpa-agency.github.io/ltinfo-monitoring-dashboard/,
+# and that is the live legacy site: index.html plus the 36 program pages that
+# the LT Info admin's DashboardUrl values point at. It must keep working
+# untouched until Phase 5. So this workflow never deploys to the Pages root.
+# It builds the spoke from the v2 branch with base /ltinfo-monitoring-dashboard/v2/
+# and commits the output into main under v2/, the way the repo already commits
+# generated HTML to main today. Pages stays on the branch source, nothing in
+# Settings > Pages changes, and the staging site appears at
+# https://trpa-agency.github.io/ltinfo-monitoring-dashboard/v2/. After the push,
+# scripts/check-urls.mjs confirms that every staging page and every legacy page
+# still answers 200.
+#
+# Phase 5 (cutover). Switch Settings > Pages > Source to "GitHub Actions", change
+# the push trigger to main, drop the publish job, build with the root base
+# (NODE_ENV=production and no SITE_BASE), and upload dist/ with
+# actions/upload-pages-artifact followed by actions/deploy-pages under
+# `pages: write` and `id-token: write`. The v2/ folder and .nojekyll on main can
+# then be deleted along with the legacy HTML.
 #
 # Sibling layout. The spoke depends on the ESA Ecology hub through
 # file:../ecology/packages/* links in package.json, so the hub must be checked
@@ -6,45 +26,77 @@
 # built before the spoke installs. The workspace ends up as:
 #
 #   $GITHUB_WORKSPACE/
-#     ltinfo-monitoring-dashboard/   this repo
+#     ltinfo-monitoring-dashboard/   this repo, v2 branch
 #     ecology/                       esassoc/ecology at the commit in ecology.ref
 #
 # The same layout the Dockerfile builds at /work and the one ONBOARDING.md asks
 # for on a laptop. CI does not need Docker; it runs the same npm steps directly.
 #
-# Repo setting: Settings > Pages > Source must be "GitHub Actions" for the
-# deploy job to publish. The nightly run refreshes build-time data from the
-# LT Info API even when nothing was pushed.
+# Triggers. Push to v2, manual dispatch, and a nightly schedule that refreshes
+# build-time data even when nothing was pushed. Not on push to main: the publish
+# job pushes to main, and a main trigger would loop. Two rules of GitHub's
+# worth knowing:
+#   - Scheduled workflows run only from the default branch, so the nightly run
+#     fires only once a copy of this file is on main. The build step always
+#     checks out v2 regardless of which branch the workflow file came from.
+#   - GitHub disables the schedule after 60 days without a commit to the repo.
+#     Re-enable it under Actions > this workflow, or push something.
+#
+# Token. The publish job pushes to main with github.token, which works while
+# main is unprotected. If main becomes a protected branch, the default token
+# cannot push and a DEPLOY_TOKEN repository secret is needed: a fine-grained
+# personal access token for this repo with Contents: Read and write, held by an
+# account allowed to bypass the protection. The checkout step falls back to
+# github.token when the secret is absent. Commits made with github.token do not
+# trigger other workflows; commits made with a PAT do, so keep main out of the
+# push trigger either way.
 
-name: Deploy to GitHub Pages
+name: Build v2 and publish to staging
 
 on:
   push:
-    branches: [main]
+    branches: [v2]
   workflow_dispatch:
   schedule:
     # 11:00 UTC is 3 am Pacific standard time (4 am during daylight time).
     - cron: "0 11 * * *"
 
+# Push to main needs contents: write. No Pages or OIDC permissions until Phase 5.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# One deploy at a time. Runs queue instead of cancelling, so a push during a
-# deploy still ships.
+# One publish at a time. Runs queue instead of cancelling, so two pushes to v2
+# in a row cannot race on main, and the later one still ships.
 concurrency:
-  group: github-pages
+  group: publish-v2-staging
   cancel-in-progress: false
+
+env:
+  # The folder under the Pages root where the staging build lands, and the base
+  # the build is told about. Change both together.
+  STAGING_PREFIX: v2
+  SITE_BASE: /ltinfo-monitoring-dashboard/v2/
+  PAGES_URL: https://trpa-agency.github.io/ltinfo-monitoring-dashboard
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      spoke_sha: ${{ steps.spoke.outputs.sha }}
     steps:
-      - name: Check out the spoke
+      - name: Check out the spoke (v2 branch)
         uses: actions/checkout@v7
         with:
+          # Explicit so the scheduled run, which starts from the default branch,
+          # builds v2 like the other triggers do.
+          ref: v2
           path: ltinfo-monitoring-dashboard
+
+      - name: Record the spoke commit
+        id: spoke
+        working-directory: ltinfo-monitoring-dashboard
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: Read the pinned hub commit from ecology.ref
         id: hub
@@ -81,25 +133,119 @@ jobs:
         working-directory: ltinfo-monitoring-dashboard
         run: npm ci
 
-      - name: Build the spoke
+      # Gates, in order. Any failure stops the run before anything is built.
+      - name: Unit tests
+        working-directory: ltinfo-monitoring-dashboard
+        run: npm test
+
+      - name: Type check
+        working-directory: ltinfo-monitoring-dashboard
+        run: npm run typecheck
+
+      - name: Contrast gate (light theme, enhanced and WCAG AA)
+        working-directory: ltinfo-monitoring-dashboard
+        run: npm run check:contrast
+
+      - name: Build the spoke for the staging path
         working-directory: ltinfo-monitoring-dashboard
         env:
-          # astro.config.mjs switches base to the Pages subpath on production.
+          # astro.config.mjs takes SITE_BASE verbatim when it is set; NODE_ENV
+          # production is still what the build pipeline expects.
           NODE_ENV: production
+          SITE_BASE: ${{ env.SITE_BASE }}
         run: npm run build
 
-      - name: Upload the Pages artifact
-        uses: actions/upload-pages-artifact@v5
+      - name: Upload dist for the publish job
+        uses: actions/upload-artifact@v6
         with:
+          name: dist
           path: ltinfo-monitoring-dashboard/dist
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 3
 
-  deploy:
+  publish:
     needs: build
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    timeout-minutes: 30
     steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5
+      - name: Check out main (the Pages branch)
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          path: site
+          fetch-depth: 1
+          # github.token while main is unprotected; a DEPLOY_TOKEN secret (a
+          # fine-grained PAT with Contents write) once it is. See the header.
+          token: ${{ secrets.DEPLOY_TOKEN || github.token }}
+
+      - name: Check out the URL checker and programs.json from v2
+        uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.build.outputs.spoke_sha }}
+          path: spoke
+          sparse-checkout: |
+            scripts/check-urls.mjs
+            programs.json
+            .nvmrc
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: spoke/.nvmrc
+
+      - name: Download dist
+        uses: actions/download-artifact@v6
+        with:
+          name: dist
+          path: dist
+
+      - name: Replace site/v2 with the new build
+        run: |
+          set -euo pipefail
+          rm -rf "site/${STAGING_PREFIX}"
+          mkdir -p "site/${STAGING_PREFIX}"
+          cp -R dist/. "site/${STAGING_PREFIX}/"
+          # Astro writes assets to _astro/. Jekyll, which Pages runs on a branch
+          # source, skips folders that start with an underscore unless this
+          # file exists at the site root.
+          touch site/.nojekyll
+          echo "Staged $(find "site/${STAGING_PREFIX}" -name '*.html' | wc -l) HTML files under site/${STAGING_PREFIX}/"
+
+      - name: Commit and push to main when anything changed
+        id: commit
+        working-directory: site
+        env:
+          SPOKE_SHA: ${{ needs.build.outputs.spoke_sha }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          git add -A -- "${STAGING_PREFIX}" .nojekyll
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No change to ${STAGING_PREFIX}/; nothing to publish."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "v2 staging: build ${SPOKE_SHA}" -m "Source: v2 at ${SPOKE_SHA}. Run: ${RUN_URL}"
+          git push origin HEAD:main
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+
+      # Pages takes a minute or more to publish a branch commit, so the staging
+      # check retries. The legacy check must pass regardless: if any of the 36
+      # live pages or index.html stops answering 200, the job fails.
+      - name: Check the staging URLs
+        run: |
+          node spoke/scripts/check-urls.mjs \
+            --base "$PAGES_URL" --prefix "$STAGING_PREFIX" \
+            --programs spoke/programs.json \
+            --retries 10 --delay 30
+
+      - name: Check the legacy URLs (the live site)
+        run: |
+          node spoke/scripts/check-urls.mjs \
+            --base "$PAGES_URL" \
+            --programs site/programs.json \
+            --retries 4 --delay 30

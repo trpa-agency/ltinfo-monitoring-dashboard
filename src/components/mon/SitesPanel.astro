@@ -1,0 +1,50 @@
+---
+// mon-lego-checked: MapPanel (esa-card, esa-button, esa-badge, esa-empty-state, and
+// esa-loading-spinner) is the markup and esa-select the pick control; no esa-* reads a
+// program's site source and fills a map, so the mon-sites-panel element around it is the
+// reusable home for that wiring.
+//
+// SitesPanel: the Sites section for one site source. Takes the programs.json keys of a
+// program (sitesLayer, mapLayer, overlays) or a GeoJSON URL (the LT Info sites hook) as one
+// SitesPanelConfig, renders the MapPanel card for it at build time, and hands the config to
+// <mon-sites-panel> (mon-sites-panel.ts), which loads the data in the browser. The program
+// pages and /spikes/map both render through this component, so there is one implementation.
+import MapPanel from './MapPanel.astro';
+import { sitesPanelSource, sitesPanelTitle, sitesPanelUnit, type SitesPanelConfig } from '../../lib/sites.ts';
+
+interface Props {
+  /** Id of the MapPanel section inside; the page may find the panel by it. */
+  id: string;
+  config: SitesPanelConfig;
+  /** Card title; the area layer's title or "Monitoring sites" when omitted. */
+  title?: string;
+  /** A 560 px map instead of 420 px. */
+  tall?: boolean;
+  /** Empty-state copy, in the embed contract's form. */
+  emptyTitle?: string;
+  emptyDescription?: string;
+}
+const { id, config, title = sitesPanelTitle(config), tall = false, emptyTitle, emptyDescription } = Astro.props;
+const unit = sitesPanelUnit(config);
+const source = sitesPanelSource(config);
+const pick = config.mapLayer?.pick;
+const list = config.mapLayer?.list !== false;
+---
+<mon-sites-panel class="mon-sites-panel" data-config={JSON.stringify(config)} data-state="loading">
+  <MapPanel id={id} title={title} unit={unit} source={source} tall={tall} list={list} emptyTitle={emptyTitle} emptyDescription={emptyDescription}>
+    {pick && <esa-select slot="tools" label={config.mapLayer?.pickLabel || pick} size="sm" data-mon-pick hidden></esa-select>}
+  </MapPanel>
+</mon-sites-panel>
+
+<script>
+  // Loaded on demand so pages without a Sites panel never fetch Leaflet or the
+  // map and list elements (Phase 0 spike 3 criterion).
+  if (document.querySelector('mon-sites-panel')) import('./mon-sites-panel.ts');
+</script>
+
+<style>
+  .mon-sites-panel {
+    display: block;
+    min-width: 0;
+  }
+</style>
